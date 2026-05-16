@@ -18,6 +18,9 @@ public class CategoryService {
     }
 
     public Category criarCategoria(Category category) {
+        if (categoryRepository.existsByNameIgnoreCase(category.getName())) {
+            throw new RuntimeException("Nome de categoria existente");
+        }
         return categoryRepository.save(category);
     }
 

@@ -1,13 +1,13 @@
 package com.example.ecommerce.controller.category;
 
+import com.example.ecommerce.dto.category.CategoryDTO;
 import com.example.ecommerce.model.category.Category;
 import com.example.ecommerce.service.category.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/categories")
@@ -19,11 +19,19 @@ public class ControllerCategory {
 
     @PostMapping
     public ResponseEntity<Category> criarCategoria(@RequestBody Category category) {
+        try {
+            Category novaCategoria = categoryService.criarCategoria(category);
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(novaCategoria);
+        }catch (Exception ex){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
-        Category novaCategoria = categoryService.criarCategoria(category);
+    }
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(novaCategoria);
+    @GetMapping
+    public List<CategoryDTO> listarCategorias() {
+        return categoryService.listarCategorias();
     }
 }
