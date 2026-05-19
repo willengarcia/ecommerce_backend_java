@@ -89,13 +89,13 @@ public class ProductService {
         return produto;
     }
 
-    public Product atualizarInformacoesPrincipais(Long produtoId, Product produtos){
+    public Product atualizarInformacoesPrincipais(Long produtoId, ProductCreateDTO produtos){
         Product produto = productRepository.findById(produtoId).orElseThrow();
 
-        produto.setNome(produtos.getNome());
-        produto.setPreco(produtos.getPreco());
-        produto.setQuantidade_estoque(produtos.getQuantidade_estoque());
-        produto.setStatus(produtos.getStatus());
+        produto.setNome(produtos.nome());
+        produto.setPreco(produtos.preco());
+        produto.setQuantidade_estoque(produtos.quantidade_estoque());
+        produto.setStatus(produtos.status());
 
         productRepository.save(produto);
 

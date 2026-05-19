@@ -51,7 +51,7 @@ public class ProductController {
     }
 
     @PutMapping("/{productId}")
-    public Product alterarInformacoesEssenciaisProduto(@PathVariable Long productId, @RequestBody Product produto){
+    public Product alterarInformacoesEssenciaisProduto(@PathVariable Long productId, @RequestBody ProductCreateDTO produto){
         Product produtos = productService.atualizarInformacoesPrincipais(productId, produto);
         return produtos;
     }
