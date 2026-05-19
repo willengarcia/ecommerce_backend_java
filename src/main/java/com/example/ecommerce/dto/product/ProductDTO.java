@@ -21,6 +21,6 @@ public record ProductDTO(
         float media_avaliacao,
         Integer total_avaliacoes,
         boolean status,
-        LocalDate data_criacao
-) {
+        LocalDate data_criacao,
+        Long aLong) {
 }

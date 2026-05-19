@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -37,8 +36,8 @@ public class Product {
     @OneToMany(mappedBy= "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ProductImages> imagem =  new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
     private Category categoria;
 
     @OneToMany(mappedBy= "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
