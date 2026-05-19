@@ -4,6 +4,7 @@ import com.example.ecommerce.model.cart.CartItem;
 import com.example.ecommerce.model.category.Category;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,7 +14,6 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long category_id;
     private String nome;
     private String slug;
     private String descricao_curta;
@@ -30,23 +30,23 @@ public class Product {
     private float comprimento;
     private float media_avaliacao;
     private Integer total_avaliacoes;
-    private String status;
-    private Date data_criacao;
-    private Date data_atualizacao;
+    private boolean status;
+    private LocalDate data_criacao;
+    private LocalDate data_atualizacao;
 
     @OneToMany(mappedBy= "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ProductImages> imagem =  new ArrayList<>();
 
     @ManyToOne
+    @JoinColumn(name = "category_id")
     private Category categoria;
 
     @OneToMany(mappedBy= "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<CartItem> items = new ArrayList<>();
 
 
-    public Product(Long id, Long category_id, String nome, String slug, String descricao_curta, String descricao, float preco, float preco_promocional, Integer quantidade_estoque, Integer quantidade_reservada, Integer estoque_minimo, String sku, float peso, float altura, float largura, float comprimento, float media_avaliacao, Integer total_avaliacoes, String status) {
+    public Product(Long id, String nome, String slug, String descricao_curta, String descricao, float preco, float preco_promocional, Integer quantidade_estoque, Integer quantidade_reservada, Integer estoque_minimo, String sku, float peso, float altura, float largura, float comprimento, float media_avaliacao, Integer total_avaliacoes, boolean status) {
         this.id = id;
-        this.category_id = category_id;
         this.nome = nome;
         this.slug = slug;
         this.descricao_curta = descricao_curta;
@@ -75,6 +75,7 @@ public class Product {
         this.items = items;
     }
 
+
     public List<ProductImages> getImagem() {
         return imagem;
     }
@@ -102,14 +103,9 @@ public class Product {
         this.id = id;
     }
 
-    public Long getCategory_id() {
-        return category_id;
+    public boolean isStatus() {
+        return status;
     }
-
-    public void setCategory_id(Long category_id) {
-        this.category_id = category_id;
-    }
-
     public String getNome() {
         return nome;
     }
@@ -238,27 +234,27 @@ public class Product {
         this.media_avaliacao = media_avaliacao;
     }
 
-    public String getStatus() {
+    public boolean getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 
-    public Date getData_criacao() {
+    public LocalDate getData_criacao() {
         return data_criacao;
     }
 
-    public void setData_criacao(Date data_criacao) {
+    public void setData_criacao(LocalDate data_criacao) {
         this.data_criacao = data_criacao;
     }
 
-    public Date getData_atualizacao() {
+    public LocalDate getData_atualizacao() {
         return data_atualizacao;
     }
 
-    public void setData_atualizacao(Date data_atualizacao) {
+    public void setData_atualizacao(LocalDate data_atualizacao) {
         this.data_atualizacao = data_atualizacao;
     }
 }

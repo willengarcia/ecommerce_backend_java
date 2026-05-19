@@ -18,10 +18,13 @@ public class CategoryService {
     }
 
     public Category criarCategoria(Category category) {
-        if (categoryRepository.existsByNameIgnoreCase(category.getName())) {
+        if (category.getName().isEmpty()) {
+            throw new RuntimeException("É obrigatório informar o Nome do Categoria");
+        } else if (categoryRepository.existsByNameIgnoreCase(category.getName())) {
             throw new RuntimeException("Nome de categoria existente");
+        }else {
+            return categoryRepository.save(category);
         }
-        return categoryRepository.save(category);
     }
 
     public List<CategoryDTO> listarCategorias() {

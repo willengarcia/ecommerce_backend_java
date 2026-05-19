@@ -12,26 +12,40 @@ import java.util.List;
 @RestController
 @RequestMapping("/categories")
 public class ControllerCategory {
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
     public ControllerCategory(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
 
     @PostMapping
-    public ResponseEntity<Category> criarCategoria(@RequestBody Category category) {
+    public ResponseEntity<?> criarCategoria(@RequestBody Category category) {
         try {
             Category novaCategoria = categoryService.criarCategoria(category);
             return ResponseEntity
                     .status(HttpStatus.CREATED)
                     .body(novaCategoria);
         }catch (Exception ex){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(ex.getMessage());
         }
-
     }
 
     @GetMapping
     public List<CategoryDTO> listarCategorias() {
         return categoryService.listarCategorias();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Category> atualizarCategoria(@PathVariable Long id, @RequestBody Category category) {
+        Category novaCategoria = categoryService.atualizarCategoria(id, category);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(novaCategoria);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Category> deletarCategoria(@PathVariable Long id) {
+        categoryService.deletarCategoria(id);
+        return ResponseEntity
+                .status(HttpStatus.OK).body(null);
     }
 }
