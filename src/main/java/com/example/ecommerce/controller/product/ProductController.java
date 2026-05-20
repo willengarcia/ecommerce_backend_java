@@ -3,16 +3,15 @@ package com.example.ecommerce.controller.product;
 import com.example.ecommerce.dto.product.ProductCreateDTO;
 import com.example.ecommerce.dto.product.ProductDTO;
 import com.example.ecommerce.model.product.Product;
-import com.example.ecommerce.service.service.ProductService;
+import com.example.ecommerce.service.product.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
-@RestController("/product")
+@RestController
+@RequestMapping("/product")
 public class ProductController {
     private final ProductService productService;
 
@@ -21,12 +20,12 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<?> criarProduto(ProductCreateDTO productCreateDTO){
+    public ResponseEntity<?> criarProduto(@RequestBody ProductCreateDTO productCreateDTO){
         try{
             Product produto = productService.criarProduct(productCreateDTO);
             return ResponseEntity
                     .status(HttpStatus.CREATED)
-                    .body(produto);
+                    .body(productCreateDTO);
         } catch (Exception ex){
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
@@ -45,14 +44,48 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public Product buscarUmProduto(@PathVariable Long productId){
+    public ProductCreateDTO buscarUmProduto(@PathVariable Long productId){
         Product produto = productService.buscarUmProduto(productId);
-        return produto;
+        ProductCreateDTO dto = new ProductCreateDTO(
+                produto.getNome(),
+                produto.getSlug(),
+                produto.getDescricao_curta(),
+                produto.getDescricao(),
+                produto.getPreco(),
+                produto.getPreco_promocional(),
+                produto.getQuantidade_estoque(),
+                produto.getQuantidade_reservada(),
+                produto.getSku(),
+                produto.getPeso(),
+                produto.getAltura(),
+                produto.getLargura(),
+                produto.getComprimento(),
+                produto.isStatus(),
+                produto.getCategoria().getId()
+        );
+        return dto;
     }
 
     @PutMapping("/{productId}")
-    public Product alterarInformacoesEssenciaisProduto(@PathVariable Long productId, @RequestBody ProductCreateDTO produto){
+    public ProductCreateDTO alterarInformacoesEssenciaisProduto(@PathVariable Long productId, @RequestBody ProductCreateDTO produto){
         Product produtos = productService.atualizarInformacoesPrincipais(productId, produto);
-        return produtos;
+        ProductCreateDTO dto = new ProductCreateDTO(
+                produtos.getNome(),
+                produtos.getSlug(),
+                produtos.getDescricao_curta(),
+                produtos.getDescricao(),
+                produtos.getPreco(),
+                produtos.getPreco_promocional(),
+                produtos.getQuantidade_estoque(),
+                produtos.getQuantidade_reservada(),
+                produtos.getSku(),
+                produtos.getPeso(),
+                produtos.getAltura(),
+                produtos.getLargura(),
+                produtos.getComprimento(),
+                produtos.isStatus(),
+                produtos.getCategoria().getId()
+        );
+        return dto;
     }
 }

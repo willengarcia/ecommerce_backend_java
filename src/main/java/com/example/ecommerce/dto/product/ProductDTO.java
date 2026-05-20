@@ -22,5 +22,6 @@ public record ProductDTO(
         Integer total_avaliacoes,
         boolean status,
         LocalDate data_criacao,
-        Long aLong) {
+        Long categoria_id
+) {
 }

@@ -11,9 +11,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/categories")
-public class ControllerCategory {
+public class CategoryController {
     private final CategoryService categoryService;
-    public ControllerCategory(CategoryService categoryService) {
+    public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
 
@@ -21,9 +21,16 @@ public class ControllerCategory {
     public ResponseEntity<?> criarCategoria(@RequestBody Category category) {
         try {
             Category novaCategoria = categoryService.criarCategoria(category);
+            CategoryDTO dto = new CategoryDTO(
+                    novaCategoria.getId(),
+                    novaCategoria.getName(),
+                    novaCategoria.getDescription(),
+                    novaCategoria.isAtivo(),
+                    novaCategoria.getDataAtualizacao()
+            );
             return ResponseEntity
                     .status(HttpStatus.CREATED)
-                    .body(novaCategoria);
+                    .body(dto);
         }catch (Exception ex){
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
@@ -35,11 +42,18 @@ public class ControllerCategory {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Category> atualizarCategoria(@PathVariable Long id, @RequestBody Category category) {
+    public ResponseEntity<?> atualizarCategoria(@PathVariable Long id, @RequestBody CategoryDTO category) {
         Category novaCategoria = categoryService.atualizarCategoria(id, category);
+        CategoryDTO dto = new CategoryDTO(
+                novaCategoria.getId(),
+                novaCategoria.getName(),
+                novaCategoria.getDescription(),
+                novaCategoria.isAtivo(),
+                novaCategoria.getDataAtualizacao()
+        );
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(novaCategoria);
+                .body(dto);
     }
 
     @DeleteMapping("/{id}")

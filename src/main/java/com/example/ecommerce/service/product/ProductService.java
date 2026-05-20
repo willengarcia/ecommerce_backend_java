@@ -1,4 +1,4 @@
-package com.example.ecommerce.service.service;
+package com.example.ecommerce.service.product;
 
 import com.example.ecommerce.dto.product.ProductCreateDTO;
 import com.example.ecommerce.dto.product.ProductDTO;
@@ -8,6 +8,7 @@ import com.example.ecommerce.repository.category.RepositoryCategory;
 import com.example.ecommerce.repository.product.ProductRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,6 +70,9 @@ public class ProductService {
         product.setPreco(productDTO.preco());
         product.setPreco_promocional(productDTO.preco_promocional());
         product.setQuantidade_estoque(productDTO.quantidade_estoque());
+        product.setQuantidade_reservada(0);
+        product.setData_criacao(LocalDate.now());
+        product.setTotal_avaliacoes(0);
         product.setEstoque_minimo(productDTO.estoque_minimo());
         product.setSku(productDTO.sku());
         product.setPeso(productDTO.peso());
@@ -97,9 +101,7 @@ public class ProductService {
         produto.setQuantidade_estoque(produtos.quantidade_estoque());
         produto.setStatus(produtos.status());
 
-        productRepository.save(produto);
-
-        return produto;
+        return productRepository.save(produto);
     }
 
 }

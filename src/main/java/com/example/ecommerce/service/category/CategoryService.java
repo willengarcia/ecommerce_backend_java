@@ -5,6 +5,7 @@ import com.example.ecommerce.model.category.Category;
 import com.example.ecommerce.repository.category.RepositoryCategory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,12 +38,13 @@ public class CategoryService {
         return categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
     }
 
-    public Category atualizarCategoria(Long id, Category novaCategoria) {
+    public Category atualizarCategoria(Long id, CategoryDTO novaCategoria) {
         Category category = buscarPorId(id);
 
-        category.setName(novaCategoria.getName());
-        category.setDescription(novaCategoria.getDescription());
-        category.setAtivo(novaCategoria.isAtivo());
+        category.setName(novaCategoria.name());
+        category.setDescription(novaCategoria.description());
+        category.setAtivo(novaCategoria.ativo());
+        category.setDataAtualizacao(LocalDate.now());
 
         return categoryRepository.save(category);
     }
