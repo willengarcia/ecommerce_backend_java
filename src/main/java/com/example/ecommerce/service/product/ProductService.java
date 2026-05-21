@@ -6,6 +6,8 @@ import com.example.ecommerce.model.category.Category;
 import com.example.ecommerce.model.product.Product;
 import com.example.ecommerce.repository.category.RepositoryCategory;
 import com.example.ecommerce.repository.product.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -30,22 +32,22 @@ public class ProductService {
                         product.getId(),
                         product.getNome(),
                         product.getSlug(),
-                        product.getDescricao_curta(),
+                        product.getDescricaoCurta(),
                         product.getDescricao(),
                         product.getPreco(),
-                        product.getPreco_promocional(),
-                        product.getQuantidade_estoque(),
-                        product.getQuantidade_reservada(),
-                        product.getEstoque_minimo(),
+                        product.getPrecoPromocional(),
+                        product.getQuantidadeEstoque(),
+                        product.getQuantidadeReservada(),
+                        product.getEstoqueMinimo(),
                         product.getSku(),
                         product.getPeso(),
                         product.getAltura(),
                         product.getLargura(),
                         product.getComprimento(),
-                        product.getMedia_avaliacao(),
-                        product.getTotal_avaliacoes(),
+                        product.getMediaAvaliacao(),
+                        product.getTotalAvaliacoes(),
                         product.getStatus(),
-                        product.getData_criacao(),
+                        product.getDataCriacao(),
                         product.getCategoria().getId()
                 )
         ).collect(Collectors.toList());
@@ -59,21 +61,21 @@ public class ProductService {
 
 
 
-        if (productDTO.nome().isEmpty() || productDTO.preco() == 0 || productDTO.estoque_minimo() < 1 || categoryId == null){
+        if (productDTO.nome().isEmpty() || productDTO.preco() == 0 || productDTO.estoqueMinimo() < 1 || categoryId == null){
             throw new RuntimeException("É necessário informar o Nome, preço, estoque mínimo maior que 1 e o ID da Categoria");
         }
 
         product.setNome(productDTO.nome());
         product.setSlug(productDTO.slug());
-        product.setDescricao_curta(productDTO.descricao_curta());
+        product.setDescricaoCurta(productDTO.descricaoCurta());
         product.setDescricao(productDTO.descricao());
         product.setPreco(productDTO.preco());
-        product.setPreco_promocional(productDTO.preco_promocional());
-        product.setQuantidade_estoque(productDTO.quantidade_estoque());
-        product.setQuantidade_reservada(0);
-        product.setData_criacao(LocalDate.now());
-        product.setTotal_avaliacoes(0);
-        product.setEstoque_minimo(productDTO.estoque_minimo());
+        product.setPrecoPromocional(productDTO.precoPromocional());
+        product.setQuantidadeEstoque(productDTO.quantidadeEstoque());
+        product.setQuantidadeReservada(0);
+        product.setDataCriacao(LocalDate.now());
+        product.setTotalAvaliacoes(0);
+        product.setEstoqueMinimo(productDTO.estoqueMinimo());
         product.setSku(productDTO.sku());
         product.setPeso(productDTO.peso());
         product.setAltura(productDTO.altura());
@@ -98,10 +100,60 @@ public class ProductService {
 
         produto.setNome(produtos.nome());
         produto.setPreco(produtos.preco());
-        produto.setQuantidade_estoque(produtos.quantidade_estoque());
+        produto.setQuantidadeEstoque(produtos.quantidadeEstoque());
         produto.setStatus(produtos.status());
 
         return productRepository.save(produto);
+    }
+
+    public ProductCreateDTO deletarUmProduto(Long produtoId){
+        Product produto = productRepository.findById(produtoId).orElseThrow();
+        ProductCreateDTO dto = new ProductCreateDTO(
+                produto.getNome(),
+                produto.getSlug(),
+                produto.getDescricaoCurta(),
+                produto.getDescricao(),
+                produto.getPreco(),
+                produto.getPrecoPromocional(),
+                produto.getQuantidadeEstoque(),
+                produto.getEstoqueMinimo(),
+                produto.getSku(),
+                produto.getPeso(),
+                produto.getAltura(),
+                produto.getLargura(),
+                produto.getComprimento(),
+                produto.getStatus(),
+                produto.getCategoria().getId()
+        );
+        productRepository.delete(produto);
+        return dto;
+    }
+
+    public Page<ProductCreateDTO> findAllPaginado(Pageable pageable) {
+        return productRepository.findAll(pageable)
+                .map(produto -> new ProductCreateDTO(
+                        produto.getNome(),
+                        produto.getSlug(),
+                        produto.getDescricaoCurta(),
+                        produto.getDescricao(),
+                        produto.getPreco(),
+                        produto.getPrecoPromocional(),
+                        produto.getQuantidadeEstoque(),
+                        produto.getEstoqueMinimo(),
+                        produto.getSku(),
+                        produto.getPeso(),
+                        produto.getAltura(),
+                        produto.getLargura(),
+                        produto.getComprimento(),
+                        produto.getStatus(),
+                        produto.getCategoria().getId()
+                )
+        );
+    }
+
+    public List<ProductCreateDTO> listarProdutosPorCategoria(Long categoriaId){
+        List<ProductCreateDTO> produto = productRepository.findByCategoriaId(categoriaId);
+        return produto;
     }
 
 }

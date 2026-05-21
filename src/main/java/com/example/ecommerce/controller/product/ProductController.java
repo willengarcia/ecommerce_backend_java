@@ -4,6 +4,9 @@ import com.example.ecommerce.dto.product.ProductCreateDTO;
 import com.example.ecommerce.dto.product.ProductDTO;
 import com.example.ecommerce.model.product.Product;
 import com.example.ecommerce.service.product.ProductService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,18 +52,18 @@ public class ProductController {
         ProductCreateDTO dto = new ProductCreateDTO(
                 produto.getNome(),
                 produto.getSlug(),
-                produto.getDescricao_curta(),
+                produto.getDescricaoCurta(),
                 produto.getDescricao(),
                 produto.getPreco(),
-                produto.getPreco_promocional(),
-                produto.getQuantidade_estoque(),
-                produto.getQuantidade_reservada(),
+                produto.getPrecoPromocional(),
+                produto.getQuantidadeEstoque(),
+                produto.getEstoqueMinimo(),
                 produto.getSku(),
                 produto.getPeso(),
                 produto.getAltura(),
                 produto.getLargura(),
                 produto.getComprimento(),
-                produto.isStatus(),
+                produto.getStatus(),
                 produto.getCategoria().getId()
         );
         return dto;
@@ -72,20 +75,40 @@ public class ProductController {
         ProductCreateDTO dto = new ProductCreateDTO(
                 produtos.getNome(),
                 produtos.getSlug(),
-                produtos.getDescricao_curta(),
+                produtos.getDescricaoCurta(),
                 produtos.getDescricao(),
                 produtos.getPreco(),
-                produtos.getPreco_promocional(),
-                produtos.getQuantidade_estoque(),
-                produtos.getQuantidade_reservada(),
+                produtos.getPrecoPromocional(),
+                produtos.getQuantidadeEstoque(),
+                produtos.getEstoqueMinimo(),
                 produtos.getSku(),
                 produtos.getPeso(),
                 produtos.getAltura(),
                 produtos.getLargura(),
                 produtos.getComprimento(),
-                produtos.isStatus(),
+                produtos.getStatus(),
                 produtos.getCategoria().getId()
         );
         return dto;
+    }
+
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<?> deletarProduto(@PathVariable Long productId){
+        ProductCreateDTO dto = productService.deletarUmProduto(productId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(dto);
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<Page<ProductCreateDTO>> listarProdutos(@PageableDefault(size = 10, sort = "id") Pageable pageable) {
+
+        Page<ProductCreateDTO> produtos = productService.findAllPaginado(pageable);
+
+        return ResponseEntity.ok(produtos);
+    }
+
+    @GetMapping("/category/{id}")
+    public ResponseEntity<List<ProductCreateDTO>> listarProdutosPorCategoria(@PathVariable Long id) {
+        List<ProductCreateDTO> produtos = productService.listarProdutosPorCategoria(id);
+        return ResponseEntity.status(HttpStatus.OK).body(produtos);
     }
 }

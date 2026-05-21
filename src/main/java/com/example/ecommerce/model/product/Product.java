@@ -15,23 +15,33 @@ public class Product {
     private Long id;
     private String nome;
     private String slug;
-    private String descricao_curta;
+    @Column(name = "descricao_curta")
+    private String descricaoCurta;
     private String descricao;
     private float preco;
-    private float preco_promocional;
-    private Integer quantidade_estoque;
-    private Integer quantidade_reservada;
-    private Integer estoque_minimo;
+    @Column(name = "preco_promocional")
+    private float precoPromocional;
+    @Column(name = "quantidadeEstoque")
+    private Integer quantidadeEstoque;
+    @Column(name = "quantidade_reservada")
+    private Integer quantidadeReservada;
+    @Column(name = "estoqueMinimo")
+    private Integer estoqueMinimo;
     private String sku;
     private float peso;
     private float altura;
     private float largura;
     private float comprimento;
-    private float media_avaliacao;
-    private Integer total_avaliacoes;
+
+    @Column(name = "media_avaliacao")
+    private float mediaAvaliacao;
+    @Column(name = "total_avaliacao")
+    private Integer totalAvaliacoes;
     private boolean status;
-    private LocalDate data_criacao;
-    private LocalDate data_atualizacao;
+
+    private LocalDate dataCriacao;
+
+    private LocalDate dataCtualizacao;
 
     @OneToMany(mappedBy= "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ProductImages> imagem =  new ArrayList<>();
@@ -48,20 +58,20 @@ public class Product {
         this.id = id;
         this.nome = nome;
         this.slug = slug;
-        this.descricao_curta = descricao_curta;
+        this.descricaoCurta = descricao_curta;
         this.descricao = descricao;
         this.preco = preco;
-        this.preco_promocional = preco_promocional;
-        this.quantidade_estoque = quantidade_estoque;
-        this.quantidade_reservada = quantidade_reservada;
-        this.estoque_minimo = estoque_minimo;
+        this.precoPromocional = preco_promocional;
+        this.quantidadeEstoque = quantidade_estoque;
+        this.quantidadeReservada = quantidade_reservada;
+        this.estoqueMinimo = estoque_minimo;
         this.sku = sku;
         this.peso = peso;
         this.altura = altura;
         this.largura = largura;
         this.comprimento = comprimento;
-        this.media_avaliacao = media_avaliacao;
-        this.total_avaliacoes = total_avaliacoes;
+        this.mediaAvaliacao = media_avaliacao;
+        this.totalAvaliacoes = total_avaliacoes;
         this.status = status;
     }
 
@@ -121,14 +131,6 @@ public class Product {
         this.slug = slug;
     }
 
-    public String getDescricao_curta() {
-        return descricao_curta;
-    }
-
-    public void setDescricao_curta(String descricao_curta) {
-        this.descricao_curta = descricao_curta;
-    }
-
     public String getDescricao() {
         return descricao;
     }
@@ -143,38 +145,6 @@ public class Product {
 
     public void setPreco(float preco) {
         this.preco = preco;
-    }
-
-    public float getPreco_promocional() {
-        return preco_promocional;
-    }
-
-    public void setPreco_promocional(float preco_promocional) {
-        this.preco_promocional = preco_promocional;
-    }
-
-    public Integer getQuantidade_estoque() {
-        return quantidade_estoque;
-    }
-
-    public void setQuantidade_estoque(Integer quantidade_estoque) {
-        this.quantidade_estoque = quantidade_estoque;
-    }
-
-    public Integer getQuantidade_reservada() {
-        return quantidade_reservada;
-    }
-
-    public void setQuantidade_reservada(Integer quantidade_reservada) {
-        this.quantidade_reservada = quantidade_reservada;
-    }
-
-    public Integer getEstoque_minimo() {
-        return estoque_minimo;
-    }
-
-    public void setEstoque_minimo(Integer estoque_minimo) {
-        this.estoque_minimo = estoque_minimo;
     }
 
     public String getSku() {
@@ -217,22 +187,6 @@ public class Product {
         this.comprimento = comprimento;
     }
 
-    public Integer getTotal_avaliacoes() {
-        return total_avaliacoes;
-    }
-
-    public void setTotal_avaliacoes(Integer total_avaliacoes) {
-        this.total_avaliacoes = total_avaliacoes;
-    }
-
-    public float getMedia_avaliacao() {
-        return media_avaliacao;
-    }
-
-    public void setMedia_avaliacao(float media_avaliacao) {
-        this.media_avaliacao = media_avaliacao;
-    }
-
     public boolean getStatus() {
         return status;
     }
@@ -241,19 +195,75 @@ public class Product {
         this.status = status;
     }
 
-    public LocalDate getData_criacao() {
-        return data_criacao;
+    public String getDescricaoCurta() {
+        return descricaoCurta;
     }
 
-    public void setData_criacao(LocalDate data_criacao) {
-        this.data_criacao = data_criacao;
+    public void setDescricaoCurta(String descricaoCurta) {
+        this.descricaoCurta = descricaoCurta;
     }
 
-    public LocalDate getData_atualizacao() {
-        return data_atualizacao;
+    public float getPrecoPromocional() {
+        return precoPromocional;
     }
 
-    public void setData_atualizacao(LocalDate data_atualizacao) {
-        this.data_atualizacao = data_atualizacao;
+    public void setPrecoPromocional(float precoPromocional) {
+        this.precoPromocional = precoPromocional;
+    }
+
+    public Integer getQuantidadeEstoque() {
+        return quantidadeEstoque;
+    }
+
+    public void setQuantidadeEstoque(Integer quantidadeEstoque) {
+        this.quantidadeEstoque = quantidadeEstoque;
+    }
+
+    public Integer getQuantidadeReservada() {
+        return quantidadeReservada;
+    }
+
+    public void setQuantidadeReservada(Integer quantidadeReservada) {
+        this.quantidadeReservada = quantidadeReservada;
+    }
+
+    public Integer getEstoqueMinimo() {
+        return estoqueMinimo;
+    }
+
+    public void setEstoqueMinimo(Integer estoqueMinimo) {
+        this.estoqueMinimo = estoqueMinimo;
+    }
+
+    public float getMediaAvaliacao() {
+        return mediaAvaliacao;
+    }
+
+    public void setMediaAvaliacao(float mediaAvaliacao) {
+        this.mediaAvaliacao = mediaAvaliacao;
+    }
+
+    public Integer getTotalAvaliacoes() {
+        return totalAvaliacoes;
+    }
+
+    public void setTotalAvaliacoes(Integer totalAvaliacoes) {
+        this.totalAvaliacoes = totalAvaliacoes;
+    }
+
+    public LocalDate getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(LocalDate dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public LocalDate getDataCtualizacao() {
+        return dataCtualizacao;
+    }
+
+    public void setDataCtualizacao(LocalDate dataCtualizacao) {
+        this.dataCtualizacao = dataCtualizacao;
     }
 }
