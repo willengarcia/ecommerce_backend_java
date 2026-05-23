@@ -111,4 +111,17 @@ public class ProductController {
         List<ProductCreateDTO> produtos = productService.listarProdutosPorCategoria(id);
         return ResponseEntity.status(HttpStatus.OK).body(produtos);
     }
+
+    @GetMapping("/nome/{nome}")
+    public ResponseEntity<List<ProductCreateDTO>> listarProdutosPorNome(@PathVariable String nome) {
+        List<ProductCreateDTO> dto = productService.buscarProdutoPorNome(nome);
+        return ResponseEntity.status(HttpStatus.OK).body(dto);
+    }
+
+    @GetMapping("/preco")
+    public ResponseEntity<List<ProductCreateDTO>> listarProdutosPorPreco() {
+        List<ProductCreateDTO> dto = productService.buscarProdutoPorPrecoPorOrdem();
+        return  ResponseEntity.status(HttpStatus.OK).body(dto);
+
+    }
 }

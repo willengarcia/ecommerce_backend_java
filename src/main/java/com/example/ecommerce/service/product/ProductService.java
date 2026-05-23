@@ -27,6 +27,7 @@ public class ProductService {
     }
 
     public List<ProductDTO> findAll() {
+
         return productRepository.findAll().stream().map(
                 product -> new ProductDTO(
                         product.getId(),
@@ -61,8 +62,14 @@ public class ProductService {
 
 
 
-        if (productDTO.nome().isEmpty() || productDTO.preco() == 0 || productDTO.estoqueMinimo() < 1 || categoryId == null){
-            throw new RuntimeException("É necessário informar o Nome, preço, estoque mínimo maior que 1 e o ID da Categoria");
+        if (productDTO.nome() == null || productDTO.nome().isBlank()
+                || productDTO.preco() == null || productDTO.preco() <= 0
+                || productDTO.estoqueMinimo() == null || productDTO.estoqueMinimo() < 1
+                || categoryId == null) {
+
+            throw new RuntimeException(
+                    "É necessário informar o Nome, preço, estoque mínimo maior que 1 e o ID da Categoria"
+            );
         }
 
         product.setNome(productDTO.nome());
@@ -156,4 +163,11 @@ public class ProductService {
         return produto;
     }
 
+    public List<ProductCreateDTO> buscarProdutoPorNome(String nome){
+        return productRepository.findByNomeContainingIgnoreCase(nome);
+    }
+
+    public List<ProductCreateDTO> buscarProdutoPorPrecoPorOrdem(){
+        return productRepository.findAllByOrderByPrecoAsc();
+    }
 }

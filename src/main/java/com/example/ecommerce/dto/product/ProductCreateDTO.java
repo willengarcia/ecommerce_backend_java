@@ -5,16 +5,16 @@ public record ProductCreateDTO(
         String slug,
         String descricaoCurta,
         String descricao,
-        float preco,
-        float precoPromocional,
+        Float preco,
+        Float precoPromocional,
         Integer quantidadeEstoque,
         Integer estoqueMinimo,
         String sku,
-        float peso,
-        float altura,
-        float largura,
-        float comprimento,
-        boolean status,
+        Float peso,
+        Float altura,
+        Float largura,
+        Float comprimento,
+        Boolean status,
         Long categoria_id
 ) {
 }
