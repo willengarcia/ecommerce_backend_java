@@ -41,4 +41,21 @@ public class CustomerController {
         return ResponseEntity.status(HttpStatus.OK).body(customer);
     }
 
+    @PutMapping("/{idCustomer}")
+    public ResponseEntity<CustomerDTO>  updateCustomer(@PathVariable Integer idCustomer, @RequestBody CustomerDTO dto) {
+        Customers customer = customerService.atualizarUsuarioPorId(idCustomer, dto);
+        CustomerDTO customerDTO = new CustomerDTO(
+                customer.getId(),
+                customer.getNomeCompleto(),
+                customer.getCpf(),
+                customer.getEmail(),
+                customer.getTelefone(),
+                customer.getSenhaHash(),
+                customer.isStatus(),
+                customer.getDataCriacao(),
+                customer.getDataAtualizacao()
+        );
+        return ResponseEntity.status(HttpStatus.OK).body(customerDTO);
+    }
+
 }

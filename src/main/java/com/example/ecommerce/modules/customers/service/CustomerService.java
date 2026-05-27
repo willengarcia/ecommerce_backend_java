@@ -19,14 +19,35 @@ public class CustomerService {
     }
     public Customers criarUsuario(CustomerDTO customerDTO){
         Customers customers = new Customers();
-        customers.setCpf(customerDTO.cpf());
-        customers.setNomeCompleto(customerDTO.nomeCompleto());
-        customers.setEmail(customerDTO.email());
-        customers.setTelefone(customerDTO.telefone());
-        customers.setStatus("ATIVO");
-        customers.setSenhaHash(customerDTO.senhaHash());
-        customers.setDataCriacao(LocalDate.now());
-        customers.setDataAtualizacao(LocalDate.now());
-        return customerRepository.save(customers);
+        if(customerDTO.nomeCompleto().isEmpty() || customerDTO.cpf().isEmpty() || customerDTO.email().isEmpty() || customerDTO.telefone().isEmpty() || customerDTO.senhaHash().isEmpty()){
+            throw new RuntimeException("É obrigatório informar os campos: Nome, Email, Telefone, Senha, CPF");
+        } else if (customerDTO.cpf().length() != 11) {
+            throw new RuntimeException("É necessário informar 11 caracteres");
+        }else {
+            customers.setCpf(customerDTO.cpf());
+            customers.setNomeCompleto(customerDTO.nomeCompleto());
+            customers.setEmail(customerDTO.email());
+            customers.setTelefone(customerDTO.telefone());
+            customers.setStatus("ATIVO");
+            customers.setSenhaHash(customerDTO.senhaHash());
+            customers.setDataCriacao(LocalDate.now());
+            customers.setDataAtualizacao(LocalDate.now());
+            return customerRepository.save(customers);
+        }
+    }
+    public Customers atualizarUsuarioPorId(Integer id, CustomerDTO customerDTO){
+        Customers customers = customerRepository.findById(id).orElseThrow();
+        if(customerDTO.nomeCompleto().isEmpty() || customerDTO.email().isEmpty() || customerDTO.telefone().isEmpty() || customerDTO.senhaHash().isEmpty()){
+            throw new RuntimeException("É obrigatório informar os campos: Nome, Email, Telefone, Senha");
+        } else{
+
+            customers.setNomeCompleto(customerDTO.nomeCompleto());
+            customers.setEmail(customerDTO.email());
+            customers.setTelefone(customerDTO.telefone());
+            customers.setSenhaHash(customerDTO.senhaHash());
+            customers.setDataAtualizacao(LocalDate.now());
+
+            return customerRepository.save(customers);
+        }
     }
 }
