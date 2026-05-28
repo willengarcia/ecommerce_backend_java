@@ -44,6 +44,11 @@ public class CustomerController {
         List<Customers> customer = customerService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(customer);
     }
+    
+    @GetMapping("/{idCustomer}")
+    public CustomerDTO getIdUser(@PathVariable Integer idCustomer){
+        return customerService.buscarUsuarioPorId(idCustomer);
+    }
 
     @PutMapping("/{idCustomer}")
     public ResponseEntity<CustomerDTO>  updateCustomer(@PathVariable Integer idCustomer, @RequestBody CustomerDTO dto) {

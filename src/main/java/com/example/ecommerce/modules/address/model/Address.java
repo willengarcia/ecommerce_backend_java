@@ -10,30 +10,40 @@ public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nome_endereco;
-    private String nome_destinatario;
+    @Column(nullable = false)
+    private String nomeEndereco;
+    @Column(nullable = false)
+    private String nomeDestinatario;
     @Column(nullable = false)
     private String cep;
+    @Column(nullable = false)
     private String rua;
+    @Column(nullable = false)
     private String numero;
     private String complemento;
+    @Column(nullable = false)
     private String bairro;
+    @Column(nullable = false)
     private String cidade;
+    @Column(nullable = false)
     private String estado;
     private String referencia;
-    private String tipo_endereco;
     @Column(nullable = false)
-    private String endereco_principal;
-    private Date data_criacao;
-    private Date data_atualizacao;
+    private String tipoEndereco;
+    @Column(nullable = false)
+    private String enderecoPrincipal;
+    private Date dataCriacao;
+    private Date dataAtualizacao;
 
     @ManyToOne
     private Customers usuario;
 
-    public Address(Long id, String nome_endereco, String nome_destinatario, String cep, String rua, String numero, String complemento, String cidade, String bairro, String estado, String referencia, String tipo_endereco, String endereco_principal) {
-        this.id = id;
-        this.nome_endereco = nome_endereco;
-        this.nome_destinatario = nome_destinatario;
+    public Address() {
+    }
+
+    public Address(String nome_endereco, String nome_destinatario, String cep, String rua, String numero, String complemento, String cidade, String bairro, String estado, String referencia, String tipo_endereco, String endereco_principal) {
+        this.nomeEndereco = nome_endereco;
+        this.nomeDestinatario = nome_destinatario;
         this.cep = cep;
         this.rua = rua;
         this.numero = numero;
@@ -42,8 +52,8 @@ public class Address {
         this.bairro = bairro;
         this.estado = estado;
         this.referencia = referencia;
-        this.tipo_endereco = tipo_endereco;
-        this.endereco_principal = endereco_principal;
+        this.tipoEndereco = tipo_endereco;
+        this.enderecoPrincipal = endereco_principal;
     }
 
     public Long getId() {
@@ -62,20 +72,20 @@ public class Address {
         this.usuario = usuario;
     }
 
-    public String getNome_endereco() {
-        return nome_endereco;
+    public String getNomeEndereco() {
+        return nomeEndereco;
     }
 
-    public void setNome_endereco(String nome_endereco) {
-        this.nome_endereco = nome_endereco;
+    public void setNomeEndereco(String nomeEndereco) {
+        this.nomeEndereco = nomeEndereco;
     }
 
-    public String getNome_destinatario() {
-        return nome_destinatario;
+    public String getNomeDestinatario() {
+        return nomeDestinatario;
     }
 
-    public void setNome_destinatario(String nome_destinatario) {
-        this.nome_destinatario = nome_destinatario;
+    public void setNomeDestinatario(String nomeDestinatario) {
+        this.nomeDestinatario = nomeDestinatario;
     }
 
     public String getCep() {
@@ -142,35 +152,35 @@ public class Address {
         this.referencia = referencia;
     }
 
-    public String getTipo_endereco() {
-        return tipo_endereco;
+    public String getTipoEndereco() {
+        return tipoEndereco;
     }
 
-    public void setTipo_endereco(String tipo_endereco) {
-        this.tipo_endereco = tipo_endereco;
+    public void setTipoEndereco(String tipoEndereco) {
+        this.tipoEndereco = tipoEndereco;
     }
 
-    public String getEndereco_principal() {
-        return endereco_principal;
+    public String getEnderecoPrincipal() {
+        return enderecoPrincipal;
     }
 
-    public void setEndereco_principal(String endereco_principal) {
-        this.endereco_principal = endereco_principal;
+    public void setEnderecoPrincipal(String enderecoPrincipal) {
+        this.enderecoPrincipal = enderecoPrincipal;
     }
 
-    public Date getData_criacao() {
-        return data_criacao;
+    public Date getDataCriacao() {
+        return dataCriacao;
     }
 
-    public void setData_criacao(Date data_criacao) {
-        this.data_criacao = data_criacao;
+    public void setDataCriacao(Date dataCriacao) {
+        this.dataCriacao = dataCriacao;
     }
 
-    public Date getData_atualizacao() {
-        return data_atualizacao;
+    public Date getDataAtualizacao() {
+        return dataAtualizacao;
     }
 
-    public void setData_atualizacao(Date data_atualizacao) {
-        this.data_atualizacao = data_atualizacao;
+    public void setDataAtualizacao(Date dataAtualizacao) {
+        this.dataAtualizacao = dataAtualizacao;
     }
 }

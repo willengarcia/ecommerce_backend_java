@@ -14,9 +14,11 @@ public class CustomerService {
     public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
+
     public List<Customers> findAll(){
         return customerRepository.findAll();
     }
+
     public Customers criarUsuario(CustomerDTO customerDTO){
         Customers customers = new Customers();
         if(customerDTO.nomeCompleto().isEmpty() || customerDTO.cpf().isEmpty() || customerDTO.email().isEmpty() || customerDTO.telefone().isEmpty() || customerDTO.senhaHash().isEmpty()){
@@ -53,5 +55,21 @@ public class CustomerService {
 
             return customerRepository.save(customers);
         }
+    }
+
+    public CustomerDTO buscarUsuarioPorId(Integer idCustomer){
+        Customers customers = customerRepository.findById(idCustomer).orElseThrow();
+        CustomerDTO dto = new CustomerDTO(
+                customers.getId(),
+                customers.getNomeCompleto(),
+                customers.getCpf(),
+                customers.getEmail(),
+                customers.getSenhaHash(),
+                customers.getTelefone(),
+                customers.isStatus(),
+                customers.getDataCriacao(),
+                customers.getDataAtualizacao()
+        );
+        return dto;
     }
 }
