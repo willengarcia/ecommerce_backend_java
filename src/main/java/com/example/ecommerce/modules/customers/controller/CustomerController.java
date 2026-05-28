@@ -19,20 +19,24 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<CustomerDTO> createCustomer(@RequestBody CustomerDTO dto) {
-        Customers customer = customerService.criarUsuario(dto);
-        CustomerDTO customerDTO = new CustomerDTO(
-                customer.getId(),
-                customer.getNomeCompleto(),
-                customer.getCpf(),
-                customer.getEmail(),
-                customer.getTelefone(),
-                customer.getSenhaHash(),
-                customer.isStatus(),
-                customer.getDataCriacao(),
-                customer.getDataAtualizacao()
-        );
-        return ResponseEntity.status(HttpStatus.CREATED).body(customerDTO);
+    public ResponseEntity<?> createCustomer(@RequestBody CustomerDTO dto) {
+        try{
+            Customers customer = customerService.criarUsuario(dto);
+            CustomerDTO customerDTO = new CustomerDTO(
+                    customer.getId(),
+                    customer.getNomeCompleto(),
+                    customer.getCpf(),
+                    customer.getEmail(),
+                    customer.getTelefone(),
+                    customer.getSenhaHash(),
+                    customer.isStatus(),
+                    customer.getDataCriacao(),
+                    customer.getDataAtualizacao()
+            );
+            return ResponseEntity.status(HttpStatus.CREATED).body(customerDTO);
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping

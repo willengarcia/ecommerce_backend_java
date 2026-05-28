@@ -23,7 +23,11 @@ public class CustomerService {
             throw new RuntimeException("É obrigatório informar os campos: Nome, Email, Telefone, Senha, CPF");
         } else if (customerDTO.cpf().length() != 11) {
             throw new RuntimeException("É necessário informar 11 caracteres");
-        }else {
+        } if (customerRepository.existsByCpf(customerDTO.cpf())) {
+            throw new RuntimeException("CPF já cadastrado");
+        } if (customerRepository.existsByEmail(customerDTO.email())) {
+            throw new RuntimeException("Email já cadastrado");
+        } else {
             customers.setCpf(customerDTO.cpf());
             customers.setNomeCompleto(customerDTO.nomeCompleto());
             customers.setEmail(customerDTO.email());
