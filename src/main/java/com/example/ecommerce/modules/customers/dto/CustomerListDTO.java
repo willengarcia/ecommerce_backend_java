@@ -1,15 +1,18 @@
 package com.example.ecommerce.modules.customers.dto;
 
-import java.time.LocalDate;
+import com.example.ecommerce.modules.address.dto.AddressListDTO;
 
-public record CustomerDTO(
-        Long id,
+import java.time.LocalDate;
+import java.util.List;
+
+public record CustomerListDTO(
+        Integer id,
         String nomeCompleto,
         String cpf,
         String email,
         String telefone,
-        String senhaHash,
         String status,
+        List<AddressListDTO> addresses,
         LocalDate dataCriacao,
         LocalDate dataAtualizacao
 ) {

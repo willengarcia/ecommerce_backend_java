@@ -3,13 +3,13 @@ package com.example.ecommerce.modules.address.model;
 import com.example.ecommerce.modules.customers.model.Customers;
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     @Column(nullable = false)
     private String nomeEndereco;
     @Column(nullable = false)
@@ -32,8 +32,8 @@ public class Address {
     private String tipoEndereco;
     @Column(nullable = false)
     private String enderecoPrincipal;
-    private Date dataCriacao;
-    private Date dataAtualizacao;
+    private LocalDate dataCriacao;
+    private LocalDate dataAtualizacao;
 
     @ManyToOne
     private Customers usuario;
@@ -41,7 +41,8 @@ public class Address {
     public Address() {
     }
 
-    public Address(String nome_endereco, String nome_destinatario, String cep, String rua, String numero, String complemento, String cidade, String bairro, String estado, String referencia, String tipo_endereco, String endereco_principal) {
+    public Address(Integer id, String nome_endereco, String nome_destinatario, String cep, String rua, String numero, String complemento, String cidade, String bairro, String estado, String referencia, String tipo_endereco, String endereco_principal) {
+        this.id = id;
         this.nomeEndereco = nome_endereco;
         this.nomeDestinatario = nome_destinatario;
         this.cep = cep;
@@ -56,11 +57,11 @@ public class Address {
         this.enderecoPrincipal = endereco_principal;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -168,19 +169,19 @@ public class Address {
         this.enderecoPrincipal = enderecoPrincipal;
     }
 
-    public Date getDataCriacao() {
+    public LocalDate getDataCriacao() {
         return dataCriacao;
     }
 
-    public void setDataCriacao(Date dataCriacao) {
+    public void setDataCriacao(LocalDate dataCriacao) {
         this.dataCriacao = dataCriacao;
     }
 
-    public Date getDataAtualizacao() {
+    public LocalDate getDataAtualizacao() {
         return dataAtualizacao;
     }
 
-    public void setDataAtualizacao(Date dataAtualizacao) {
+    public void setDataAtualizacao(LocalDate dataAtualizacao) {
         this.dataAtualizacao = dataAtualizacao;
     }
 }

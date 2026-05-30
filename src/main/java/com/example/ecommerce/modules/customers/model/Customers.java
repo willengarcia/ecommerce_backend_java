@@ -11,7 +11,7 @@ import java.util.List;
 public class Customers {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     private String nomeCompleto;
     @Column(unique = true)
     private String cpf;
@@ -29,7 +29,7 @@ public class Customers {
 
     public Customers() {}
 
-    public Customers (Long id, String nome_completo, String cpf, String email, String telefone, String senhaHash, String status) {
+    public Customers (Integer id, String nome_completo, String cpf, String email, String telefone, String senhaHash, String status) {
         this.id = id;
         this.nomeCompleto = nome_completo;
         this.cpf = cpf;
@@ -48,11 +48,11 @@ public class Customers {
         this.enderecos = enderecos;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
