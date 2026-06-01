@@ -23,7 +23,7 @@ public class Customers {
     private LocalDate dataCriacao;
     private LocalDate dataAtualizacao;
 
-    @OneToMany(mappedBy= "usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy= "usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Address> enderecos =  new ArrayList<>();
 
 

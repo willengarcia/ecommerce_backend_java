@@ -3,7 +3,7 @@ package com.example.ecommerce.modules.cart.model;
 import com.example.ecommerce.modules.product.model.Product;
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 public class CartItem {
@@ -11,10 +11,10 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Integer quantidade;
-    private float preco_unitario;
+    private float precoUnitario;
     private float subtotal;
-    private Date data_criacao;
-    private Date data_atualizacao;
+    private LocalDate dataCriacao;
+    private LocalDate dataAtualizacao;
 
     @ManyToOne
     private Cart carro;
@@ -22,13 +22,11 @@ public class CartItem {
     @ManyToOne
     private Product product;
 
-    public CartItem(Long id, Integer quantidade, float preco_unitario, float subtotal, Date data_criacao, Date data_atualizacao) {
+    public CartItem(Long id, Integer quantidade, float precoUnitario, float subtotal) {
         this.id = id;
         this.quantidade = quantidade;
-        this.preco_unitario = preco_unitario;
+        this.precoUnitario = precoUnitario;
         this.subtotal = subtotal;
-        this.data_criacao = data_criacao;
-        this.data_atualizacao = data_atualizacao;
     }
 
     public Product getProduct() {
@@ -57,12 +55,12 @@ public class CartItem {
         this.quantidade = quantidade;
     }
 
-    public float getPreco_unitario() {
-        return preco_unitario;
+    public float getPrecoUnitario() {
+        return precoUnitario;
     }
 
-    public void setPreco_unitario(float preco_unitario) {
-        this.preco_unitario = preco_unitario;
+    public void setPrecoUnitario(float precoUnitario) {
+        this.precoUnitario = precoUnitario;
     }
 
     public float getSubtotal() {
@@ -73,23 +71,23 @@ public class CartItem {
         this.subtotal = subtotal;
     }
 
-    public Date getData_criacao() {
-        return data_criacao;
+    public LocalDate getDataCriacao() {
+        return dataCriacao;
     }
 
-    public void setData_criacao(Date data_criacao) {
-        this.data_criacao = data_criacao;
+    public void setDataCriacao(LocalDate dataCriacao) {
+        this.dataAtualizacao = dataCriacao;
     }
 
-    public Date getData_atualizacao() {
-        return data_atualizacao;
+    public LocalDate getDataAtualizacao() {
+        return dataAtualizacao;
     }
 
-    public void setData_atualizacao(Date data_atualizacao) {
-        this.data_atualizacao = data_atualizacao;
+    public void setDataAtualizacao(LocalDate dataAtualizacao) {
+        this.dataAtualizacao = dataAtualizacao;
     }
 
-    public Cart getCarro() {
+    public Cart getCarro(Integer integer) {
         return carro;
     }
 

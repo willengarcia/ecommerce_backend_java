@@ -43,14 +43,14 @@ public class Product {
 
     private LocalDate dataCtualizacao;
 
-    @OneToMany(mappedBy= "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy= "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProductImages> imagem =  new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category categoria;
 
-    @OneToMany(mappedBy= "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy= "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CartItem> items = new ArrayList<>();
 
 

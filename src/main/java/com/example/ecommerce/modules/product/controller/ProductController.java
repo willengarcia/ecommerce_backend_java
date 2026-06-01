@@ -47,7 +47,7 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public ProductCreateDTO buscarUmProduto(@PathVariable Long productId){
+    public ProductCreateDTO buscarUmProduto(@PathVariable Integer productId){
         Product produto = productService.buscarUmProduto(productId);
         ProductCreateDTO dto = new ProductCreateDTO(
                 produto.getNome(),
@@ -70,7 +70,7 @@ public class ProductController {
     }
 
     @PutMapping("/{productId}")
-    public ProductCreateDTO alterarInformacoesEssenciaisProduto(@PathVariable Long productId, @RequestBody ProductCreateDTO produto){
+    public ProductCreateDTO alterarInformacoesEssenciaisProduto(@PathVariable Integer productId, @RequestBody ProductCreateDTO produto){
         Product produtos = productService.atualizarInformacoesPrincipais(productId, produto);
         ProductCreateDTO dto = new ProductCreateDTO(
                 produtos.getNome(),
@@ -93,7 +93,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<?> deletarProduto(@PathVariable Long productId){
+    public ResponseEntity<?> deletarProduto(@PathVariable Integer productId){
         ProductCreateDTO dto = productService.deletarUmProduto(productId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(dto);
     }

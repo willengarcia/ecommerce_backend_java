@@ -1,11 +1,15 @@
 package com.example.ecommerce.modules.address.controller;
 
 import com.example.ecommerce.modules.address.dto.AddressCreateDTO;
+import com.example.ecommerce.modules.address.dto.AddressListDTO;
 import com.example.ecommerce.modules.address.model.Address;
 import com.example.ecommerce.modules.address.service.AddressService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/address")
@@ -50,4 +54,41 @@ public class AddressController {
         return ResponseEntity.status(HttpStatus.OK).body(addressService.findAll());
     }
 
+    @GetMapping("/{idAddress}")
+    public ResponseEntity<?> getAddress(@PathVariable Integer idAddress){
+        return ResponseEntity.status(HttpStatus.OK).body(addressService.findById(idAddress));
+    }
+
+    @GetMapping("/user/{idUsuario}")
+    public ResponseEntity<?> getAddressByUsuarioId(@PathVariable Integer idUsuario){
+        List<Address> address = addressService.findByUsuarioId(idUsuario);
+        List<AddressListDTO> addressListDTO = new ArrayList<>();
+        address.forEach(addres -> {
+            addressListDTO.add(new AddressListDTO(
+                    addres.getId(),
+                    addres.getNomeEndereco(),
+                    addres.getNomeDestinatario(),
+                    addres.getCep(),
+                    addres.getRua(),
+                    addres.getNumero(),
+                    addres.getComplemento(),
+                    addres.getBairro(),
+                    addres.getCidade(),
+                    addres.getEstado(),
+                    addres.getReferencia(),
+                    addres.getTipoEndereco(),
+                    addres.getEnderecoPrincipal(),
+                    addres.getDataCriacao(),
+                    addres.getDataAtualizacao()
+            ));
+        });
+
+        return ResponseEntity.status(HttpStatus.OK).body(addressListDTO.stream().toList());
+    }
+
+    @DeleteMapping("/{idAddress}")
+    public ResponseEntity<?> deleteAddress(@PathVariable Integer idAddress){
+        addressService.deletarById(idAddress);
+        return ResponseEntity.status(HttpStatus.OK).body("Deletado com sucesso");
+    }
 }

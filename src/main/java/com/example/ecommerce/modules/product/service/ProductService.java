@@ -97,12 +97,12 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public Product buscarUmProduto(Long productId){
+    public Product buscarUmProduto(Integer productId){
         Product produto = productRepository.findById(productId).orElseThrow();
         return produto;
     }
 
-    public Product atualizarInformacoesPrincipais(Long produtoId, ProductCreateDTO produtos){
+    public Product atualizarInformacoesPrincipais(Integer produtoId, ProductCreateDTO produtos){
         Product produto = productRepository.findById(produtoId).orElseThrow();
 
         produto.setNome(produtos.nome());
@@ -113,7 +113,7 @@ public class ProductService {
         return productRepository.save(produto);
     }
 
-    public ProductCreateDTO deletarUmProduto(Long produtoId){
+    public ProductCreateDTO deletarUmProduto(Integer produtoId){
         Product produto = productRepository.findById(produtoId).orElseThrow();
         ProductCreateDTO dto = new ProductCreateDTO(
                 produto.getNome(),

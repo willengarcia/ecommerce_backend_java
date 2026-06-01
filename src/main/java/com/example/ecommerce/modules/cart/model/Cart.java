@@ -3,8 +3,8 @@ package com.example.ecommerce.modules.cart.model;
 import com.example.ecommerce.modules.customers.model.Customers;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -13,8 +13,8 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private boolean status;
-    private Date data_criacao;
-    private Date data_atualizacao;
+    private LocalDate dataCriacao;
+    private LocalDate dataAtualizacao;
 
     @OneToMany(mappedBy= "carro", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<CartItem> items = new ArrayList<CartItem>();
@@ -23,11 +23,12 @@ public class Cart {
     @JoinColumn(name = "customer_id")
     private Customers usuario;
 
-    public Cart(Long id, boolean status, Date data_criacao, Date data_atualizacao) {
+    public Cart(Long id, boolean status, LocalDate data_criacao, LocalDate data_atualizacao, Customers usuario) {
         this.id = id;
         this.status = status;
-        this.data_criacao = data_criacao;
-        this.data_atualizacao = data_atualizacao;
+        this.dataCriacao = data_criacao;
+        this.dataAtualizacao = data_atualizacao;
+        this.usuario = usuario;
     }
 
     public Cart() {}
@@ -65,19 +66,19 @@ public class Cart {
         this.status = status;
     }
 
-    public Date getData_criacao() {
-        return data_criacao;
+    public LocalDate getDataCriacao() {
+        return dataCriacao;
     }
 
-    public void setData_criacao(Date data_criacao) {
-        this.data_criacao = data_criacao;
+    public void setDataCriacao(LocalDate data_criacao) {
+        this.dataCriacao = data_criacao;
     }
 
-    public Date getData_atualizacao() {
-        return data_atualizacao;
+    public LocalDate getDataAtualizacao() {
+        return dataAtualizacao;
     }
 
-    public void setData_atualizacao(Date data_atualizacao) {
-        this.data_atualizacao = data_atualizacao;
+    public void setDataAtualizacao(LocalDate data_atualizacao) {
+        this.dataAtualizacao = data_atualizacao;
     }
 }
