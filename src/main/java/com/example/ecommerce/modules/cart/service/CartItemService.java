@@ -31,12 +31,11 @@ public class CartItemService {
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 
         CartItem created = new CartItem();
-
         created.setCarro(cart);
         created.setProduct(product);
-        created.setQuantidade(dto.quantidade());
+        created.setQuantidade(1);
         created.setPrecoUnitario(product.getPreco());
-        created.setSubtotal(product.getPreco() * dto.quantidade());
+        created.setSubtotal(product.getPreco() * 1);
         created.setDataCriacao(LocalDate.now());
         created.setDataAtualizacao(LocalDate.now());
 
