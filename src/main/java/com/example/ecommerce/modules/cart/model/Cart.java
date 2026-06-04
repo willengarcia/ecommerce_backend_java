@@ -15,6 +15,7 @@ public class Cart {
     private boolean status;
     private LocalDate dataCriacao;
     private LocalDate dataAtualizacao;
+    private Float valorTotal;
 
     @OneToMany(mappedBy= "carro", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<CartItem> items = new ArrayList<CartItem>();
@@ -23,12 +24,13 @@ public class Cart {
     @JoinColumn(name = "customer_id")
     private Customers usuario;
 
-    public Cart(Long id, boolean status, LocalDate data_criacao, LocalDate data_atualizacao, Customers usuario) {
+    public Cart(Long id, boolean status, LocalDate data_criacao, LocalDate data_atualizacao, Customers usuario, Float valorTotal) {
         this.id = id;
         this.status = status;
         this.dataCriacao = data_criacao;
         this.dataAtualizacao = data_atualizacao;
         this.usuario = usuario;
+        this.valorTotal = valorTotal;
     }
 
     public Cart() {}
@@ -80,5 +82,13 @@ public class Cart {
 
     public void setDataAtualizacao(LocalDate data_atualizacao) {
         this.dataAtualizacao = data_atualizacao;
+    }
+
+    public Float getValorTotal() {
+        return valorTotal;
+    }
+
+    public void setValorTotal(Float valorTotal) {
+        this.valorTotal = valorTotal;
     }
 }

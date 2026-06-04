@@ -28,6 +28,7 @@ public class CartController {
         CartResponseDTO response = new CartResponseDTO(
                 cart.getId(),
                 cart.isStatus(),
+                cart.getValorTotal(),
                 cart.getDataCriacao(),
                 cart.getDataAtualizacao(),
                 cart.getUsuario().getId()
@@ -47,7 +48,7 @@ public class CartController {
     @GetMapping
     public ResponseEntity<List<CartResponseDTO>> getAllCart(){
         List<Cart> cart = cartService.getAllCart();
-        List<CartResponseDTO> response = cart.stream().map(c -> new CartResponseDTO(c.getId(), c.isStatus(), c.getDataCriacao(), c.getDataAtualizacao(), c.getUsuario().getId())).toList();
+        List<CartResponseDTO> response = cart.stream().map(c -> new CartResponseDTO(c.getId(), c.isStatus(), c.getValorTotal(), c.getDataCriacao(), c.getDataAtualizacao(), c.getUsuario().getId())).toList();
         return ResponseEntity.ok(response);
     }
 }

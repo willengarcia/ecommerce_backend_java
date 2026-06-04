@@ -1,6 +1,7 @@
 package com.example.ecommerce.modules.cart.service;
 
 import com.example.ecommerce.modules.cart.dto.CartItemResponseDTO;
+import com.example.ecommerce.modules.cart.mapper.CartMapper;
 import com.example.ecommerce.modules.cart.model.Cart;
 import com.example.ecommerce.modules.cart.model.CartItem;
 import com.example.ecommerce.modules.cart.repository.CartRepository;
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class CartService {
+public class CartService extends CartMapper {
     private final CartRepository cartRepository;
     private final CustomerRepository customerRepository;
     public CartService(CartRepository cartRepository,  CustomerRepository customerRepository) {
@@ -45,39 +46,13 @@ public class CartService {
 
         return cart.getItems()
                 .stream()
-                .map(item -> {
-                    Product product = item.getProduct();
-
-                    ProductDTO productDTO = new ProductDTO(
-                            product.getId(),
-                            product.getNome(),
-                            product.getSlug(),
-                            product.getDescricaoCurta(),
-                            product.getDescricao(),
-                            product.getPreco(),
-                            product.getPrecoPromocional(),
-                            product.getQuantidadeEstoque(),
-                            product.getQuantidadeReservada(),
-                            product.getEstoqueMinimo(),
-                            product.getSku(),
-                            product.getPeso(),
-                            product.getAltura(),
-                            product.getLargura(),
-                            product.getComprimento(),
-                            product.getMediaAvaliacao(),
-                            product.getTotalAvaliacoes(),
-                            product.isStatus(),
-                            product.getDataCriacao(),
-                            product.getCategoria().getId()
-                    );
-
-                    return new CartItemResponseDTO(
-                            item.getQuantidade(),
-                            item.getPrecoUnitario(),
-                            item.getSubtotal(),
-                            productDTO
-                    );
-                })
+                .map(item -> new CartItemResponseDTO(
+                        item.getId(),
+                        item.getQuantidade(),
+                        item.getPrecoUnitario(),
+                        item.getSubtotal(),
+                        conversorProductDTO(item)
+                ))
                 .toList();
     }
 
