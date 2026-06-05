@@ -8,7 +8,6 @@ import com.example.ecommerce.modules.cart.model.Cart;
 import com.example.ecommerce.modules.cart.model.CartItem;
 import com.example.ecommerce.modules.cart.repository.CartItemRepository;
 import com.example.ecommerce.modules.cart.repository.CartRepository;
-import com.example.ecommerce.modules.product.dto.ProductDTO;
 import com.example.ecommerce.modules.product.model.Product;
 import com.example.ecommerce.modules.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -28,7 +27,7 @@ public class CartItemService extends CartMapper {
         this.cartRepository = cartRepository;
     }
 
-    public CartItem create(CartItemCreateDTO dto) {
+    public CartItemResponseDTO create(CartItemCreateDTO dto) {
 
         Cart cart = cartRepository.findById(dto.cartId())
                 .orElseThrow(() -> new RuntimeException("Carrinho não encontrado"));
@@ -36,17 +35,60 @@ public class CartItemService extends CartMapper {
         Product product = productRepository.findById(dto.productId())
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 
+
         CartItem created = new CartItem();
-        cart.setValorTotal(product.getPreco());
+
+        CartItem existente = cartItemRepository
+                .findByCarroIdAndProductId(dto.cartId(), dto.productId());
+
+        if (existente != null) {
+            existente.setQuantidade(existente.getQuantidade() + 1);
+            existente.setSubtotal(existente.getQuantidade() * existente.getPrecoUnitario());
+            existente.setDataAtualizacao(LocalDate.now());
+
+            cartItemRepository.save(existente);
+
+            cart.setValorTotal(findSubTotalItemsInCart(dto.cartId()));
+            cartRepository.save(cart);
+
+            return new CartItemResponseDTO(
+                    existente.getId(),
+                    existente.getQuantidade(),
+                    existente.getPrecoUnitario(),
+                    existente.getSubtotal(),
+                    conversorProductDTO(existente)
+            );
+        }
+
         created.setCarro(cart);
         created.setProduct(product);
         created.setQuantidade(1);
         created.setPrecoUnitario(product.getPreco());
-        created.setSubtotal(product.getPreco() * 1);
+        created.setSubtotal(product.getPreco());
         created.setDataCriacao(LocalDate.now());
         created.setDataAtualizacao(LocalDate.now());
+
+        cart.getItems().add(created);
+
+        cartItemRepository.save(created);
+
+        cart.setValorTotal(
+                cart.getItems()
+                        .stream()
+                        .map(CartItem::getSubtotal)
+                        .reduce(0f, Float::sum)
+        );
+
         cartRepository.save(cart);
-        return cartItemRepository.save(created);
+
+        return new CartItemResponseDTO(
+                created.getId(),
+                created.getQuantidade(),
+                created.getPrecoUnitario(),
+                created.getSubtotal(),
+                conversorProductDTO(created)
+        );
+
     }
 
     public CartItemResponseDTO addItems(CartItemAddProductDTO dto, Integer cartId) {
@@ -61,7 +103,7 @@ public class CartItemService extends CartMapper {
                     cartItemRepository.save(c);
                 }
             }
-            CartItem cartItemsResponse = cartItemRepository.findAllByCarroIdAndProductId(cartId, dto.productId());
+            CartItem cartItemsResponse = cartItemRepository.findByCarroIdAndProductId(cartId, dto.productId());
 
             CartItemResponseDTO dtoResponse = new CartItemResponseDTO(
                     cartItemsResponse.getId(),
@@ -72,10 +114,37 @@ public class CartItemService extends CartMapper {
             );
             cart.setValorTotal(findSubTotalItemsInCart(cartId));
             cartRepository.save(cart);
-            findSubTotalItemsInCart(cartId);
             return dtoResponse;
         }else {
-            return null;
+            CartItem addItem = new CartItem();
+            Product product = productRepository.findById(dto.productId())
+                    .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+            addItem.setCarro(cart);
+            addItem.setProduct(product);
+            addItem.setQuantidade(1);
+            addItem.setPrecoUnitario(product.getPreco());
+            addItem.setSubtotal(product.getPreco() * 1);
+            addItem.setDataCriacao(LocalDate.now());
+            addItem.setDataAtualizacao(LocalDate.now());
+            cart.getItems().add(addItem);
+            cart.setValorTotal(
+                    cart.getItems()
+                            .stream()
+                            .map(CartItem::getSubtotal)
+                            .reduce(0f, Float::sum)
+            );
+            cartRepository.save(cart);
+            cartItemRepository.save(addItem);
+            CartItem cartItemsResponse = cartItemRepository.findByCarroIdAndProductId(cartId, dto.productId());
+
+            CartItemResponseDTO dtoResponse = new CartItemResponseDTO(
+                    cartItemsResponse.getId(),
+                    cartItemsResponse.getQuantidade(),
+                    cartItemsResponse.getPrecoUnitario(),
+                    cartItemsResponse.getSubtotal(),
+                    conversorProductDTO(cartItemsResponse)
+            );
+            return dtoResponse;
         }
     }
 
@@ -84,4 +153,20 @@ public class CartItemService extends CartMapper {
         return cartItem;
     }
 
+    public CartItem deleteItem(Integer cartId, Integer cartItemId){
+        CartItem cartItem = cartItemRepository.findByCarroIdAndId(cartId, cartItemId);
+
+        Cart cart = cartRepository.findById(cartId).orElseThrow();
+
+        cart.getItems().remove(cartItem);
+        cartItem.setCarro(null);
+        cart.setValorTotal(
+                cart.getItems()
+                        .stream()
+                        .map(CartItem::getSubtotal)
+                        .reduce(0f, Float::sum)
+        );
+        cartRepository.save(cart);
+        return null;
+    }
 }

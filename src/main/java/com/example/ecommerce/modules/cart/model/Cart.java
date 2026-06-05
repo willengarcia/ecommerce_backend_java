@@ -17,7 +17,7 @@ public class Cart {
     private LocalDate dataAtualizacao;
     private Float valorTotal;
 
-    @OneToMany(mappedBy= "carro", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy= "carro", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<CartItem> items = new ArrayList<CartItem>();
 
     @OneToOne

@@ -6,6 +6,14 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_cart_product",
+                        columnNames = {"carro_id", "product_id"}
+                )
+        }
+)
 public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
