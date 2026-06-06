@@ -1,5 +1,7 @@
 package com.example.ecommerce.modules.address.dto;
 
+import com.example.ecommerce.modules.address.model.AddressEnum;
+
 import java.time.LocalDate;
 
 public record AddressUpdateDTO(
@@ -7,7 +9,7 @@ public record AddressUpdateDTO(
         String numero,
         String complemento,
         String referencia,
-        String tipoEndereco,
+        AddressEnum tipoEndereco,
         String enderecoPrincipal,
         LocalDate dataAtualizacao
 ) {

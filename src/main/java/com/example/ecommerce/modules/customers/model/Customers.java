@@ -19,7 +19,8 @@ public class Customers {
     private String email;
     private String telefone;
     private String senhaHash;
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private CustomerEnum status;
     private LocalDate dataCriacao;
     private LocalDate dataAtualizacao;
 
@@ -29,14 +30,14 @@ public class Customers {
 
     public Customers() {}
 
-    public Customers (Integer id, String nome_completo, String cpf, String email, String telefone, String senhaHash, String status) {
+    public Customers (Integer id, String nome_completo, String cpf, String email, String telefone, String senhaHash, CustomerEnum status) {
         this.id = id;
         this.nomeCompleto = nome_completo;
         this.cpf = cpf;
         this.email = email;
         this.telefone = telefone;
         this.senhaHash = senhaHash;
-        this.status = status;
+        this.status = CustomerEnum.fromString(status.name());
     }
 
     public List<Address> getEnderecos() {
@@ -96,11 +97,11 @@ public class Customers {
         this.telefone = telefone;
     }
 
-    public String isStatus() {
+    public CustomerEnum isStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(CustomerEnum status) {
         this.status = status;
     }
 

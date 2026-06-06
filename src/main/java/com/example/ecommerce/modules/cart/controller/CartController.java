@@ -51,4 +51,18 @@ public class CartController {
         List<CartResponseDTO> response = cart.stream().map(c -> new CartResponseDTO(c.getId(), c.isStatus(), c.getValorTotal(), c.getDataCriacao(), c.getDataAtualizacao(), c.getUsuario().getId())).toList();
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/clear/{idCart}")
+    public ResponseEntity<CartResponseDTO> delete(@PathVariable Integer idCart) {
+        Cart cart = cartService.clearCart(idCart);
+        CartResponseDTO response = new CartResponseDTO(
+                cart.getId(),
+                cart.isStatus(),
+                cart.getValorTotal(),
+                cart.getDataCriacao(),
+                cart.getDataAtualizacao(),
+                cart.getUsuario().getId()
+        );
+        return ResponseEntity.ok(response);
+    }
 }

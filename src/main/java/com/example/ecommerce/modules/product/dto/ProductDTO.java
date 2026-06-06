@@ -1,5 +1,7 @@
 package com.example.ecommerce.modules.product.dto;
 
+import com.example.ecommerce.modules.product.model.ProductEnum;
+
 import java.time.LocalDate;
 
 public record ProductDTO(
@@ -20,7 +22,7 @@ public record ProductDTO(
         float comprimento,
         float mediaAvaliacao,
         Integer totalAvaliacoes,
-        boolean status,
+        ProductEnum status,
         LocalDate dataCriacao,
         Long categoria_id
 ) {

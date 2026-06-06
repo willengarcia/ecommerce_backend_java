@@ -12,7 +12,8 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private boolean status;
+    @Enumerated(EnumType.STRING)
+    private CartEnum status;
     private LocalDate dataCriacao;
     private LocalDate dataAtualizacao;
     private Float valorTotal;
@@ -24,9 +25,9 @@ public class Cart {
     @JoinColumn(name = "customer_id")
     private Customers usuario;
 
-    public Cart(Long id, boolean status, LocalDate data_criacao, LocalDate data_atualizacao, Customers usuario, Float valorTotal) {
+    public Cart(Long id, CartEnum status, LocalDate data_criacao, LocalDate data_atualizacao, Customers usuario, Float valorTotal) {
         this.id = id;
-        this.status = status;
+        this.status = CartEnum.fromString(status.name());
         this.dataCriacao = data_criacao;
         this.dataAtualizacao = data_atualizacao;
         this.usuario = usuario;
@@ -60,11 +61,11 @@ public class Cart {
         this.id = id;
     }
 
-    public boolean isStatus() {
+    public CartEnum isStatus() {
         return status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(CartEnum status) {
         this.status = status;
     }
 

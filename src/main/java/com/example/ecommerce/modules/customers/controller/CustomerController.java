@@ -96,7 +96,7 @@ public class CustomerController {
                 customer.getCpf(),
                 customer.getEmail(),
                 customer.getTelefone(),
-                customer.isStatus(),
+                customer.isStatus().name(),
                 customer.getDataAtualizacao()
         );
         return ResponseEntity.status(HttpStatus.OK).body(customerCreateDTO);

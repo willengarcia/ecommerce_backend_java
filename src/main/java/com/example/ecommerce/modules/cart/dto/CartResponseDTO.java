@@ -1,10 +1,12 @@
 package com.example.ecommerce.modules.cart.dto;
 
+import com.example.ecommerce.modules.cart.model.CartEnum;
+
 import java.time.LocalDate;
 
 public record CartResponseDTO(
         Long id,
-        boolean status,
+        CartEnum status,
         Float valorTotal,
         LocalDate dataCriacao,
         LocalDate dataAtualizacao,

@@ -29,7 +29,8 @@ public class Address {
     private String estado;
     private String referencia;
     @Column(nullable = false)
-    private String tipoEndereco;
+    @Enumerated(EnumType.STRING)
+    private AddressEnum tipoEndereco;
     @Column(nullable = false)
     private String enderecoPrincipal;
     private LocalDate dataCriacao;
@@ -41,7 +42,7 @@ public class Address {
     public Address() {
     }
 
-    public Address(Integer id, String nome_endereco, String nome_destinatario, String cep, String rua, String numero, String complemento, String cidade, String bairro, String estado, String referencia, String tipo_endereco, String endereco_principal) {
+    public Address(Integer id, String nome_endereco, String nome_destinatario, String cep, String rua, String numero, String complemento, String cidade, String bairro, String estado, String referencia, AddressEnum tipo_endereco, String endereco_principal) {
         this.id = id;
         this.nomeEndereco = nome_endereco;
         this.nomeDestinatario = nome_destinatario;
@@ -53,7 +54,7 @@ public class Address {
         this.bairro = bairro;
         this.estado = estado;
         this.referencia = referencia;
-        this.tipoEndereco = tipo_endereco;
+        this.tipoEndereco = AddressEnum.fromString(tipo_endereco.name());
         this.enderecoPrincipal = endereco_principal;
     }
 
@@ -153,11 +154,11 @@ public class Address {
         this.referencia = referencia;
     }
 
-    public String getTipoEndereco() {
+    public AddressEnum getTipoEndereco() {
         return tipoEndereco;
     }
 
-    public void setTipoEndereco(String tipoEndereco) {
+    public void setTipoEndereco(AddressEnum tipoEndereco) {
         this.tipoEndereco = tipoEndereco;
     }
 

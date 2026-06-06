@@ -4,14 +4,13 @@ import com.example.ecommerce.modules.address.dto.AddressListDTO;
 import com.example.ecommerce.modules.customers.dto.CustomerCreateDTO;
 import com.example.ecommerce.modules.customers.dto.CustomerListDTO;
 import com.example.ecommerce.modules.customers.dto.CustomerUpdateDTO;
+import com.example.ecommerce.modules.customers.model.CustomerEnum;
 import com.example.ecommerce.modules.customers.model.Customers;
 import com.example.ecommerce.modules.customers.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 
 @Service
 public class CustomerService {
@@ -40,7 +39,7 @@ public class CustomerService {
             customers.setNomeCompleto(customerCreateDTO.nomeCompleto());
             customers.setEmail(customerCreateDTO.email());
             customers.setTelefone(customerCreateDTO.telefone());
-            customers.setStatus("ATIVO");
+            customers.setStatus(CustomerEnum.ATIVO);
             customers.setSenhaHash(customerCreateDTO.senhaHash());
             customers.setDataCriacao(LocalDate.now());
             customers.setDataAtualizacao(LocalDate.now());

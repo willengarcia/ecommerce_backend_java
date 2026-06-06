@@ -32,12 +32,12 @@ public class Product {
     private float altura;
     private float largura;
     private float comprimento;
-
     @Column(name = "media_avaliacao")
     private float mediaAvaliacao;
     @Column(name = "total_avaliacao")
     private Integer totalAvaliacoes;
-    private boolean status;
+    @Enumerated(EnumType.STRING)
+    private ProductEnum status;
 
     private LocalDate dataCriacao;
 
@@ -54,7 +54,7 @@ public class Product {
     private List<CartItem> items = new ArrayList<>();
 
 
-    public Product(Long id, String nome, String slug, String descricao_curta, String descricao, float preco, float preco_promocional, Integer quantidade_estoque, Integer quantidade_reservada, Integer estoque_minimo, String sku, float peso, float altura, float largura, float comprimento, float media_avaliacao, Integer total_avaliacoes, boolean status) {
+    public Product(Long id, String nome, String slug, String descricao_curta, String descricao, float preco, float preco_promocional, Integer quantidade_estoque, Integer quantidade_reservada, Integer estoque_minimo, String sku, float peso, float altura, float largura, float comprimento, float media_avaliacao, Integer total_avaliacoes, ProductEnum status) {
         this.id = id;
         this.nome = nome;
         this.slug = slug;
@@ -72,7 +72,7 @@ public class Product {
         this.comprimento = comprimento;
         this.mediaAvaliacao = media_avaliacao;
         this.totalAvaliacoes = total_avaliacoes;
-        this.status = status;
+        this.status = ProductEnum.fromString(status.name());
     }
 
     public List<CartItem> getItems() {
@@ -112,7 +112,7 @@ public class Product {
         this.id = id;
     }
 
-    public boolean isStatus() {
+    public ProductEnum isStatus() {
         return status;
     }
     public String getNome() {
@@ -187,11 +187,11 @@ public class Product {
         this.comprimento = comprimento;
     }
 
-    public boolean getStatus() {
+    public ProductEnum getStatus() {
         return status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(ProductEnum status) {
         this.status = status;
     }
 

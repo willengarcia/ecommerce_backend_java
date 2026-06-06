@@ -1,5 +1,7 @@
 package com.example.ecommerce.modules.product.dto;
 
+import com.example.ecommerce.modules.product.model.ProductEnum;
+
 public record ProductCreateDTO(
         String nome,
         String slug,
@@ -14,7 +16,7 @@ public record ProductCreateDTO(
         Float altura,
         Float largura,
         Float comprimento,
-        Boolean status,
+        ProductEnum status,
         Long categoria_id
 ) {
 }

@@ -60,4 +60,12 @@ public class CartService extends CartMapper {
         List<Cart> cart = cartRepository.findAll();
         return cart;
     }
+
+    public Cart clearCart(Integer cartId) {
+        Cart cart = cartRepository.findById(cartId).orElseThrow();
+        cart.getItems().clear();
+        cart.setValorTotal(0f);
+        cartRepository.save(cart);
+        return cart;
+    }
 }

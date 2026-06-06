@@ -1,5 +1,7 @@
 package com.example.ecommerce.modules.address.dto;
 
+import com.example.ecommerce.modules.address.model.AddressEnum;
+
 import java.time.LocalDate;
 
 public record AddressCreateDTO(
@@ -13,7 +15,7 @@ public record AddressCreateDTO(
         String cidade,
         String estado,
         String referencia,
-        String tipoEndereco,
+        AddressEnum tipoEndereco,
         String enderecoPrincipal,
         Integer usuario_id,
         LocalDate dataCriacao,

@@ -1,5 +1,7 @@
 package com.example.ecommerce.modules.customers.dto;
 
+import com.example.ecommerce.modules.customers.model.CustomerEnum;
+
 import java.time.LocalDate;
 
 public record CustomerCreateDTO(
@@ -9,7 +11,7 @@ public record CustomerCreateDTO(
         String email,
         String telefone,
         String senhaHash,
-        String status,
+        CustomerEnum status,
         LocalDate dataCriacao,
         LocalDate dataAtualizacao
 ) {

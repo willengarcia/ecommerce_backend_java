@@ -4,7 +4,6 @@ import com.example.ecommerce.modules.cart.dto.CartItemAddProductDTO;
 import com.example.ecommerce.modules.cart.dto.CartItemCreateDTO;
 import com.example.ecommerce.modules.cart.dto.CartItemResponseDTO;
 import com.example.ecommerce.modules.cart.mapper.CartMapper;
-import com.example.ecommerce.modules.cart.model.CartItem;
 import com.example.ecommerce.modules.cart.service.CartItemService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
