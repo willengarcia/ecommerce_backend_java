@@ -1,6 +1,7 @@
 package com.example.ecommerce.modules.customers.model;
 
 import com.example.ecommerce.modules.address.model.Address;
+import com.example.ecommerce.modules.order.model.Order;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -27,6 +28,9 @@ public class Customers {
     @OneToMany(mappedBy= "usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Address> enderecos =  new ArrayList<>();
 
+    @OneToMany(mappedBy= "usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<Order> orders =  new ArrayList<>();
+
 
     public Customers() {}
 
@@ -38,6 +42,18 @@ public class Customers {
         this.telefone = telefone;
         this.senhaHash = senhaHash;
         this.status = CustomerEnum.fromString(status.name());
+    }
+
+    public CustomerEnum getStatus() {
+        return status;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 
     public List<Address> getEnderecos() {
@@ -97,7 +113,7 @@ public class Customers {
         this.telefone = telefone;
     }
 
-    public CustomerEnum isStatus() {
+    public CustomerEnum isStatus() { // Remover método
         return status;
     }
 

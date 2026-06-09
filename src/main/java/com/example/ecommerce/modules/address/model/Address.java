@@ -1,9 +1,12 @@
 package com.example.ecommerce.modules.address.model;
 
 import com.example.ecommerce.modules.customers.model.Customers;
+import com.example.ecommerce.modules.order.model.Order;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Address {
@@ -38,6 +41,9 @@ public class Address {
 
     @ManyToOne
     private Customers usuario;
+
+    @OneToMany(mappedBy= "address", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<Order> orders =  new ArrayList<>();
 
     public Address() {
     }
@@ -184,5 +190,13 @@ public class Address {
 
     public void setDataAtualizacao(LocalDate dataAtualizacao) {
         this.dataAtualizacao = dataAtualizacao;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 }

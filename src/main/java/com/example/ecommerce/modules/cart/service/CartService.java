@@ -3,6 +3,7 @@ package com.example.ecommerce.modules.cart.service;
 import com.example.ecommerce.modules.cart.dto.CartItemResponseDTO;
 import com.example.ecommerce.modules.cart.mapper.CartMapper;
 import com.example.ecommerce.modules.cart.model.Cart;
+import com.example.ecommerce.modules.cart.model.CartEnum;
 import com.example.ecommerce.modules.cart.model.CartItem;
 import com.example.ecommerce.modules.cart.repository.CartRepository;
 import com.example.ecommerce.modules.customers.model.Customers;
@@ -32,7 +33,7 @@ public class CartService extends CartMapper {
 
         Cart cart = new Cart();
         cart.setUsuario(customer);
-        cart.setStatus(true);
+        cart.setStatus(CartEnum.ATIVO);
         cart.setDataCriacao(LocalDate.now());
         cart.setDataAtualizacao(LocalDate.now());
 
