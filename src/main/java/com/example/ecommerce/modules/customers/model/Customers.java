@@ -41,7 +41,7 @@ public class Customers {
         this.email = email;
         this.telefone = telefone;
         this.senhaHash = senhaHash;
-        this.status = CustomerEnum.fromString(status.name());
+        this.status = status;
     }
 
     public CustomerEnum getStatus() {

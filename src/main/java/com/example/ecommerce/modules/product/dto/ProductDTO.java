@@ -24,6 +24,6 @@ public record ProductDTO(
         Integer totalAvaliacoes,
         ProductEnum status,
         LocalDate dataCriacao,
-        Long categoria_id
+        Long categoriaId
 ) {
 }

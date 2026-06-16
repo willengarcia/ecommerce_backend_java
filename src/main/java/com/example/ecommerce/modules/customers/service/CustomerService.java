@@ -86,7 +86,7 @@ public class CustomerService {
                         address.getEstado(),
                         address.getReferencia(),
                         address.getTipoEndereco(),
-                        address.getTipoEndereco(),
+                        address.getEnderecoPrincipal(),
                         address.getDataCriacao(),
                         address.getDataAtualizacao()
                 ))

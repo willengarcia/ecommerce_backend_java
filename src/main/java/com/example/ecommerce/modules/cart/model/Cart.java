@@ -27,7 +27,7 @@ public class Cart {
 
     public Cart(Long id, CartEnum status, LocalDate data_criacao, LocalDate data_atualizacao, Customers usuario, Float valorTotal) {
         this.id = id;
-        this.status = CartEnum.fromString(status.name());
+        this.status = status;
         this.dataCriacao = data_criacao;
         this.dataAtualizacao = data_atualizacao;
         this.usuario = usuario;

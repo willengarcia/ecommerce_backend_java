@@ -58,7 +58,7 @@ public class ProductService {
 
         Product product = new Product();
 
-        Long categoryId = productDTO.categoria_id();
+        Long categoryId = productDTO.categoriaId();
 
 
 

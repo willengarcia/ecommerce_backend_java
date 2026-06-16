@@ -60,7 +60,7 @@ public class Address {
         this.bairro = bairro;
         this.estado = estado;
         this.referencia = referencia;
-        this.tipoEndereco = AddressEnum.fromString(tipo_endereco.name());
+        this.tipoEndereco = tipo_endereco;
         this.enderecoPrincipal = endereco_principal;
     }
 

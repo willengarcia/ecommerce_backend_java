@@ -1,13 +1,15 @@
 package com.example.ecommerce.modules.order.model;
 
 import com.example.ecommerce.modules.address.model.Address;
-import com.example.ecommerce.modules.category.model.OrderEnum;
 import com.example.ecommerce.modules.customers.model.Customers;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
+@Table(name = "orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +27,9 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "address_id")
     private Address address;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderItem> orderItem = new ArrayList<>();
 
     public Order() {}
 
@@ -88,5 +93,13 @@ public class Order {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public List<OrderItem> getOrderItem() {
+        return orderItem;
+    }
+
+    public void setOrderItem(List<OrderItem> orderItem) {
+        this.orderItem = orderItem;
     }
 }

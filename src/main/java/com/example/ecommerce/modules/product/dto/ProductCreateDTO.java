@@ -17,6 +17,6 @@ public record ProductCreateDTO(
         Float largura,
         Float comprimento,
         ProductEnum status,
-        Long categoria_id
+        Long categoriaId
 ) {
 }

@@ -4,9 +4,9 @@ package com.example.ecommerce.modules.cart.model;
 public enum CartEnum {
     ATIVO("ATIVO"),
     CONVERTIDO("CONVERTIDO"),
-    ABANDONADO("ABANDONADO"),;
+    ABANDONADO("ABANDONADO");
     private String cartEnum;
-    CartEnum(String productEnum) {
+    CartEnum(String cartEnum) {
         this.cartEnum = cartEnum;
     }
     public static CartEnum fromString(String text) {

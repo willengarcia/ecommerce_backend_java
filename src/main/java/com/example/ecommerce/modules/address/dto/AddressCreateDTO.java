@@ -17,7 +17,7 @@ public record AddressCreateDTO(
         String referencia,
         AddressEnum tipoEndereco,
         String enderecoPrincipal,
-        Integer usuario_id,
+        Integer usuarioId,
         LocalDate dataCriacao,
         LocalDate dataAtualizacao
 ) {

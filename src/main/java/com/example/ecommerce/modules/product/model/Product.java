@@ -72,7 +72,7 @@ public class Product {
         this.comprimento = comprimento;
         this.mediaAvaliacao = media_avaliacao;
         this.totalAvaliacoes = total_avaliacoes;
-        this.status = ProductEnum.fromString(status.name());
+        this.status = status;
     }
 
     public List<CartItem> getItems() {

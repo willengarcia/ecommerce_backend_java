@@ -1,4 +1,4 @@
-package com.example.ecommerce.modules.category.model;
+package com.example.ecommerce.modules.order.model;
 
 public enum OrderEnum {
     CRIADO("ATIVO"),

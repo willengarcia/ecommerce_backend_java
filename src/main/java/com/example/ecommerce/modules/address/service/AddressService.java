@@ -22,16 +22,31 @@ public class AddressService {
     }
 
     public Address criarAddress(Address address) {
-        Customers customers = customerRepository.findById(address.getUsuario().getId()).orElseThrow();
-        if(address.getCep().isEmpty() || address.getBairro().isEmpty() || address.getCidade().isEmpty() || address.getNumero().isEmpty() || address.getEstado().isEmpty()){
-            throw new RuntimeException("É necessário informar a Cidade, Bairro, Número, Estado, Rua, CEP");
-        } else if (customers.isStatus().equals("INATIVO")) {
-            throw new RuntimeException("Usuário Inativo");
-        } else {
-            address.setDataCriacao(LocalDate.now());
-            address.setDataAtualizacao(LocalDate.now());
-            return addressRepository.save(address);
+        if (address.getUsuario() == null || address.getUsuario().getId() == null) {
+            throw new RuntimeException("É necessário informar o usuário");
         }
+
+        Customers customers = customerRepository.findById(address.getUsuario().getId())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        if (address.getCep() == null || address.getCep().isEmpty()
+                || address.getBairro() == null || address.getBairro().isEmpty()
+                || address.getCidade() == null || address.getCidade().isEmpty()
+                || address.getNumero() == null || address.getNumero().isEmpty()
+                || address.getEstado() == null || address.getEstado().isEmpty()
+                || address.getRua() == null || address.getRua().isEmpty()) {
+            throw new RuntimeException("É necessário informar a Cidade, Bairro, Número, Estado, Rua, CEP");
+        }
+
+        if (customers.isStatus().equals("INATIVO")) {
+            throw new RuntimeException("Usuário Inativo");
+        }
+
+        address.setUsuario(customers);
+        address.setDataCriacao(LocalDate.now());
+        address.setDataAtualizacao(LocalDate.now());
+
+        return addressRepository.save(address);
     }
 
     public List<AddressListDTO> findAll(){
