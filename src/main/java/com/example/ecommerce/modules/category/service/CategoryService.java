@@ -43,13 +43,23 @@ public class CategoryService {
 
         category.setName(novaCategoria.name());
         category.setDescription(novaCategoria.description());
-        category.setAtivo(novaCategoria.ativo());
+        if (novaCategoria.ativo() == false || !categoryRepository.hasProducts(category.getId())) {
+            throw new RuntimeException(
+                    "Categoria não pode ficar inativa por ter produtos vinculados à ela."
+            );
+        }
+        category.setAtivo(true);
         category.setDataAtualizacao(LocalDate.now());
-
         return categoryRepository.save(category);
     }
 
     public void deletarCategoria(Long id) {
+        if (categoryRepository.hasProducts(id)){
+            throw new RuntimeException(
+                    "Categoria vinculada a um produto"
+            );
+        }
         categoryRepository.deleteById(id);
     }
+
 }

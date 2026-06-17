@@ -19,8 +19,8 @@ public class Category {
     private LocalDate dataCriacao;
     private LocalDate dataAtualizacao;
 
-    @OneToMany(mappedBy= "categoria", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Product> products =  new ArrayList<>();
+    @OneToMany(mappedBy= "category", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private final List<Product> products =  new ArrayList<>();
 
     public Category() {
     }
@@ -31,15 +31,6 @@ public class Category {
         this.ativo = ativo;
         this.dataCriacao = LocalDate.now();
         this.dataAtualizacao = LocalDate.now();
-    }
-
-    public List<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<Product> products) {
-        products.forEach(product -> product.setCategoria(this));
-        this.products = products;
     }
 
     public Long getId() {

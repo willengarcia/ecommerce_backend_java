@@ -27,7 +27,7 @@ public class CartMapper {
                 product.getTotalAvaliacoes(),
                 product.isStatus(),
                 product.getDataCriacao(),
-                product.getCategoria().getId()
+                product.getCategory().getId()
         );
         return productDTO;
     }

@@ -64,7 +64,7 @@ public class ProductController {
                 produto.getLargura(),
                 produto.getComprimento(),
                 produto.getStatus(),
-                produto.getCategoria().getId()
+                produto.getCategory().getId()
         );
         return dto;
     }
@@ -87,7 +87,7 @@ public class ProductController {
                 produtos.getLargura(),
                 produtos.getComprimento(),
                 produtos.getStatus(),
-                produtos.getCategoria().getId()
+                produtos.getCategory().getId()
         );
         return dto;
     }

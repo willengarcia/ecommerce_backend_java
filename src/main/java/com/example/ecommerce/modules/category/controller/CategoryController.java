@@ -32,7 +32,12 @@ public class CategoryController {
                     .status(HttpStatus.CREATED)
                     .body(dto);
         }catch (Exception ex){
-            return ResponseEntity.badRequest().body(ex.getMessage());
+            return ResponseEntity.badRequest().body("É obrigatório informar todas as Tag no Body via JSON, no modelo:\n" +
+                    "{\n" +
+                    "  \"name\": \"joalheria\",\n" +
+                    "  \"description\": \"Produtos de bijuterias\",\n" +
+                    "  \"ativo\": true\n" +
+                    "}");
         }
     }
 
@@ -43,23 +48,31 @@ public class CategoryController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> atualizarCategoria(@PathVariable Long id, @RequestBody CategoryDTO category) {
-        Category novaCategoria = categoryService.atualizarCategoria(id, category);
-        CategoryDTO dto = new CategoryDTO(
-                novaCategoria.getId(),
-                novaCategoria.getName(),
-                novaCategoria.getDescription(),
-                novaCategoria.isAtivo(),
-                novaCategoria.getDataAtualizacao()
-        );
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(dto);
+        try {
+            Category novaCategoria = categoryService.atualizarCategoria(id, category);
+            CategoryDTO dto = new CategoryDTO(
+                    novaCategoria.getId(),
+                    novaCategoria.getName(),
+                    novaCategoria.getDescription(),
+                    novaCategoria.isAtivo(),
+                    novaCategoria.getDataAtualizacao()
+            );
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(dto);
+        } catch (Exception ex){
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Category> deletarCategoria(@PathVariable Long id) {
-        categoryService.deletarCategoria(id);
-        return ResponseEntity
-                .status(HttpStatus.OK).body(null);
+    public ResponseEntity<?> deletarCategoria(@PathVariable Long id) {
+        try {
+            categoryService.deletarCategoria(id);
+            return ResponseEntity
+                    .status(HttpStatus.OK).body(null);
+        }catch (Exception ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
     }
 }

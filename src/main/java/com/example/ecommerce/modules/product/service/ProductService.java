@@ -49,7 +49,7 @@ public class ProductService {
                         product.getTotalAvaliacoes(),
                         product.getStatus(),
                         product.getDataCriacao(),
-                        product.getCategoria().getId()
+                        product.getCategory().getId()
                 )
         ).collect(Collectors.toList());
     }
@@ -92,7 +92,7 @@ public class ProductService {
 
         Category category = categoryRepository.findById(categoryId).orElseThrow();
 
-        product.setCategoria(category);
+        product.setCategory(category);
 
         return productRepository.save(product);
     }
@@ -130,7 +130,7 @@ public class ProductService {
                 produto.getLargura(),
                 produto.getComprimento(),
                 produto.getStatus(),
-                produto.getCategoria().getId()
+                produto.getCategory().getId()
         );
         productRepository.delete(produto);
         return dto;
@@ -153,13 +153,13 @@ public class ProductService {
                         produto.getLargura(),
                         produto.getComprimento(),
                         produto.getStatus(),
-                        produto.getCategoria().getId()
+                        produto.getCategory().getId()
                 )
         );
     }
 
     public List<ProductCreateDTO> listarProdutosPorCategoria(Long categoriaId){
-        List<ProductCreateDTO> produto = productRepository.findByCategoriaId(categoriaId);
+        List<ProductCreateDTO> produto = productRepository.findByCategoryId(categoriaId);
         return produto;
     }
 
