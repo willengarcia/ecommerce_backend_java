@@ -17,7 +17,7 @@ public record AddressListDTO(
         String estado,
         String referencia,
         AddressEnum tipoEndereco,
-        String enderecoPrincipal,
+        Boolean enderecoPrincipal,
         LocalDate dataCriacao,
         LocalDate dataAtualizacao
 ) {

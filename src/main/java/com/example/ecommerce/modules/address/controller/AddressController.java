@@ -2,6 +2,7 @@ package com.example.ecommerce.modules.address.controller;
 
 import com.example.ecommerce.modules.address.dto.AddressCreateDTO;
 import com.example.ecommerce.modules.address.dto.AddressListDTO;
+import com.example.ecommerce.modules.address.dto.AddressUpdateDTO;
 import com.example.ecommerce.modules.address.model.Address;
 import com.example.ecommerce.modules.address.service.AddressService;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,7 @@ public class AddressController {
                     address.getCidade(),
                     address.getBairro(),
                     address.getEstado(),
-                    address.getEnderecoPrincipal(),
+                    address.getComplemento(),
                     address.getReferencia(),
                     address.getTipoEndereco(),
                     address.getEnderecoPrincipal(),
@@ -90,5 +91,11 @@ public class AddressController {
     public ResponseEntity<?> deleteAddress(@PathVariable Integer idAddress){
         addressService.deletarById(idAddress);
         return ResponseEntity.status(HttpStatus.OK).body("Deletado com sucesso");
+    }
+
+    @PatchMapping("/{idAddress}/customer/{idCustomer}")
+    public ResponseEntity<?> updateAddress(@RequestBody AddressUpdateDTO addressUpdateDTO, @PathVariable Integer idAddress,  @PathVariable Integer idCustomer){
+        AddressUpdateDTO dto = addressService.alterAddressById(idAddress, idCustomer, addressUpdateDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 }

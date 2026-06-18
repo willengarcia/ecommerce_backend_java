@@ -98,24 +98,65 @@ public class AddressService {
         return address;
     }
 
-    public AddressUpdateDTO alterAddressById(Integer id){
-        Address address = addressRepository.findById(id).orElseThrow();
-        address.setNomeDestinatario(address.getNomeDestinatario());
-        address.setNumero(address.getNumero());
-        address.setComplemento(address.getComplemento());
-        address.setReferencia(address.getReferencia());
-        address.setTipoEndereco(address.getTipoEndereco());
-        address.setEnderecoPrincipal(address.getEnderecoPrincipal());
+    public AddressUpdateDTO alterAddressById(Integer idAddress, Integer idCustomer, AddressUpdateDTO addressUpdateDTO){
+        Address address = addressRepository.findById(idAddress).orElseThrow();
+        Customers customers = customerRepository.findById(idCustomer).orElseThrow();
+        if (!address.getUsuario().getId().equals(customers.getId())) {
+            throw new RuntimeException("Endereço não pertence ao cliente informado");
+        }
+        if (addressUpdateDTO.tipoEndereco() != null) {
+            address.setTipoEndereco(addressUpdateDTO.tipoEndereco());
+        }
+        if (addressUpdateDTO.bairro() != null) {
+            address.setBairro(addressUpdateDTO.bairro());
+        }
+        if (addressUpdateDTO.cidade() != null) {
+            address.setCidade(addressUpdateDTO.cidade());
+        }
+        if (addressUpdateDTO.estado() != null) {
+            address.setEstado(addressUpdateDTO.estado());
+        }
+        if (addressUpdateDTO.rua() != null) {
+            address.setRua(addressUpdateDTO.rua());
+        }
+        if (addressUpdateDTO.numero() != null) {
+            address.setNumero(addressUpdateDTO.numero());
+        }
+        if (addressUpdateDTO.complemento() != null) {
+            address.setComplemento(addressUpdateDTO.complemento());
+        }
+        if (addressUpdateDTO.nomeDestinatario() != null) {
+            address.setNomeDestinatario(addressUpdateDTO.nomeDestinatario());
+        }
+        if (addressUpdateDTO.referencia() != null) {
+            address.setReferencia(addressUpdateDTO.referencia());
+        }
+        if (addressUpdateDTO.enderecoPrincipal() != null
+                && addressUpdateDTO.enderecoPrincipal()) {
+
+            customers.getEnderecos().forEach(endereco -> {
+                if (!endereco.getId().equals(address.getId())) {
+                    endereco.setEnderecoPrincipal(false);
+                }
+            });
+
+            address.setEnderecoPrincipal(true);
+        }
         address.setDataAtualizacao(LocalDate.now());
         addressRepository.save(address);
         return new AddressUpdateDTO(
+                address.getNomeEndereco(),
                 address.getNomeDestinatario(),
+                address.getCep(),
+                address.getRua(),
                 address.getNumero(),
+                address.getCidade(),
+                address.getBairro(),
+                address.getEstado(),
                 address.getComplemento(),
                 address.getReferencia(),
                 address.getTipoEndereco(),
-                address.getEnderecoPrincipal(),
-                address.getDataAtualizacao()
+                address.getEnderecoPrincipal()
         );
     }
 
