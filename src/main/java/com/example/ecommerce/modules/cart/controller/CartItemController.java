@@ -5,6 +5,7 @@ import com.example.ecommerce.modules.cart.dto.CartItemCreateDTO;
 import com.example.ecommerce.modules.cart.dto.CartItemResponseDTO;
 import com.example.ecommerce.modules.cart.mapper.CartMapper;
 import com.example.ecommerce.modules.cart.service.CartItemService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,19 +19,27 @@ public class CartItemController extends CartMapper {
     }
 
     @PostMapping
-    public CartItemResponseDTO createCartItem(@RequestBody CartItemCreateDTO dto) {
-        CartItemResponseDTO cartItem = cartItemService.create(dto);
-        return cartItem;
+    public ResponseEntity<?> createCartItem(@RequestBody CartItemCreateDTO dto) {
+        try{
+            CartItemResponseDTO cartItem = cartItemService.create(dto);
+            return ResponseEntity.ok(cartItem);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping("/add/{idCart}")
     public ResponseEntity<?> addItemsToCartItem(@PathVariable Integer idCart, @RequestBody CartItemAddProductDTO dto) {
         CartItemResponseDTO cartItem = cartItemService.addItems(dto, idCart);
 
-        if (cartItem != null) {
-            return ResponseEntity.ok(cartItem);
-        }else{
-            return ResponseEntity.badRequest().body("Esse produto não está nesse Carrinho");
+        try{
+            if (cartItem != null) {
+                return ResponseEntity.ok(cartItem);
+            }else{
+                return ResponseEntity.badRequest().body("Esse produto não está nesse Carrinho");
+            }
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("Erro ao tentar adicionar produto. "+e.getMessage());
         }
     }
 

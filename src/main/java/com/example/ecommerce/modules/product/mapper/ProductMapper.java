@@ -1,12 +1,11 @@
-package com.example.ecommerce.modules.cart.mapper;
+package com.example.ecommerce.modules.product.mapper;
 
-import com.example.ecommerce.modules.cart.model.CartItem;
+import com.example.ecommerce.modules.product.dto.ProductCreateDTO;
 import com.example.ecommerce.modules.product.dto.ProductResponseDTO;
 import com.example.ecommerce.modules.product.model.Product;
 
-public class CartMapper {
-    public ProductResponseDTO conversorProductDTO(CartItem cartItem) {
-        Product product = cartItem.getProduct();
+public class ProductMapper {
+    public static ProductResponseDTO toProductResponseDTO(Product product) {
         ProductResponseDTO productResponseDTO = new ProductResponseDTO(
                 product.getId(),
                 product.getNome(),
@@ -25,10 +24,30 @@ public class CartMapper {
                 product.getComprimento(),
                 product.getMediaAvaliacao(),
                 product.getTotalAvaliacoes(),
-                product.isStatus(),
+                product.getStatus(),
                 product.getDataCriacao(),
                 product.getCategory().getId()
         );
         return productResponseDTO;
+    }
+    public static ProductCreateDTO toProductCreateDTO(Product produto) {
+        ProductCreateDTO dto = new ProductCreateDTO(
+                produto.getNome(),
+                produto.getSlug(),
+                produto.getDescricaoCurta(),
+                produto.getDescricao(),
+                produto.getPreco(),
+                produto.getPrecoPromocional(),
+                produto.getQuantidadeEstoque(),
+                produto.getEstoqueMinimo(),
+                produto.getSku(),
+                produto.getPeso(),
+                produto.getAltura(),
+                produto.getLargura(),
+                produto.getComprimento(),
+                produto.getStatus(),
+                produto.getCategory().getId()
+        );
+        return dto;
     }
 }

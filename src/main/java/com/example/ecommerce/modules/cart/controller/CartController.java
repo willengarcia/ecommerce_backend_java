@@ -5,13 +5,10 @@ import com.example.ecommerce.modules.cart.dto.CartItemResponseDTO;
 import com.example.ecommerce.modules.cart.dto.CartResponseDTO;
 import com.example.ecommerce.modules.cart.model.Cart;
 import com.example.ecommerce.modules.cart.service.CartService;
-import com.example.ecommerce.modules.product.dto.ProductDTO;
-import com.example.ecommerce.modules.product.model.Product;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

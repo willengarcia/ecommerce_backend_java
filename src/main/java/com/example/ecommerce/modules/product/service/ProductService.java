@@ -1,8 +1,9 @@
 package com.example.ecommerce.modules.product.service;
 
 import com.example.ecommerce.modules.product.dto.ProductCreateDTO;
-import com.example.ecommerce.modules.product.dto.ProductDTO;
+import com.example.ecommerce.modules.product.dto.ProductResponseDTO;
 import com.example.ecommerce.modules.category.model.Category;
+import com.example.ecommerce.modules.product.mapper.ProductMapper;
 import com.example.ecommerce.modules.product.model.Product;
 import com.example.ecommerce.modules.category.repository.RepositoryCategory;
 import com.example.ecommerce.modules.product.repository.ProductRepository;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,31 +28,10 @@ public class ProductService {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<ProductDTO> findAll() {
+    public List<ProductResponseDTO> findAll() {
 
         return productRepository.findAll().stream().map(
-                product -> new ProductDTO(
-                        product.getId(),
-                        product.getNome(),
-                        product.getSlug(),
-                        product.getDescricaoCurta(),
-                        product.getDescricao(),
-                        product.getPreco(),
-                        product.getPrecoPromocional(),
-                        product.getQuantidadeEstoque(),
-                        product.getQuantidadeReservada(),
-                        product.getEstoqueMinimo(),
-                        product.getSku(),
-                        product.getPeso(),
-                        product.getAltura(),
-                        product.getLargura(),
-                        product.getComprimento(),
-                        product.getMediaAvaliacao(),
-                        product.getTotalAvaliacoes(),
-                        product.getStatus(),
-                        product.getDataCriacao(),
-                        product.getCategory().getId()
-                )
+                ProductMapper::toProductResponseDTO
         ).collect(Collectors.toList());
     }
 
@@ -97,77 +78,46 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public Product buscarUmProduto(Integer productId){
+    public ProductResponseDTO buscarUmProduto(Integer productId){
         Product produto = productRepository.findById(productId).orElseThrow();
-        return produto;
+        return ProductMapper.toProductResponseDTO(produto);
     }
 
-    public Product atualizarInformacoesPrincipais(Integer produtoId, ProductCreateDTO produtos){
+    public ProductResponseDTO atualizarInformacoesPrincipais(Integer produtoId, ProductCreateDTO produtos){
         Product produto = productRepository.findById(produtoId).orElseThrow();
 
         produto.setNome(produtos.nome());
         produto.setPreco(produtos.preco());
         produto.setQuantidadeEstoque(produtos.quantidadeEstoque());
         produto.setStatus(produtos.status());
-
-        return productRepository.save(produto);
+        productRepository.save(produto);
+        return ProductMapper.toProductResponseDTO(produto);
     }
 
-    public ProductCreateDTO deletarUmProduto(Integer produtoId){
+    public ProductResponseDTO deletarUmProduto(Integer produtoId){
         Product produto = productRepository.findById(produtoId).orElseThrow();
-        ProductCreateDTO dto = new ProductCreateDTO(
-                produto.getNome(),
-                produto.getSlug(),
-                produto.getDescricaoCurta(),
-                produto.getDescricao(),
-                produto.getPreco(),
-                produto.getPrecoPromocional(),
-                produto.getQuantidadeEstoque(),
-                produto.getEstoqueMinimo(),
-                produto.getSku(),
-                produto.getPeso(),
-                produto.getAltura(),
-                produto.getLargura(),
-                produto.getComprimento(),
-                produto.getStatus(),
-                produto.getCategory().getId()
-        );
         productRepository.delete(produto);
-        return dto;
+        return ProductMapper.toProductResponseDTO(produto);
     }
 
-    public Page<ProductCreateDTO> findAllPaginado(Pageable pageable) {
+    public Page<ProductResponseDTO> findAllPaginado(Pageable pageable) {
         return productRepository.findAll(pageable)
-                .map(produto -> new ProductCreateDTO(
-                        produto.getNome(),
-                        produto.getSlug(),
-                        produto.getDescricaoCurta(),
-                        produto.getDescricao(),
-                        produto.getPreco(),
-                        produto.getPrecoPromocional(),
-                        produto.getQuantidadeEstoque(),
-                        produto.getEstoqueMinimo(),
-                        produto.getSku(),
-                        produto.getPeso(),
-                        produto.getAltura(),
-                        produto.getLargura(),
-                        produto.getComprimento(),
-                        produto.getStatus(),
-                        produto.getCategory().getId()
-                )
+                .map(ProductMapper::toProductResponseDTO
         );
     }
 
-    public List<ProductCreateDTO> listarProdutosPorCategoria(Long categoriaId){
+    public List<ProductResponseDTO> listarProdutosPorCategoria(Long categoriaId){
         List<ProductCreateDTO> produto = productRepository.findByCategoryId(categoriaId);
-        return produto;
+        return Collections.singletonList(ProductMapper.toProductResponseDTO((Product) produto));
     }
 
-    public List<ProductCreateDTO> buscarProdutoPorNome(String nome){
-        return productRepository.findByNomeContainingIgnoreCase(nome);
+    public List<ProductResponseDTO> buscarProdutoPorNome(String nome){
+        List<Product> product = productRepository.findByNomeContainingIgnoreCase(nome);
+        return Collections.singletonList(ProductMapper.toProductResponseDTO((Product) product));
     }
 
-    public List<ProductCreateDTO> buscarProdutoPorPrecoPorOrdem(){
-        return productRepository.findAllByOrderByPrecoAsc();
+    public List<ProductResponseDTO> buscarProdutoPorPrecoPorOrdem(){
+        List<Product> products = productRepository.findAllByOrderByPrecoAsc();
+        return Collections.singletonList(ProductMapper.toProductResponseDTO((Product) products));
     }
 }

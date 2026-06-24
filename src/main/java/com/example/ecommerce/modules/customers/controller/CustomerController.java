@@ -4,6 +4,7 @@ import com.example.ecommerce.modules.address.dto.AddressListDTO;
 import com.example.ecommerce.modules.customers.dto.CustomerCreateDTO;
 import com.example.ecommerce.modules.customers.dto.CustomerListDTO;
 import com.example.ecommerce.modules.customers.dto.CustomerUpdateDTO;
+import com.example.ecommerce.modules.customers.mapper.CustomerMapper;
 import com.example.ecommerce.modules.customers.model.Customers;
 import com.example.ecommerce.modules.customers.service.CustomerService;
 import org.springframework.http.HttpStatus;
@@ -47,47 +48,15 @@ public class CustomerController {
         List<Customers> dto = customerService.findAll();
 
         return ResponseEntity.status(HttpStatus.OK).body(
-                dto.stream()
-                        .map(customer -> new CustomerListDTO(
-                                customer.getId(),
-                                customer.getNomeCompleto(),
-                                customer.getCpf(),
-                                customer.getEmail(),
-                                customer.getTelefone(),
-                                customer.isStatus(),
-                                customer.getEnderecos()
-                                        .stream()
-                                        .map(address -> new AddressListDTO(
-                                                address.getId(),
-                                                address.getNomeEndereco(),
-                                                address.getNomeDestinatario(),
-                                                address.getCep(),
-                                                address.getRua(),
-                                                address.getNumero(),
-                                                address.getComplemento(),
-                                                address.getBairro(),
-                                                address.getCidade(),
-                                                address.getEstado(),
-                                                address.getReferencia(),
-                                                address.getTipoEndereco(),
-                                                address.getEnderecoPrincipal(),
-                                                address.getDataCriacao(),
-                                                address.getDataAtualizacao()
-                                        ))
-                                        .toList(),
-                                customer.getDataCriacao(),
-                                customer.getDataAtualizacao()
-                        ))
-                        .toList()
-        );
+                dto.stream().map(customer -> CustomerMapper.toCustomerResponseDTO((Customers) dto)).toList());
     }
     
     @GetMapping("/{idCustomer}")
-    public CustomerListDTO getIdUser(@PathVariable Integer idCustomer){
-        return customerService.buscarUsuarioPorId(idCustomer);
+    public ResponseEntity<CustomerListDTO> getIdUser(@PathVariable Integer idCustomer){
+        return ResponseEntity.status(HttpStatus.OK).body(customerService.buscarUsuarioPorId(idCustomer));
     }
 
-    @PutMapping("/{idCustomer}")
+    @PatchMapping("/{idCustomer}")
     public ResponseEntity<CustomerUpdateDTO>  updateCustomer(@PathVariable Integer idCustomer, @RequestBody CustomerUpdateDTO dto) {
         Customers customer = customerService.atualizarUsuarioPorId(idCustomer, dto);
         CustomerUpdateDTO customerCreateDTO = new CustomerUpdateDTO(

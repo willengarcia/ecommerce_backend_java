@@ -1,7 +1,7 @@
 package com.example.ecommerce.modules.product.controller;
 
 import com.example.ecommerce.modules.product.dto.ProductCreateDTO;
-import com.example.ecommerce.modules.product.dto.ProductDTO;
+import com.example.ecommerce.modules.product.dto.ProductResponseDTO;
 import com.example.ecommerce.modules.product.model.Product;
 import com.example.ecommerce.modules.product.service.ProductService;
 import org.springframework.data.domain.Page;
@@ -37,7 +37,7 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<?> buscarTodosProdutos() {
         try {
-            List<ProductDTO> products = productService.findAll();
+            List<ProductResponseDTO> products = productService.findAll();
             return ResponseEntity.ok(products);
         } catch (Exception ex) {
             return ResponseEntity
@@ -47,80 +47,46 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public ProductCreateDTO buscarUmProduto(@PathVariable Integer productId){
-        Product produto = productService.buscarUmProduto(productId);
-        ProductCreateDTO dto = new ProductCreateDTO(
-                produto.getNome(),
-                produto.getSlug(),
-                produto.getDescricaoCurta(),
-                produto.getDescricao(),
-                produto.getPreco(),
-                produto.getPrecoPromocional(),
-                produto.getQuantidadeEstoque(),
-                produto.getEstoqueMinimo(),
-                produto.getSku(),
-                produto.getPeso(),
-                produto.getAltura(),
-                produto.getLargura(),
-                produto.getComprimento(),
-                produto.getStatus(),
-                produto.getCategory().getId()
-        );
-        return dto;
+    public ProductResponseDTO buscarUmProduto(@PathVariable Integer productId){
+        ProductResponseDTO produto = productService.buscarUmProduto(productId);
+        return produto;
     }
 
     @PutMapping("/{productId}")
-    public ProductCreateDTO alterarInformacoesEssenciaisProduto(@PathVariable Integer productId, @RequestBody ProductCreateDTO produto){
-        Product produtos = productService.atualizarInformacoesPrincipais(productId, produto);
-        ProductCreateDTO dto = new ProductCreateDTO(
-                produtos.getNome(),
-                produtos.getSlug(),
-                produtos.getDescricaoCurta(),
-                produtos.getDescricao(),
-                produtos.getPreco(),
-                produtos.getPrecoPromocional(),
-                produtos.getQuantidadeEstoque(),
-                produtos.getEstoqueMinimo(),
-                produtos.getSku(),
-                produtos.getPeso(),
-                produtos.getAltura(),
-                produtos.getLargura(),
-                produtos.getComprimento(),
-                produtos.getStatus(),
-                produtos.getCategory().getId()
-        );
-        return dto;
+    public ProductResponseDTO alterarInformacoesEssenciaisProduto(@PathVariable Integer productId, @RequestBody ProductCreateDTO produto){
+        ProductResponseDTO produtos = productService.atualizarInformacoesPrincipais(productId, produto);
+        return produtos;
     }
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<?> deletarProduto(@PathVariable Integer productId){
-        ProductCreateDTO dto = productService.deletarUmProduto(productId);
+        ProductResponseDTO dto = productService.deletarUmProduto(productId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(dto);
     }
 
     @GetMapping("/page")
-    public ResponseEntity<Page<ProductCreateDTO>> listarProdutos(@PageableDefault(size = 10, sort = "id") Pageable pageable) {
+    public ResponseEntity<Page<ProductResponseDTO>> listarProdutos(@PageableDefault(size = 10, sort = "id") Pageable pageable) {
 
-        Page<ProductCreateDTO> produtos = productService.findAllPaginado(pageable);
+        Page<ProductResponseDTO> produtos = productService.findAllPaginado(pageable);
 
         return ResponseEntity.ok(produtos);
     }
 
     @GetMapping("/category/{id}")
-    public ResponseEntity<List<ProductCreateDTO>> listarProdutosPorCategoria(@PathVariable Long id) {
-        List<ProductCreateDTO> produtos = productService.listarProdutosPorCategoria(id);
+    public ResponseEntity<List<ProductResponseDTO>> listarProdutosPorCategoria(@PathVariable Long id) {
+        List<ProductResponseDTO> produtos = productService.listarProdutosPorCategoria(id);
         return ResponseEntity.status(HttpStatus.OK).body(produtos);
     }
 
     @GetMapping("/nome/{nome}")
-    public ResponseEntity<List<ProductCreateDTO>> listarProdutosPorNome(@PathVariable String nome) {
-        List<ProductCreateDTO> dto = productService.buscarProdutoPorNome(nome);
+    public ResponseEntity<List<ProductResponseDTO>> listarProdutosPorNome(@PathVariable String nome) {
+        List<ProductResponseDTO> dto = productService.buscarProdutoPorNome(nome);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
     @GetMapping("/preco")
-    public ResponseEntity<List<ProductCreateDTO>> listarProdutosPorPreco() {
-        List<ProductCreateDTO> dto = productService.buscarProdutoPorPrecoPorOrdem();
+    public ResponseEntity<List<ProductResponseDTO>> listarProdutosPorPreco() {
+        List<ProductResponseDTO> dto = productService.buscarProdutoPorPrecoPorOrdem();
         return  ResponseEntity.status(HttpStatus.OK).body(dto);
 
     }

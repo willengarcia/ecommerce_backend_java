@@ -4,7 +4,7 @@ import com.example.ecommerce.modules.product.model.ProductEnum;
 
 import java.time.LocalDate;
 
-public record ProductDTO(
+public record ProductResponseDTO(
         Long id,
         String nome,
         String slug,
