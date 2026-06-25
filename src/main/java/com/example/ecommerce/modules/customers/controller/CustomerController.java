@@ -45,10 +45,12 @@ public class CustomerController {
 
     @GetMapping
     public ResponseEntity<List<?>> getAllCustomers() {
-        List<Customers> dto = customerService.findAll();
+        List<Customers> customers = customerService.findAll();
+        List<CustomerListDTO> response = customers.stream()
+                .map(CustomerMapper::toCustomerResponseDTO)
+                .toList();
 
-        return ResponseEntity.status(HttpStatus.OK).body(
-                dto.stream().map(customer -> CustomerMapper.toCustomerResponseDTO((Customers) dto)).toList());
+        return ResponseEntity.ok(response);
     }
     
     @GetMapping("/{idCustomer}")

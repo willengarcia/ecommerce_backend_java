@@ -43,7 +43,7 @@ public class CartItemService extends CartMapper {
 
         if (existente != null) {
             // Verifica Estoque
-            if (existente.getQuantidade() >= product.getQuantidadeEstoque()){
+            if (product.getQuantidadeEstoque() <= 0){
                 throw new  RuntimeException("Quantidade de estoque insuficiente");
             }
             existente.setQuantidade(existente.getQuantidade() + 1);
@@ -67,7 +67,7 @@ public class CartItemService extends CartMapper {
                     conversorProductDTO(existente)
             );
         }
-        if (existente.getQuantidade() >= product.getQuantidadeEstoque()){
+        if (product.getQuantidadeEstoque() <= 0){
             throw new  RuntimeException("Quantidade de estoque insuficiente");
         }
 
@@ -106,60 +106,49 @@ public class CartItemService extends CartMapper {
     }
 
     public CartItemResponseDTO addItems(CartItemAddProductDTO dto, Integer cartId) {
-        Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("CartItemId não encontrado!"));
-        List<CartItem> cartItem = cart.getItems();
-        List<Product> products = cartItem.stream().map(cartItens -> cartItens.getProduct()).toList();
-        if(products.stream().anyMatch(product -> product.getId().equals(dto.productId()))) {
-            for(CartItem c: cartItem){
-                if(c.getProduct().getId().equals(dto.productId())) {
-                    c.setQuantidade(c.getQuantidade() + 1);
-                    c.setSubtotal(c.getQuantidade()*c.getPrecoUnitario());
-                    cartItemRepository.save(c);
-                }
-            }
-            CartItem cartItemsResponse = cartItemRepository.findByCarroIdAndProductId(cartId, dto.productId());
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new RuntimeException("Carrinho não encontrado"));
 
-            CartItemResponseDTO dtoResponse = new CartItemResponseDTO(
-                    cartItemsResponse.getId(),
-                    cartItemsResponse.getQuantidade(),
-                    cartItemsResponse.getPrecoUnitario(),
-                    cartItemsResponse.getSubtotal(),
-                    conversorProductDTO(cartItemsResponse)
-            );
-            cart.setValorTotal(findSubTotalItemsInCart(cartId));
-            cartRepository.save(cart);
-            return dtoResponse;
-        }else {
-            CartItem addItem = new CartItem();
-            Product product = productRepository.findById(dto.productId())
-                    .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
-            addItem.setCarro(cart);
-            addItem.setProduct(product);
-            addItem.setQuantidade(1);
-            addItem.setPrecoUnitario(product.getPreco());
-            addItem.setSubtotal(product.getPreco() * 1);
-            addItem.setDataCriacao(LocalDate.now());
-            addItem.setDataAtualizacao(LocalDate.now());
-            cart.getItems().add(addItem);
-            cart.setValorTotal(
-                    cart.getItems()
-                            .stream()
-                            .map(CartItem::getSubtotal)
-                            .reduce(0f, Float::sum)
-            );
-            cartRepository.save(cart);
-            cartItemRepository.save(addItem);
-            CartItem cartItemsResponse = cartItemRepository.findByCarroIdAndProductId(cartId, dto.productId());
+        Product product = productRepository.findById(dto.productId())
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 
-            CartItemResponseDTO dtoResponse = new CartItemResponseDTO(
-                    cartItemsResponse.getId(),
-                    cartItemsResponse.getQuantidade(),
-                    cartItemsResponse.getPrecoUnitario(),
-                    cartItemsResponse.getSubtotal(),
-                    conversorProductDTO(cartItemsResponse)
-            );
-            return dtoResponse;
+        if (product.getQuantidadeEstoque() <= 0) {
+            throw new RuntimeException("Estoque insuficiente");
         }
+
+        CartItem item = cartItemRepository.findByCarroIdAndProductId(cartId, dto.productId());
+
+        if (item != null) {
+            item.setQuantidade(item.getQuantidade() + 1);
+            item.setSubtotal(item.getQuantidade() * item.getPrecoUnitario());
+            item.setDataAtualizacao(LocalDate.now());
+        } else {
+            item = new CartItem();
+
+            item.setCarro(cart);
+            item.setProduct(product);
+            item.setQuantidade(1);
+            item.setPrecoUnitario(product.getPreco());
+            item.setSubtotal(product.getPreco());
+            item.setDataCriacao(LocalDate.now());
+            item.setDataAtualizacao(LocalDate.now());
+        }
+
+        cartItemRepository.save(item);
+
+        product.setQuantidadeEstoque(product.getQuantidadeEstoque() - 1);
+        productRepository.save(product);
+
+        cart.setValorTotal(findSubTotalItemsInCart(cartId));
+        cartRepository.save(cart);
+
+        return new CartItemResponseDTO(
+                item.getId(),
+                item.getQuantidade(),
+                item.getPrecoUnitario(),
+                item.getSubtotal(),
+                conversorProductDTO(item)
+        );
     }
 
     // Somar todos os subtotais de cada cartitem e adicionar no Cart

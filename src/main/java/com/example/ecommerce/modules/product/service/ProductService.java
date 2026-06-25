@@ -107,17 +107,23 @@ public class ProductService {
     }
 
     public List<ProductResponseDTO> listarProdutosPorCategoria(Long categoriaId){
-        List<ProductCreateDTO> produto = productRepository.findByCategoryId(categoriaId);
-        return Collections.singletonList(ProductMapper.toProductResponseDTO((Product) produto));
+        List<Product> produto = productRepository.findByCategory_Id(categoriaId).stream().toList();
+        return produto.stream()
+                .map(ProductMapper::toProductResponseDTO)
+                .toList();
     }
 
     public List<ProductResponseDTO> buscarProdutoPorNome(String nome){
         List<Product> product = productRepository.findByNomeContainingIgnoreCase(nome);
-        return Collections.singletonList(ProductMapper.toProductResponseDTO((Product) product));
+        return product.stream()
+                .map(ProductMapper::toProductResponseDTO)
+                .toList();
     }
 
     public List<ProductResponseDTO> buscarProdutoPorPrecoPorOrdem(){
         List<Product> products = productRepository.findAllByOrderByPrecoAsc();
-        return Collections.singletonList(ProductMapper.toProductResponseDTO((Product) products));
+        return products.stream()
+                .map(ProductMapper::toProductResponseDTO)
+                .toList();
     }
 }

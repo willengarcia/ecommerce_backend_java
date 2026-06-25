@@ -20,8 +20,7 @@ public class CustomerService {
     }
 
     public List<Customers> findAll(){
-        List<Customers> customers = customerRepository.findAll();
-        return customers;
+        return customerRepository.findAll();
     }
 
     public Customers criarUsuario(CustomerCreateDTO customerCreateDTO){
