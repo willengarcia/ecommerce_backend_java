@@ -2,6 +2,8 @@ package com.example.ecommerce.modules.category.model;
 
 import com.example.ecommerce.modules.product.model.Product;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -9,14 +11,26 @@ import java.util.List;
 
 @Entity
 public class Category {
+    @Setter
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Setter
+    @Getter
     @Column(unique = true)
     private String name;
+    @Setter
+    @Getter
     private String description;
+    @Setter
+    @Getter
     private boolean ativo;
+    @Setter
+    @Getter
     private LocalDate dataCriacao;
+    @Setter
+    @Getter
     private LocalDate dataAtualizacao;
 
     @OneToMany(mappedBy= "category", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -33,51 +47,4 @@ public class Category {
         this.dataAtualizacao = LocalDate.now();
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public boolean isAtivo() {
-        return ativo;
-    }
-
-    public void setAtivo(boolean ativo) {
-        this.ativo = ativo;
-    }
-
-    public LocalDate getDataCriacao() {
-        return dataCriacao;
-    }
-
-    public void setDataCriacao(LocalDate dataCriacao) {
-        this.dataCriacao = dataCriacao;
-    }
-
-    public LocalDate getDataAtualizacao() {
-        return dataAtualizacao;
-    }
-
-    public void setDataAtualizacao(LocalDate dataAtualizacao) {
-        this.dataAtualizacao = dataAtualizacao;
-    }
 }

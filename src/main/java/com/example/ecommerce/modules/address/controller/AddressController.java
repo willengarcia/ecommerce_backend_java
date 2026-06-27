@@ -3,6 +3,7 @@ package com.example.ecommerce.modules.address.controller;
 import com.example.ecommerce.modules.address.dto.AddressCreateDTO;
 import com.example.ecommerce.modules.address.dto.AddressListDTO;
 import com.example.ecommerce.modules.address.dto.AddressUpdateDTO;
+import com.example.ecommerce.modules.address.mapper.AddressMapper;
 import com.example.ecommerce.modules.address.model.Address;
 import com.example.ecommerce.modules.address.service.AddressService;
 import org.springframework.http.HttpStatus;
@@ -23,31 +24,9 @@ public class AddressController {
 
     @PostMapping
     public ResponseEntity<?> createAddress( @RequestBody Address addressCreate) {
-        try{
-            Address address = addressService.criarAddress(addressCreate);
+        Address address = addressService.criarAddress(addressCreate);
 
-            AddressCreateDTO dto = new AddressCreateDTO(
-                    address.getNomeEndereco(),
-                    address.getNomeDestinatario(),
-                    address.getCep(),
-                    address.getRua(),
-                    address.getNumero(),
-                    address.getCidade(),
-                    address.getBairro(),
-                    address.getEstado(),
-                    address.getComplemento(),
-                    address.getReferencia(),
-                    address.getTipoEndereco(),
-                    address.getEnderecoPrincipal(),
-                    address.getUsuario().getId(),
-                    address.getDataCriacao(),
-                    address.getDataAtualizacao()
-            );
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(dto);
-        } catch(Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(AddressMapper.toAddressCreate(address));
     }
 
     @GetMapping
@@ -65,23 +44,7 @@ public class AddressController {
         List<Address> address = addressService.findByUsuarioId(idUsuario);
         List<AddressListDTO> addressListDTO = new ArrayList<>();
         address.forEach(addres -> {
-            addressListDTO.add(new AddressListDTO(
-                    addres.getId(),
-                    addres.getNomeEndereco(),
-                    addres.getNomeDestinatario(),
-                    addres.getCep(),
-                    addres.getRua(),
-                    addres.getNumero(),
-                    addres.getComplemento(),
-                    addres.getBairro(),
-                    addres.getCidade(),
-                    addres.getEstado(),
-                    addres.getReferencia(),
-                    addres.getTipoEndereco(),
-                    addres.getEnderecoPrincipal(),
-                    addres.getDataCriacao(),
-                    addres.getDataAtualizacao()
-            ));
+            addressListDTO.add(AddressMapper.toAddressList(addres));
         });
 
         return ResponseEntity.status(HttpStatus.OK).body(addressListDTO.stream().toList());
@@ -90,7 +53,7 @@ public class AddressController {
     @DeleteMapping("/{idAddress}")
     public ResponseEntity<?> deleteAddress(@PathVariable Integer idAddress){
         addressService.deletarById(idAddress);
-        return ResponseEntity.status(HttpStatus.OK).body("Deletado com sucesso");
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{idAddress}/customer/{idCustomer}")
