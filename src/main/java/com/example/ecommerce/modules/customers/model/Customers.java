@@ -1,8 +1,11 @@
 package com.example.ecommerce.modules.customers.model;
 
 import com.example.ecommerce.modules.address.model.Address;
+import com.example.ecommerce.modules.cart.model.Cart;
 import com.example.ecommerce.modules.order.model.Order;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,27 +13,50 @@ import java.util.List;
 
 @Entity
 public class Customers {
+    @Getter
+    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Getter
+    @Setter
     private String nomeCompleto;
+    @Getter
+    @Setter
     @Column(unique = true)
     private String cpf;
+    @Getter
+    @Setter
     @Column(unique = true)
     private String email;
+    @Getter
+    @Setter
     private String telefone;
+    @Getter
+    @Setter
     private String senhaHash;
+    @Getter
+    @Setter
     @Enumerated(EnumType.STRING)
     private CustomerEnum status;
+    @Getter
+    @Setter
     private LocalDate dataCriacao;
+    @Getter
+    @Setter
     private LocalDate dataAtualizacao;
 
+    @Getter
     @OneToMany(mappedBy= "usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Address> enderecos =  new ArrayList<>();
 
+    @Getter
     @OneToMany(mappedBy= "usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Order> orders =  new ArrayList<>();
 
+    @Getter
+    @OneToMany(mappedBy = "usuario")
+    private List<Cart> carts = new ArrayList<>();
 
     public Customers() {}
 
@@ -44,96 +70,13 @@ public class Customers {
         this.status = status;
     }
 
-    public CustomerEnum getStatus() {
-        return status;
-    }
-
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
-    }
-
-    public List<Address> getEnderecos() {
-        return enderecos;
-    }
-
     public void setEnderecos(List<Address> enderecos) {
         enderecos.forEach(address -> address.setUsuario(this));
         this.enderecos = enderecos;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getNomeCompleto() {
-        return nomeCompleto;
-    }
-
-    public void setNomeCompleto(String nomeCompleto) {
-        this.nomeCompleto = nomeCompleto;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
-    public String getSenhaHash() {
-        return senhaHash;
-    }
-
-    public void setSenhaHash(String senhaHash) {
-        this.senhaHash = senhaHash;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
     }
 
     public CustomerEnum isStatus() { // Remover método
         return status;
     }
 
-    public void setStatus(CustomerEnum status) {
-        this.status = status;
-    }
-
-    public LocalDate getDataCriacao() {
-        return dataCriacao;
-    }
-
-    public void setDataCriacao(LocalDate dataCriacao) {
-        this.dataCriacao = dataCriacao;
-    }
-
-    public LocalDate getDataAtualizacao() {
-        return dataAtualizacao;
-    }
-
-    public void setDataAtualizacao(LocalDate dataAtualizacao) {
-        this.dataAtualizacao = dataAtualizacao;
-    }
 }

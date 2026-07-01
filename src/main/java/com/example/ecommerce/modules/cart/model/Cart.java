@@ -21,7 +21,7 @@ public class Cart {
     @OneToMany(mappedBy= "carro", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<CartItem> items = new ArrayList<CartItem>();
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customers usuario;
 

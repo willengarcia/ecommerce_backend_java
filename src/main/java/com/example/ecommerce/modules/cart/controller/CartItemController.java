@@ -20,27 +20,8 @@ public class CartItemController extends CartMapper {
 
     @PostMapping
     public ResponseEntity<?> createCartItem(@RequestBody CartItemCreateDTO dto) {
-        try{
-            CartItemResponseDTO cartItem = cartItemService.create(dto);
-            return ResponseEntity.ok(cartItem);
-        }catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @PutMapping("/add/{idCart}")
-    public ResponseEntity<?> addItemsToCartItem(@PathVariable Integer idCart, @RequestBody CartItemAddProductDTO dto) {
-        CartItemResponseDTO cartItem = cartItemService.addItems(dto, idCart);
-
-        try{
-            if (cartItem != null) {
-                return ResponseEntity.ok(cartItem);
-            }else{
-                return ResponseEntity.badRequest().body("Esse produto não está nesse Carrinho");
-            }
-        }catch (Exception e){
-            return ResponseEntity.badRequest().body("Erro ao tentar adicionar produto. "+e.getMessage());
-        }
+        CartItemResponseDTO cartItem = cartItemService.create(dto);
+        return ResponseEntity.ok(cartItem);
     }
 
     @DeleteMapping("/cart/{idCart}/item/{idCartItem}")

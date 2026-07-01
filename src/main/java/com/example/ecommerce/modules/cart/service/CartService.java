@@ -1,6 +1,7 @@
 package com.example.ecommerce.modules.cart.service;
 
 import com.example.ecommerce.modules.cart.dto.CartItemResponseDTO;
+import com.example.ecommerce.modules.cart.exception.CartException;
 import com.example.ecommerce.modules.cart.mapper.CartMapper;
 import com.example.ecommerce.modules.cart.model.Cart;
 import com.example.ecommerce.modules.cart.model.CartEnum;
@@ -26,8 +27,10 @@ public class CartService extends CartMapper {
         Customers customer = customerRepository
                 .findById(customerId)
                 .orElseThrow(() ->
-                        new RuntimeException("Cliente não encontrado"));
-
+                        new CartException("Cliente não encontrado"));
+        if (customer.getCarts().stream().anyMatch(c -> c.isStatus().equals(CartEnum.ATIVO))) {
+            throw new CartException("Usuário tem um carrinho ATIVO");
+        }
         Cart cart = new Cart();
         cart.setUsuario(customer);
         cart.setStatus(CartEnum.ATIVO);
@@ -40,7 +43,7 @@ public class CartService extends CartMapper {
     public List<CartItemResponseDTO> getItemsByCart(Integer cartId) {
 
         Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new RuntimeException("Carrinho não encontrado"));
+                .orElseThrow(() -> new CartException("Carrinho não encontrado"));
 
         return cart.getItems()
                 .stream()
@@ -55,15 +58,21 @@ public class CartService extends CartMapper {
     }
 
     public List<Cart> getAllCart() {
-        List<Cart> cart = cartRepository.findAll();
-        return cart;
+        return cartRepository.findAll();
     }
 
     public Cart clearCart(Integer cartId) {
-        Cart cart = cartRepository.findById(cartId).orElseThrow();
+        Cart cart = cartRepository.findById(cartId).orElseThrow(() ->
+                new CartException("Carrinho não encontrado"));
         cart.getItems().clear();
         cart.setValorTotal(0f);
         cartRepository.save(cart);
         return cart;
+    }
+    public void deleteCart(Integer cartId) {
+        Cart cart = cartRepository.findById(cartId).orElseThrow(
+                () -> new CartException("Carrinho não existente")
+        );
+        cartRepository.delete(cart);
     }
 }

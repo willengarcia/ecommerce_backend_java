@@ -3,6 +3,7 @@ package com.example.ecommerce.modules.cart.controller;
 import com.example.ecommerce.modules.cart.dto.CartCreateDTO;
 import com.example.ecommerce.modules.cart.dto.CartItemResponseDTO;
 import com.example.ecommerce.modules.cart.dto.CartResponseDTO;
+import com.example.ecommerce.modules.cart.mapper.CartMapper;
 import com.example.ecommerce.modules.cart.model.Cart;
 import com.example.ecommerce.modules.cart.service.CartService;
 import org.springframework.http.HttpStatus;
@@ -22,16 +23,7 @@ public class CartController {
     public ResponseEntity<CartResponseDTO> create(@RequestBody CartCreateDTO dto) {
         Cart cart = cartService.createCart(dto.customerId());
 
-        CartResponseDTO response = new CartResponseDTO(
-                cart.getId(),
-                cart.isStatus(),
-                cart.getValorTotal(),
-                cart.getDataCriacao(),
-                cart.getDataAtualizacao(),
-                cart.getUsuario().getId()
-        );
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(CartMapper.conversorCartResponseDTO(cart));
     }
 
     @GetMapping("/{cartId}/items")
@@ -45,21 +37,18 @@ public class CartController {
     @GetMapping
     public ResponseEntity<List<CartResponseDTO>> getAllCart(){
         List<Cart> cart = cartService.getAllCart();
-        List<CartResponseDTO> response = cart.stream().map(c -> new CartResponseDTO(c.getId(), c.isStatus(), c.getValorTotal(), c.getDataCriacao(), c.getDataAtualizacao(), c.getUsuario().getId())).toList();
+        List<CartResponseDTO> response = cart.stream().map(CartMapper::conversorCartResponseDTO).toList();
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/clear/{idCart}")
     public ResponseEntity<CartResponseDTO> delete(@PathVariable Integer idCart) {
         Cart cart = cartService.clearCart(idCart);
-        CartResponseDTO response = new CartResponseDTO(
-                cart.getId(),
-                cart.isStatus(),
-                cart.getValorTotal(),
-                cart.getDataCriacao(),
-                cart.getDataAtualizacao(),
-                cart.getUsuario().getId()
-        );
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(CartMapper.conversorCartResponseDTO(cart));
+    }
+    @DeleteMapping("/{idCart}")
+    public ResponseEntity<CartResponseDTO> deleteCart(@PathVariable Integer idCart) {
+        cartService.deleteCart(idCart);
+        return ResponseEntity.noContent().build();
     }
 }
