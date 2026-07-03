@@ -2,6 +2,7 @@ package com.example.ecommerce.modules.product.controller;
 
 import com.example.ecommerce.modules.product.dto.ProductCreateDTO;
 import com.example.ecommerce.modules.product.dto.ProductResponseDTO;
+import com.example.ecommerce.modules.product.dto.ProductUpdateDTO;
 import com.example.ecommerce.modules.product.model.Product;
 import com.example.ecommerce.modules.product.service.ProductService;
 import org.springframework.data.domain.Page;
@@ -89,5 +90,10 @@ public class ProductController {
         List<ProductResponseDTO> dto = productService.buscarProdutoPorPrecoPorOrdem();
         return  ResponseEntity.status(HttpStatus.OK).body(dto);
 
+    }
+
+    @PatchMapping("/{idProduct}")
+    public ResponseEntity<ProductResponseDTO> updateDataProduct(@PathVariable Integer idProduct, @RequestBody ProductUpdateDTO productUpdateDTO){
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(productService.alterarDadosProdutos(idProduct, productUpdateDTO));
     }
 }

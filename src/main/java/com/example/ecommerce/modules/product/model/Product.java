@@ -27,6 +27,7 @@ public class Product {
     private Integer quantidadeReservada;
     @Column(name = "estoqueMinimo")
     private Integer estoqueMinimo;
+    @Column(unique = true)
     private String sku;
     private float peso;
     private float altura;

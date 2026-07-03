@@ -3,6 +3,8 @@ package com.example.ecommerce.modules.product.service;
 import com.example.ecommerce.modules.product.dto.ProductCreateDTO;
 import com.example.ecommerce.modules.product.dto.ProductResponseDTO;
 import com.example.ecommerce.modules.category.model.Category;
+import com.example.ecommerce.modules.product.dto.ProductUpdateDTO;
+import com.example.ecommerce.modules.product.exception.ProductException;
 import com.example.ecommerce.modules.product.mapper.ProductMapper;
 import com.example.ecommerce.modules.product.model.Product;
 import com.example.ecommerce.modules.category.repository.RepositoryCategory;
@@ -28,30 +30,29 @@ public class ProductService {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<ProductResponseDTO> findAll() {
-
-        return productRepository.findAll().stream().map(
-                ProductMapper::toProductResponseDTO
-        ).collect(Collectors.toList());
-    }
-
     public Product criarProduct(ProductCreateDTO productDTO) {
-
-        Product product = new Product();
+        List<Product> productConsulta = productRepository.findByNomeContainingIgnoreCase(productDTO.nome());
+        Product p = productRepository.findBySkuContainingIgnoreCase(productDTO.sku());
+        if (!productConsulta.isEmpty()) {
+            throw new ProductException("Nome de produto já existe!");
+        }
+        if (p != null) {
+            throw new ProductException("SKU do produto já existe!");
+        }
 
         Long categoryId = productDTO.categoriaId();
-
-
 
         if (productDTO.nome() == null || productDTO.nome().isBlank()
                 || productDTO.preco() == null || productDTO.preco() <= 0
                 || productDTO.estoqueMinimo() == null || productDTO.estoqueMinimo() < 1
-                || categoryId == null) {
+                || categoryId == null || productDTO.quantidadeEstoque() <= 0) {
 
             throw new RuntimeException(
-                    "É necessário informar o Nome, preço, estoque mínimo maior que 1 e o ID da Categoria"
+                    "É necessário informar o Nome, preço, estoque mínimo maior que 0, quantidade estoque maior que 0, e o ID da Categoria"
             );
         }
+        Product product = new Product();
+
 
         product.setNome(productDTO.nome());
         product.setSlug(productDTO.slug());
@@ -71,11 +72,24 @@ public class ProductService {
         product.setComprimento(productDTO.comprimento());
         product.setStatus(productDTO.status());
 
-        Category category = categoryRepository.findById(categoryId).orElseThrow();
+        Category category = categoryRepository.findById(categoryId).orElseThrow(
+                () -> new ProductException("Categoria não existe!")
+        );
+
+        if (!category.isAtivo()){
+            throw new ProductException("Não é possível vincular uma categoria Inativa a um Produto");
+        }
 
         product.setCategory(category);
 
         return productRepository.save(product);
+    }
+
+    public List<ProductResponseDTO> findAll() {
+
+        return productRepository.findAll().stream().map(
+                ProductMapper::toProductResponseDTO
+        ).collect(Collectors.toList());
     }
 
     public ProductResponseDTO buscarUmProduto(Integer productId){
@@ -95,7 +109,9 @@ public class ProductService {
     }
 
     public ProductResponseDTO deletarUmProduto(Integer produtoId){
-        Product produto = productRepository.findById(produtoId).orElseThrow();
+        Product produto = productRepository.findById(produtoId).orElseThrow(
+                () -> new ProductException("Produto não encontrado!")
+        );
         productRepository.delete(produto);
         return ProductMapper.toProductResponseDTO(produto);
     }
@@ -125,5 +141,59 @@ public class ProductService {
         return products.stream()
                 .map(ProductMapper::toProductResponseDTO)
                 .toList();
+    }
+
+    public ProductResponseDTO alterarDadosProdutos(Integer produtoId, ProductUpdateDTO produtos){
+        Product produto = productRepository.findById(produtoId).orElseThrow(
+                () -> new ProductException("Produto não encontrado!")
+        );
+        if (produtos.nome() != null && !produtos.nome().isBlank()){
+            List<Product> productConsulta = productRepository.findByNomeContainingIgnoreCase(produtos.nome());
+            if (!productConsulta.isEmpty()) {
+                throw new ProductException("Nome de produto já existe!");
+            }
+            produto.setNome(produtos.nome());
+        }
+        if (produtos.slug() != null && !produtos.slug().isBlank()){
+            produto.setSlug(produtos.slug());
+        }
+        if (produtos.descricaoCurta() != null && !produtos.descricaoCurta().isBlank()){
+            produto.setDescricaoCurta(produtos.descricaoCurta());
+        }
+        if (produtos.descricao() != null && !produtos.descricao().isBlank()){
+            produto.setDescricao(produtos.descricao());
+        }
+        if (produtos.categoriaId() != null){
+            Category category = categoryRepository.findById(produtos.categoriaId()).orElseThrow(
+                    () -> new ProductException("Categoria não existe!")
+            );
+            produto.setCategory(category);
+        }
+        if (produtos.preco() != null){
+            produto.setPreco(produtos.preco());
+        }
+        if (produtos.precoPromocional() != null){
+            produto.setPrecoPromocional(produtos.precoPromocional());
+        }
+        if (produtos.estoqueMinimo() != null){
+            produto.setEstoqueMinimo(produtos.estoqueMinimo());
+        }
+        if (produtos.peso() != null){
+            produto.setPeso(produtos.peso());
+        }
+        if (produtos.altura() != null){
+            produto.setAltura(produtos.altura());
+        }
+        if (produtos.largura() != null){
+            produto.setLargura(produtos.largura());
+        }
+        if (produtos.comprimento() != null){
+            produto.setComprimento(produtos.comprimento());
+        }
+        if (produtos.status() != null){
+            produto.setStatus(produtos.status());
+        }
+        productRepository.save(produto);
+        return ProductMapper.toProductResponseDTO(produto);
     }
 }

@@ -4,6 +4,7 @@ import com.example.ecommerce.modules.address.exception.AddressException;
 import com.example.ecommerce.modules.cart.exception.CartException;
 import com.example.ecommerce.modules.category.exceptions.CategoryException;
 import com.example.ecommerce.modules.customers.exception.CustomerException;
+import com.example.ecommerce.modules.product.exception.ProductException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -43,7 +44,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
     @ExceptionHandler(CartException.class)
-    public ResponseEntity<?> exceptionsCart(CartException e){
+    public ResponseEntity<?> exceptionsCart(CartException e) {
+        ResponseError response = new ResponseError(
+                e.getMessage(),
+                HttpStatus.BAD_REQUEST,
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+    @ExceptionHandler(ProductException.class)
+    public ResponseEntity<?> exceptionsProduct(ProductException e){
         ResponseError response = new ResponseError(
                 e.getMessage(),
                 HttpStatus.BAD_REQUEST,
