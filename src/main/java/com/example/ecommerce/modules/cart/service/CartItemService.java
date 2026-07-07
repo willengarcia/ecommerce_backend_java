@@ -8,6 +8,7 @@ import com.example.ecommerce.modules.cart.model.Cart;
 import com.example.ecommerce.modules.cart.model.CartItem;
 import com.example.ecommerce.modules.cart.repository.CartItemRepository;
 import com.example.ecommerce.modules.cart.repository.CartRepository;
+import com.example.ecommerce.modules.customers.mapper.CustomerMapper;
 import com.example.ecommerce.modules.product.model.Product;
 import com.example.ecommerce.modules.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -80,8 +81,7 @@ public class CartItemService extends CartMapper {
                 created.getQuantidade(),
                 created.getPrecoUnitario(),
                 created.getSubtotal(),
-                conversorProductDTO(created)
-        );
+                conversorProductDTO(created));
     }
 
     public CartItemResponseDTO adicionarProdutoExistente(Product product, CartItem existente, Cart cart, CartItemCreateDTO dto) {
@@ -107,8 +107,7 @@ public class CartItemService extends CartMapper {
                 existente.getQuantidade(),
                 existente.getPrecoUnitario(),
                 existente.getSubtotal(),
-                conversorProductDTO(existente)
-        );
+                conversorProductDTO(existente));
     }
 
     public Float findSubTotalItemsInCart(Integer cartId) {

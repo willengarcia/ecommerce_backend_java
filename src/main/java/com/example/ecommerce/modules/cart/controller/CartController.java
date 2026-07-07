@@ -1,6 +1,7 @@
 package com.example.ecommerce.modules.cart.controller;
 
 import com.example.ecommerce.modules.cart.dto.CartCreateDTO;
+import com.example.ecommerce.modules.cart.dto.CartDetailsResponse;
 import com.example.ecommerce.modules.cart.dto.CartItemResponseDTO;
 import com.example.ecommerce.modules.cart.dto.CartResponseDTO;
 import com.example.ecommerce.modules.cart.mapper.CartMapper;
@@ -50,5 +51,10 @@ public class CartController {
     public ResponseEntity<CartResponseDTO> deleteCart(@PathVariable Integer idCart) {
         cartService.deleteCart(idCart);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{idCart}/customer/{idCustomer}")
+    public ResponseEntity<CartDetailsResponse> getAllDetailsCart(@PathVariable Integer idCart, @PathVariable Integer idCustomer) {
+        return ResponseEntity.ok(cartService.getDetailsByCart(idCart, idCustomer));
     }
 }

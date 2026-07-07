@@ -95,7 +95,7 @@ public class CartItem {
         this.dataAtualizacao = dataAtualizacao;
     }
 
-    public Cart getCarro(Integer integer) {
+    public Cart getCarro() {
         return carro;
     }
 

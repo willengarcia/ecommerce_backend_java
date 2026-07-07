@@ -65,7 +65,7 @@ public class CustomerService {
     public CustomerListDTO buscarUsuarioPorId(Integer idCustomer){
         Customers customers = customerRepository.findById(idCustomer).orElseThrow();
 
-        return CustomerMapper.toCustomerResponseDTO(customers);
+        return CustomerMapper.toCustomerListResponseDTO(customers);
     }
 
     public static boolean validarCPF(String cpf) {

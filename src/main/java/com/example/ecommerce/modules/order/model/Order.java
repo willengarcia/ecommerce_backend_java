@@ -1,8 +1,11 @@
 package com.example.ecommerce.modules.order.model;
 
 import com.example.ecommerce.modules.address.model.Address;
+import com.example.ecommerce.modules.address.model.AddressEnum;
 import com.example.ecommerce.modules.customers.model.Customers;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,95 +14,99 @@ import java.util.List;
 @Entity
 @Table(name = "orders")
 public class Order {
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderId;
+    @Getter
+    @Setter
     private Float valorTotal;
+    @Getter
+    @Setter
     @Enumerated(EnumType.STRING)
     private OrderEnum status;
-    private LocalDate dataCriacao;
-    private LocalDate dataAtualizacao;
 
+    @Getter
+    @Setter
+    private Integer idAddress;
+    @Getter
+    @Setter
+    private String nomeEndereco;
+    @Getter
+    @Setter
+    private String nomeDestinatario;
+    @Getter
+    @Setter
+    private String cep;
+    @Getter
+    @Setter
+    private String rua;
+    @Getter
+    @Setter
+    private String numero;
+    @Getter
+    @Setter
+    private String complemento;
+    @Getter
+    @Setter
+    private String bairro;
+    @Getter
+    @Setter
+    private String cidade;
+    @Getter
+    @Setter
+    private String estado;
+    @Getter
+    @Setter
+    private String referencia;
+    @Getter
+    @Setter
+    @Enumerated(EnumType.STRING)
+    private AddressEnum tipoEndereco;
+    @Getter
+    @Setter
+    private Boolean enderecoPrincipal;
+    @Getter
+    @Setter
+    private LocalDate dataCriacao;
+    @Getter
+    @Setter
+    private LocalDate dataAtualizacao;
+    @Getter
+    @Setter
     @ManyToOne
     @JoinColumn(name = "usuario_id")
     private Customers usuario;
-
+    @Getter
+    @Setter
     @ManyToOne
     @JoinColumn(name = "address_id")
     private Address address;
-
+    @Getter
+    @Setter
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItem = new ArrayList<>();
 
     public Order() {}
 
-    public Order(Long orderId, Float valorTotal, OrderEnum status) {
+    public Order(Long orderId, Float valorTotal, OrderEnum status, String nomeEndereco, String nomeDestinatario, String cep, String rua, String numero, String complemento, String bairro, String estado, String cidade, String referencia, AddressEnum tipoEndereco, Boolean enderecoPrincipal, Integer idAddress) {
         this.orderId = orderId;
         this.valorTotal = valorTotal;
         this.status = status;
-    }
-
-    public Long getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
-    }
-
-    public Float getValorTotal() {
-        return valorTotal;
-    }
-
-    public void setValorTotal(Float valorTotal) {
-        this.valorTotal = valorTotal;
-    }
-
-    public OrderEnum getStatus() {
-        return status;
-    }
-
-    public void setStatus(OrderEnum status) {
-        this.status = status;
-    }
-
-    public LocalDate getDataCriacao() {
-        return dataCriacao;
-    }
-
-    public void setDataCriacao(LocalDate dataCriacao) {
-        this.dataCriacao = dataCriacao;
-    }
-
-    public LocalDate getDataAtualizacao() {
-        return dataAtualizacao;
-    }
-
-    public void setDataAtualizacao(LocalDate dataAtualizacao) {
-        this.dataAtualizacao = dataAtualizacao;
-    }
-
-    public Customers getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Customers usuario) {
-        this.usuario = usuario;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
-    public List<OrderItem> getOrderItem() {
-        return orderItem;
-    }
-
-    public void setOrderItem(List<OrderItem> orderItem) {
-        this.orderItem = orderItem;
+        this.idAddress = idAddress;
+        this.nomeEndereco = nomeEndereco;
+        this.nomeDestinatario = nomeDestinatario;
+        this.cep = cep;
+        this.rua = rua;
+        this.numero = numero;
+        this.complemento = complemento;
+        this.bairro = bairro;
+        this.estado = estado;
+        this.cidade = cidade;
+        this.referencia = referencia;
+        this.tipoEndereco = tipoEndereco;
+        this.enderecoPrincipal = enderecoPrincipal;
+        this.dataCriacao = LocalDate.now();
+        this.dataAtualizacao = LocalDate.now();
     }
 }

@@ -42,6 +42,8 @@ public class AddressService {
             throw new AddressException("Usuário Inativo ou Bloqueado!");
         }
 
+        // adicionar validação de endereço, do qual se já existir um cep para o cliente cadastrado, ele tem que transformar esse endereço em TRUE
+
         if (address.getCep() == null || address.getCep().isEmpty()
                 || address.getBairro() == null || address.getBairro().isEmpty()
                 || address.getCidade() == null || address.getCidade().isEmpty()

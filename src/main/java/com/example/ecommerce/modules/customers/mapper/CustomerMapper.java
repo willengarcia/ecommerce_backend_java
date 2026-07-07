@@ -2,10 +2,11 @@ package com.example.ecommerce.modules.customers.mapper;
 
 import com.example.ecommerce.modules.address.dto.AddressListDTO;
 import com.example.ecommerce.modules.customers.dto.CustomerListDTO;
+import com.example.ecommerce.modules.customers.dto.CustomerResponseDTO;
 import com.example.ecommerce.modules.customers.model.Customers;
 
 public class CustomerMapper {
-    public static CustomerListDTO toCustomerResponseDTO(Customers customers) {
+    public static CustomerListDTO toCustomerListResponseDTO(Customers customers) {
         CustomerListDTO dto = new CustomerListDTO(
                 customers.getId(),
                 customers.getNomeCompleto(),
@@ -35,6 +36,18 @@ public class CustomerMapper {
                         .toList(),
                 customers.getDataCriacao(),
                 customers.getDataAtualizacao()
+        );
+        return dto;
+    }
+
+    public static CustomerResponseDTO toCustomerResponseDTO(Customers customers) {
+        CustomerResponseDTO dto = new CustomerResponseDTO(
+                customers.getId(),
+                customers.getNomeCompleto(),
+                customers.getCpf(),
+                customers.getEmail(),
+                customers.getTelefone(),
+                customers.isStatus()
         );
         return dto;
     }

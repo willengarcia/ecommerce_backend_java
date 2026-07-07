@@ -42,7 +42,7 @@ public class CustomerController {
     public ResponseEntity<List<?>> getAllCustomers() {
         List<Customers> customers = customerService.findAll();
         List<CustomerListDTO> response = customers.stream()
-                .map(CustomerMapper::toCustomerResponseDTO)
+                .map(CustomerMapper::toCustomerListResponseDTO)
                 .toList();
 
         return ResponseEntity.ok(response);
