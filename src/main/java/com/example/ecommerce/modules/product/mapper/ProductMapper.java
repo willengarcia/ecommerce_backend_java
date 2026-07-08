@@ -2,11 +2,12 @@ package com.example.ecommerce.modules.product.mapper;
 
 import com.example.ecommerce.modules.product.dto.ProductCreateDTO;
 import com.example.ecommerce.modules.product.dto.ProductResponseDTO;
+import com.example.ecommerce.modules.product.dto.ProductResponseResumeDTO;
 import com.example.ecommerce.modules.product.model.Product;
 
 public class ProductMapper {
     public static ProductResponseDTO toProductResponseDTO(Product product) {
-        ProductResponseDTO productResponseDTO = new ProductResponseDTO(
+        return new ProductResponseDTO(
                 product.getId(),
                 product.getNome(),
                 product.getSlug(),
@@ -28,26 +29,16 @@ public class ProductMapper {
                 product.getDataCriacao(),
                 product.getCategory().getId()
         );
-        return productResponseDTO;
     }
-    public static ProductCreateDTO toProductCreateDTO(Product produto) {
-        ProductCreateDTO dto = new ProductCreateDTO(
-                produto.getNome(),
-                produto.getSlug(),
-                produto.getDescricaoCurta(),
-                produto.getDescricao(),
-                produto.getPreco(),
-                produto.getPrecoPromocional(),
-                produto.getQuantidadeEstoque(),
-                produto.getEstoqueMinimo(),
-                produto.getSku(),
-                produto.getPeso(),
-                produto.getAltura(),
-                produto.getLargura(),
-                produto.getComprimento(),
-                produto.getStatus(),
-                produto.getCategory().getId()
+    public static ProductResponseResumeDTO toProductResponseResumeDTO(Product product) {
+        return new ProductResponseResumeDTO(
+                product.getId(),
+                product.getNome(),
+                product.getSlug(),
+                product.getDescricaoCurta(),
+                product.getDescricao(),
+                product.getPreco(),
+                product.getSku()
         );
-        return dto;
     }
 }

@@ -20,9 +20,7 @@ import com.example.ecommerce.modules.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class CartService extends CartMapper {
@@ -133,7 +131,7 @@ public class CartService extends CartMapper {
                         item.getQuantidade(),
                         item.getPrecoUnitario(),
                         item.getSubtotal(),
-                        ProductMapper.toProductResponseDTO(item.getProduct())
+                        ProductMapper.toProductResponseResumeDTO(item.getProduct())
                 ))
                 .toList();
 

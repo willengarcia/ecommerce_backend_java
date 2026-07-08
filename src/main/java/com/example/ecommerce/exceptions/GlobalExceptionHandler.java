@@ -63,7 +63,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
     @ExceptionHandler(OrderException.class)
-    public ResponseEntity<?> exceptionOrder(ProductException e){
+    public ResponseEntity<?> exceptionOrder(OrderException e){
         ResponseError response = new ResponseError(
                 e.getMessage(),
                 HttpStatus.BAD_REQUEST,

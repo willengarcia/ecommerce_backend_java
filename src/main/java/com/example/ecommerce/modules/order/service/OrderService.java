@@ -21,7 +21,7 @@ public class OrderService{
         this.addressRepository = addressRepository;
     }
 
-    public Order createOrder(OrderCreateDTO orderCreateDTO) {
+    public Order createOrder(OrderCreateDTO orderCreateDTO, Integer idCustomer) {
         if (orderCreateDTO == null) {
             throw new OrderException("Os dados do pedido não foram informados.");
         }
@@ -77,6 +77,19 @@ public class OrderService{
             throw new OrderException("Endereço não pertence ao usuário do carrinho");
         }
         order.setAddress(address);
+        order.setIdAddress(address.getId());
+        order.setNomeEndereco(address.getNomeEndereco());
+        order.setNomeDestinatario(address.getNomeDestinatario());
+        order.setCep(address.getCep());
+        order.setRua(address.getRua());
+        order.setNumero(address.getNumero());
+        order.setComplemento(address.getComplemento());
+        order.setBairro(address.getBairro());
+        order.setEstado(address.getEstado());
+        order.setCidade(address.getCidade());
+        order.setReferencia(address.getReferencia());
+        order.setTipoEndereco(address.getTipoEndereco());
+        order.setEnderecoPrincipal(address.getEnderecoPrincipal());
         return orderRepository.save(order);
     }
 }

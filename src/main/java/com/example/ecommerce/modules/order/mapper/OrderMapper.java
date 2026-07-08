@@ -26,19 +26,19 @@ public class OrderMapper {
                 order.getUsuario().getStatus()
         );
         AddressListDTO address = new AddressListDTO(
-                order.getAddress().getId(),
-                order.getAddress().getNomeEndereco(),
-                order.getAddress().getNomeDestinatario(),
-                order.getAddress().getCep(),
-                order.getAddress().getRua(),
-                order.getAddress().getNumero(),
-                order.getAddress().getComplemento(),
-                order.getAddress().getBairro(),
-                order.getAddress().getCidade(),
-                order.getAddress().getEstado(),
-                order.getAddress().getReferencia(),
-                order.getAddress().getTipoEndereco(),
-                order.getAddress().getEnderecoPrincipal(),
+                order.getIdAddress(),
+                order.getNomeEndereco(),
+                order.getNomeDestinatario(),
+                order.getCep(),
+                order.getRua(),
+                order.getNumero(),
+                order.getComplemento(),
+                order.getBairro(),
+                order.getCidade(),
+                order.getEstado(),
+                order.getReferencia(),
+                order.getTipoEndereco(),
+                order.getEnderecoPrincipal(),
                 order.getAddress().getDataCriacao(),
                 order.getAddress().getDataAtualizacao()
         );

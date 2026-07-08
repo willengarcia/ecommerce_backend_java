@@ -1,6 +1,5 @@
 package com.example.ecommerce.modules.order.controller;
 
-import com.example.ecommerce.modules.address.model.Address;
 import com.example.ecommerce.modules.checkout.dto.CheckoutRequestDTO;
 import com.example.ecommerce.modules.checkout.service.CheckoutService;
 import com.example.ecommerce.modules.order.dto.OrderResponseDTO;
@@ -9,7 +8,6 @@ import com.example.ecommerce.modules.order.mapper.OrderMapper;
 import com.example.ecommerce.modules.order.model.Order;
 import com.example.ecommerce.modules.order.service.OrderService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,9 +24,9 @@ public class OrderController {
         this.checkoutService = checkoutService;
     }
 
-    @PostMapping
-    public ResponseEntity<OrderResponseDTO> createOrder(@RequestBody CheckoutRequestDTO orderCreateDTO) {
-        Order order = checkoutService.finalizarCompra(orderCreateDTO);
+    @PostMapping("/{idCustomer}")
+    public ResponseEntity<OrderResponseDTO> createOrder(@RequestBody CheckoutRequestDTO orderCreateDTO, @PathVariable Integer idCustomer) {
+        Order order = checkoutService.finalizarCompra(orderCreateDTO,  idCustomer);
         return ResponseEntity.status(HttpStatus.CREATED).body(OrderMapper.toOrderResponseDTO(order));
     }
 
