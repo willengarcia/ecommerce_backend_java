@@ -51,8 +51,8 @@ public class OrderController {
     }
 
     @PutMapping("/{idOrder}/address")
-    public ResponseEntity<OrderResponseDTO> updateOrderAddress(@PathVariable Long idOrder, @RequestBody OrderUpdateAddressDTO idAddress) {
-        Order order = orderService.updateOrderAddress(idOrder, idAddress);
+    public ResponseEntity<OrderResponseDTO> updateOrderAddress(@PathVariable Long idOrder, @RequestBody OrderUpdateAddressDTO orderUpdateAddressDTO) {
+        Order order = orderService.updateOrderAddress(idOrder, orderUpdateAddressDTO);
         return ResponseEntity.status(HttpStatus.OK).body(OrderMapper.toOrderResponseDTO(order));
     }
 }

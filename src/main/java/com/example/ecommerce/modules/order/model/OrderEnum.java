@@ -1,9 +1,10 @@
 package com.example.ecommerce.modules.order.model;
 
 public enum OrderEnum {
-    CRIADO("ATIVO"),
+    CRIADO("CRIADO"),
     AGUARDANDO_PAGAMENTO("CONVERTIDO"),
-    PAGO("ABANDONADO"),
+    ABANDONADO("ABANDONADO"),
+    PAGO("PAGO"),
     PROCESSADO("PROCESSADO"),
     SEPARADO("SEPARADO"),
     PREPARANDO("PREPARANDO"),
