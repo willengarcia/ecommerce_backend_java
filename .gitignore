@@ -4,6 +4,7 @@
 # =========================
 target/
 build/
+uploads/
 
 !**/src/main/**/target/
 !**/src/test/**/target/

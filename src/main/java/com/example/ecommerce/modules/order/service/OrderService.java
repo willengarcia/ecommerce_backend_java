@@ -80,7 +80,7 @@ public class OrderService{
         Address address = addressRepository.findById(orderUpdateAddressDTO.addressId()).orElseThrow(
                 ()-> new OrderException("Endereço não encontrado!")
         );
-        if (orderUpdateAddressDTO.customerId() == null || order.getUsuario().getId().equals(orderUpdateAddressDTO.customerId())) {
+        if (orderUpdateAddressDTO.customerId() == null || !order.getUsuario().getId().equals(orderUpdateAddressDTO.customerId())) {
             throw new OrderException("Order não pertence ao cliente informado.");
         }
         if (!Objects.equals(order.getUsuario().getId(), address.getUsuario().getId())) {

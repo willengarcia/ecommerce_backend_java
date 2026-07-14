@@ -1,5 +1,6 @@
 package com.example.ecommerce.modules.product.service;
 
+import com.example.ecommerce.modules.importation.product.dto.ImportProductRowDTO;
 import com.example.ecommerce.modules.product.dto.ProductCreateDTO;
 import com.example.ecommerce.modules.product.dto.ProductResponseDTO;
 import com.example.ecommerce.modules.category.model.Category;
@@ -12,6 +13,7 @@ import com.example.ecommerce.modules.product.repository.ProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -195,5 +197,45 @@ public class ProductService {
         }
         productRepository.save(produto);
         return ProductMapper.toProductResponseDTO(produto);
+    }
+
+    @Transactional
+    public void createFromImport(ImportProductRowDTO dto) {
+        if (productRepository.existsBySku(dto.sku())) {
+            throw new IllegalArgumentException(
+                    "Já existe um produto com o SKU: " + dto.sku()
+            );
+        }
+
+        if (productRepository.existsBySlug(dto.slug())) {
+            throw new IllegalArgumentException(
+                    "Já existe um produto com o slug: " + dto.slug()
+            );
+        }
+
+        Category category = categoryRepository.findById(dto.categoriaId())
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Categoria não encontrada: " + dto.categoriaId()
+                ));
+
+        Product product = new Product();
+
+        product.setNome(dto.nome());
+        product.setSlug(dto.slug());
+        product.setDescricaoCurta(dto.descricaoCurta());
+        product.setDescricao(dto.descricao());
+        product.setPreco(dto.preco());
+        product.setPrecoPromocional(dto.precoPromocional());
+        product.setQuantidadeEstoque(dto.quantidadeEstoque());
+        product.setEstoqueMinimo(dto.estoqueMinimo());
+        product.setSku(dto.sku());
+        product.setPeso(dto.peso());
+        product.setAltura(dto.altura());
+        product.setLargura(dto.largura());
+        product.setComprimento(dto.comprimento());
+        product.setStatus(dto.status());
+        product.setCategory(category);
+
+        productRepository.save(product);
     }
 }
