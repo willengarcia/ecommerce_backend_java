@@ -31,15 +31,50 @@ Construir uma API para gerenciamento de clientes, produtos, categorias, carrinho
 ## Estrutura do projeto
 
 ```text
-src/
- └── main/
-     └── java/
-         └── com/example/ecommerce/
-             └── modules /
-                  └── product
-                         ├── controller/
-                         ├── service/
-                         ├── repository/
-                         ├── model/
-                         ├── dto/
-                         └── exception/
+com.example.ecommerce
+|
+|__ config
+|
+|__ exceptions
+|   |__ GlobalExceptionHandler
+|   |__ ResponseError
+|
+|__ externalServices
+|   |__ payment
+|   |__ storage
+|
+|__ modules
+|   |
+|   |__ address
+|   |   |__ controller
+|   |   |__ dto
+|   |   |__ exception
+|   |   |__ mapper
+|   |   |__ model
+|   |   |__ repository
+|   |   |__ service
+|   |       |__ AddressService
+|   |
+|   |__ cart
+|   |
+|   |__ category
+|   |
+|   |__ checkout
+|   |
+|   |__ customers
+|   |
+|   |__ importation
+|   |   |__ category
+|   |   |__ product
+|   |       |__ controller
+|   |       |   |__ ImportProductController
+|   |       |__ dto
+|   |       |__ exception
+|   |       |__ mapper
+|   |       |__ service
+|   |
+|   |__ order
+|   |
+|   |__ product
+|
+|__ EcommerceApplication
