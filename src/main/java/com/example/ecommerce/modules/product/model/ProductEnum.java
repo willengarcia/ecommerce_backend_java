@@ -5,7 +5,7 @@ public enum ProductEnum {
     INATIVO("false"),
     SEM_ESTOQUE("SEM_ESTOQUE");
 
-    private String productEnum;
+    private final String productEnum;
     ProductEnum(String productEnum) {
         this.productEnum = productEnum;
     }

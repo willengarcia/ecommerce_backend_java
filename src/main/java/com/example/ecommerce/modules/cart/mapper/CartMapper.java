@@ -22,7 +22,7 @@ public class CartMapper {
     public static CartResponseDTO conversorCartResponseDTO(Cart cart) {
         return new CartResponseDTO(
                 cart.getId(),
-                cart.isStatus(),
+                cart.getStatus(),
                 cart.getValorTotal(),
                 cart.getDataCriacao(),
                 cart.getDataAtualizacao(),

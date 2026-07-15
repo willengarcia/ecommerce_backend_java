@@ -4,9 +4,11 @@ import com.example.ecommerce.modules.address.dto.AddressListDTO;
 import com.example.ecommerce.modules.customers.dto.CustomerResponseDTO;
 import com.example.ecommerce.modules.order.model.OrderEnum;
 
+import java.math.BigDecimal;
+
 public record OrderResponseDTO(
         Long orderId,
-        Float valorTotal,
+        BigDecimal valorTotal,
         OrderEnum status,
         CustomerResponseDTO customer,
         AddressListDTO address,

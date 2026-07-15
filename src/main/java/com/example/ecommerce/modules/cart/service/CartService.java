@@ -19,6 +19,7 @@ import com.example.ecommerce.modules.product.model.Product;
 import com.example.ecommerce.modules.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class CartService extends CartMapper {
                 .findById(customerId)
                 .orElseThrow(() ->
                         new CartException("Cliente não encontrado"));
-        if (customer.getCarts().stream().anyMatch(c -> c.isStatus().equals(CartEnum.ATIVO))) {
+        if (customer.getCarts().stream().anyMatch(c -> c.getStatus().equals(CartEnum.ATIVO))) {
             throw new CartException("Usuário tem um carrinho ATIVO");
         }
         Cart cart = new Cart();
@@ -88,7 +89,7 @@ public class CartService extends CartMapper {
         }
 
         cart.getItems().clear();
-        cart.setValorTotal(0f);
+        cart.setValorTotal(BigDecimal.ZERO);
 
         cartRepository.save(cart);
 
@@ -99,7 +100,7 @@ public class CartService extends CartMapper {
         Cart cart = cartRepository.findById(cartId).orElseThrow(
                 () -> new CartException("Carrinho não existente")
         );
-        if (!cart.isStatus().equals(CartEnum.ATIVO)) {
+        if (!cart.getStatus().equals(CartEnum.ATIVO)) {
             throw new CartException("Só é possível deletar carrrinhos com Status Ativo!");
         }
         if (!cart.getItems().isEmpty()) {
@@ -140,7 +141,7 @@ public class CartService extends CartMapper {
                 items,
                 new CartResponseDTO(
                         cart.getId(),
-                        cart.isStatus(),
+                        cart.getStatus(),
                         cart.getValorTotal(),
                         cart.getDataCriacao(),
                         cart.getDataAtualizacao(),

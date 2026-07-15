@@ -2,10 +2,14 @@ package com.example.ecommerce.modules.order.model;
 
 import com.example.ecommerce.modules.product.model.Product;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-
+@Getter
+@Setter
 @Entity
 public class OrderItem {
     @Id
@@ -14,8 +18,8 @@ public class OrderItem {
     private String nomeProduto;
     private String skuProduto;
     private Integer quantidade;
-    private Float precoUnitario;
-    private Float subTotal;
+    private BigDecimal precoUnitario;
+    private BigDecimal subTotal;
     private LocalDateTime dataCriacao;
     private LocalDateTime dataAtualizacao;
 
@@ -27,7 +31,7 @@ public class OrderItem {
 
     public OrderItem() {}
 
-    public OrderItem(Long id, String nomeProduto, String skuProduto, Integer quantidade, Float precoUnitario, Float subtotal, LocalDateTime dataCriacao, LocalDateTime dataAtualizacao) {
+    public OrderItem(Long id, String nomeProduto, String skuProduto, Integer quantidade, BigDecimal precoUnitario, BigDecimal subtotal, LocalDateTime dataCriacao, LocalDateTime dataAtualizacao) {
         this.id = id;
         this.nomeProduto = nomeProduto;
         this.skuProduto = skuProduto;
@@ -38,83 +42,4 @@ public class OrderItem {
         this.dataAtualizacao = dataAtualizacao;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNomeProduto() {
-        return nomeProduto;
-    }
-
-    public void setNomeProduto(String nomeProduto) {
-        this.nomeProduto = nomeProduto;
-    }
-
-    public String getSkuProduto() {
-        return skuProduto;
-    }
-
-    public void setSkuProduto(String skuProduto) {
-        this.skuProduto = skuProduto;
-    }
-
-    public Float getPrecoUnitario() {
-        return precoUnitario;
-    }
-
-    public void setPrecoUnitario(Float precoUnitario) {
-        this.precoUnitario = precoUnitario;
-    }
-
-    public Integer getQuantidade() {
-        return quantidade;
-    }
-
-    public void setQuantidade(Integer quantidade) {
-        this.quantidade = quantidade;
-    }
-
-    public Float getSubTotal() {
-        return subTotal;
-    }
-
-    public LocalDateTime getDataCriacao() {
-        return dataCriacao;
-    }
-
-    public void setDataCriacao(LocalDateTime dataCriacao) {
-        this.dataCriacao = dataCriacao;
-    }
-
-    public LocalDateTime getDataAtualizacao() {
-        return dataAtualizacao;
-    }
-
-    public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
-        this.dataAtualizacao = dataAtualizacao;
-    }
-
-    public void setSubTotal(Float subtotal) {
-        this.subTotal = subtotal;
-    }
-
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
 }

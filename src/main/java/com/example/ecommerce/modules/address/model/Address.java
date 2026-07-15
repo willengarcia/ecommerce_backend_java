@@ -3,11 +3,15 @@ package com.example.ecommerce.modules.address.model;
 import com.example.ecommerce.modules.customers.model.Customers;
 import com.example.ecommerce.modules.order.model.Order;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Setter
+@Getter
 @Entity
 public class Address {
     @Id
@@ -64,139 +68,4 @@ public class Address {
         this.enderecoPrincipal = endereco_principal;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Customers getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Customers usuario) {
-        this.usuario = usuario;
-    }
-
-    public String getNomeEndereco() {
-        return nomeEndereco;
-    }
-
-    public void setNomeEndereco(String nomeEndereco) {
-        this.nomeEndereco = nomeEndereco;
-    }
-
-    public String getNomeDestinatario() {
-        return nomeDestinatario;
-    }
-
-    public void setNomeDestinatario(String nomeDestinatario) {
-        this.nomeDestinatario = nomeDestinatario;
-    }
-
-    public String getCep() {
-        return cep;
-    }
-
-    public void setCep(String cep) {
-        this.cep = cep;
-    }
-
-    public String getNumero() {
-        return numero;
-    }
-
-    public void setNumero(String numero) {
-        this.numero = numero;
-    }
-
-    public String getComplemento() {
-        return complemento;
-    }
-
-    public void setComplemento(String complemento) {
-        this.complemento = complemento;
-    }
-
-    public String getRua() {
-        return rua;
-    }
-
-    public void setRua(String rua) {
-        this.rua = rua;
-    }
-
-    public String getBairro() {
-        return bairro;
-    }
-
-    public void setBairro(String bairro) {
-        this.bairro = bairro;
-    }
-
-    public String getCidade() {
-        return cidade;
-    }
-
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
-    public String getReferencia() {
-        return referencia;
-    }
-
-    public void setReferencia(String referencia) {
-        this.referencia = referencia;
-    }
-
-    public AddressEnum getTipoEndereco() {
-        return tipoEndereco;
-    }
-
-    public void setTipoEndereco(AddressEnum tipoEndereco) {
-        this.tipoEndereco = tipoEndereco;
-    }
-
-    public Boolean getEnderecoPrincipal() {
-        return enderecoPrincipal;
-    }
-
-    public void setEnderecoPrincipal(Boolean enderecoPrincipal) {
-        this.enderecoPrincipal = enderecoPrincipal;
-    }
-
-    public LocalDate getDataCriacao() {
-        return dataCriacao;
-    }
-
-    public void setDataCriacao(LocalDate dataCriacao) {
-        this.dataCriacao = dataCriacao;
-    }
-
-    public LocalDate getDataAtualizacao() {
-        return dataAtualizacao;
-    }
-
-    public void setDataAtualizacao(LocalDate dataAtualizacao) {
-        this.dataAtualizacao = dataAtualizacao;
-    }
-
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
-    }
 }

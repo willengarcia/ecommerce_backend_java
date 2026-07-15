@@ -15,8 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,7 +45,7 @@ public class ProductService {
         Long categoryId = productDTO.categoriaId();
 
         if (productDTO.nome() == null || productDTO.nome().isBlank()
-                || productDTO.preco() == null || productDTO.preco() <= 0
+                || productDTO.preco() == null || productDTO.preco().compareTo(BigDecimal.ZERO) <= 0
                 || productDTO.estoqueMinimo() == null || productDTO.estoqueMinimo() < 1
                 || categoryId == null || productDTO.quantidadeEstoque() <= 0) {
 

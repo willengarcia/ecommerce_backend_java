@@ -1,6 +1,5 @@
 package com.example.ecommerce.modules.product.mapper;
 
-import com.example.ecommerce.modules.product.dto.ProductCreateDTO;
 import com.example.ecommerce.modules.product.dto.ProductResponseDTO;
 import com.example.ecommerce.modules.product.dto.ProductResponseResumeDTO;
 import com.example.ecommerce.modules.product.model.Product;

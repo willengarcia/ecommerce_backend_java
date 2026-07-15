@@ -36,7 +36,7 @@ public class ProductController {
             Product produto = productService.criarProduct(productCreateDTO);
             return ResponseEntity
                     .status(HttpStatus.CREATED)
-                    .body(productCreateDTO);
+                    .body(produto);
         } catch (Exception ex){
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
@@ -78,14 +78,12 @@ public class ProductController {
 
     @GetMapping("/{productId}")
     public ProductResponseDTO buscarUmProduto(@PathVariable Integer productId){
-        ProductResponseDTO produto = productService.buscarUmProduto(productId);
-        return produto;
+        return productService.buscarUmProduto(productId);
     }
 
     @PutMapping("/{productId}")
     public ProductResponseDTO alterarInformacoesEssenciaisProduto(@PathVariable Integer productId, @RequestBody ProductCreateDTO produto){
-        ProductResponseDTO produtos = productService.atualizarInformacoesPrincipais(productId, produto);
-        return produtos;
+        return productService.atualizarInformacoesPrincipais(productId, produto);
     }
 
     @DeleteMapping("/{productId}")
@@ -101,7 +99,7 @@ public class ProductController {
     }
 
     @GetMapping("/page")
-    public ResponseEntity<Page<ProductResponseDTO>> listarProdutos(@PageableDefault(size = 10, sort = "id") Pageable pageable) {
+    public ResponseEntity<Page<ProductResponseDTO>> listarProdutos(@PageableDefault(sort = "id") Pageable pageable) {
 
         Page<ProductResponseDTO> produtos = productService.findAllPaginado(pageable);
 

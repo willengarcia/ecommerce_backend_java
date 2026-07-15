@@ -59,8 +59,6 @@ public class ImportProductService {
                 productService.createFromImport(dto);
             }
 
-        } catch (ProductImportException exception) {
-            throw exception;
         } catch (IOException exception) {
             throw new RuntimeException(
                     "Não foi possível ler o arquivo CSV",
@@ -78,7 +76,7 @@ public class ImportProductService {
     }
 
     private void validateValues(ImportProductRowDTO dto, long line) {
-        if (dto.preco() < 0) {
+        if (dto.preco().compareTo(BigDecimal.ZERO) < 0) {
             throw new ProductImportException(
                     line,
                     "O preço não pode ser negativo"

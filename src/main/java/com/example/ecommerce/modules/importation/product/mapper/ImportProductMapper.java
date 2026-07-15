@@ -6,7 +6,10 @@ import com.example.ecommerce.modules.product.model.ProductEnum;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Component;
 
-import static java.lang.Float.valueOf;
+import java.math.BigDecimal;
+
+import static java.lang.Float.parseFloat;
+
 @Component
 public class ImportProductMapper {
     public ImportProductRowDTO toDTO(CSVRecord record) {
@@ -17,8 +20,8 @@ public class ImportProductMapper {
                 requiredString(record, "slug", line),
                 optionalString(record, "descricaoCurta"),
                 optionalString(record, "descricao"),
-                requiredFloat(record, "preco", line),
-                optionalFloat(record, "precoPromocional", line),
+                requiredBigDecimal(record, "preco", line),
+                optionalBigDecimal(record, "precoPromocional", line),
                 requiredInteger(record, "quantidadeEstoque", line),
                 requiredInteger(record, "estoqueMinimo", line),
                 requiredString(record, "sku", line),
@@ -74,7 +77,7 @@ public class ImportProductMapper {
         return value.trim();
     }
 
-    private Float requiredFloat(
+    private BigDecimal requiredBigDecimal(
             CSVRecord record,
             String column,
             long line
@@ -82,7 +85,7 @@ public class ImportProductMapper {
         String value = requiredString(record, column, line);
 
         try {
-            return valueOf(value);
+            return new BigDecimal(value);
         } catch (NumberFormatException exception) {
             throw new ProductImportException(
                     line,
@@ -92,7 +95,7 @@ public class ImportProductMapper {
         }
     }
 
-    private Float optionalFloat(
+    private BigDecimal optionalBigDecimal(
             CSVRecord record,
             String column,
             long line
@@ -104,7 +107,29 @@ public class ImportProductMapper {
         }
 
         try {
-            return valueOf(value);
+            return new BigDecimal(value);
+        } catch (NumberFormatException exception) {
+            throw new ProductImportException(
+                    line,
+                    "A coluna '" + column + "' deve ser um número decimal",
+                    exception
+            );
+        }
+    }
+
+    private Float requiredFloat(
+            CSVRecord record,
+            String column,
+            long line
+    ) {
+        String value = getValue(record, column, line);
+
+        if (value.isBlank()) {
+            return null;
+        }
+
+        try {
+            return parseFloat(value);
         } catch (NumberFormatException exception) {
             throw new ProductImportException(
                     line,
@@ -148,24 +173,6 @@ public class ImportProductMapper {
                     exception
             );
         }
-    }
-
-    private Boolean requiredBoolean(
-            CSVRecord record,
-            String column,
-            long line
-    ) {
-        String value = requiredString(record, column, line);
-
-        if (!value.equalsIgnoreCase("true")
-                && !value.equalsIgnoreCase("false")) {
-            throw new ProductImportException(
-                    line,
-                    "A coluna '" + column + "' deve ser true ou false"
-            );
-        }
-
-        return Boolean.valueOf(value);
     }
 
     private String getValue(

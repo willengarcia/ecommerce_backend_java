@@ -8,11 +8,11 @@ import com.example.ecommerce.modules.cart.model.Cart;
 import com.example.ecommerce.modules.cart.model.CartItem;
 import com.example.ecommerce.modules.cart.repository.CartItemRepository;
 import com.example.ecommerce.modules.cart.repository.CartRepository;
-import com.example.ecommerce.modules.customers.mapper.CustomerMapper;
 import com.example.ecommerce.modules.product.model.Product;
 import com.example.ecommerce.modules.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Service
@@ -68,7 +68,7 @@ public class CartItemService extends CartMapper {
                 cart.getItems()
                         .stream()
                         .map(CartItem::getSubtotal)
-                        .reduce(0f, Float::sum)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
         );
 
         cartRepository.save(cart);
@@ -89,7 +89,7 @@ public class CartItemService extends CartMapper {
             throw new CartException("Quantidade de estoque insuficiente");
         }
         existente.setQuantidade(existente.getQuantidade() + 1);
-        existente.setSubtotal(existente.getQuantidade() * existente.getPrecoUnitario());
+        existente.setSubtotal(existente.getPrecoUnitario().multiply(BigDecimal.valueOf(existente.getQuantidade())));
         existente.setDataAtualizacao(LocalDate.now());
 
         cartItemRepository.save(existente);
@@ -110,12 +110,11 @@ public class CartItemService extends CartMapper {
                 conversorProductDTO(existente));
     }
 
-    public Float findSubTotalItemsInCart(Integer cartId) {
-        Float cartItem = cartItemRepository.findAllByCarroId(cartId).stream().map(CartItem::getSubtotal).reduce(0f, Float::sum);;
-        return cartItem;
+    public BigDecimal findSubTotalItemsInCart(Integer cartId) {
+        return cartItemRepository.findAllByCarroId(cartId).stream().map(CartItem::getSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public CartItem deleteItem(Integer cartId, Integer cartItemId){
+    public void deleteItem(Integer cartId, Integer cartItemId){
         CartItem cartItem = cartItemRepository.findByCarroIdAndId(cartId, cartItemId);
 
         if (cartItem == null) {
@@ -134,10 +133,9 @@ public class CartItemService extends CartMapper {
                 cart.getItems()
                         .stream()
                         .map(CartItem::getSubtotal)
-                        .reduce(0f, Float::sum)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
         );
         productRepository.save(product);
         cartRepository.save(cart);
-        return null;
     }
 }

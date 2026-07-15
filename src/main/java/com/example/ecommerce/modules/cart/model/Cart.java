@@ -2,11 +2,16 @@ package com.example.ecommerce.modules.cart.model;
 
 import com.example.ecommerce.modules.customers.model.Customers;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
 public class Cart {
     @Id
@@ -16,16 +21,16 @@ public class Cart {
     private CartEnum status;
     private LocalDate dataCriacao;
     private LocalDate dataAtualizacao;
-    private Float valorTotal;
+    private BigDecimal valorTotal;
 
     @OneToMany(mappedBy= "carro", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    private List<CartItem> items = new ArrayList<CartItem>();
+    private List<CartItem> items = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customers usuario;
 
-    public Cart(Long id, CartEnum status, LocalDate data_criacao, LocalDate data_atualizacao, Customers usuario, Float valorTotal) {
+    public Cart(Long id, CartEnum status, LocalDate data_criacao, LocalDate data_atualizacao, Customers usuario, BigDecimal valorTotal) {
         this.id = id;
         this.status = status;
         this.dataCriacao = data_criacao;
@@ -35,61 +40,4 @@ public class Cart {
     }
 
     public Cart() {}
-
-    public Customers getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Customers usuario) {
-        this.usuario = usuario;
-    }
-
-    public List<CartItem> getItems() {
-        return items;
-    }
-
-    public void setItems(List<CartItem> items) {
-        items.forEach(item -> item.setCarro(this));
-        this.items = items;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public CartEnum isStatus() {
-        return status;
-    }
-
-    public void setStatus(CartEnum status) {
-        this.status = status;
-    }
-
-    public LocalDate getDataCriacao() {
-        return dataCriacao;
-    }
-
-    public void setDataCriacao(LocalDate data_criacao) {
-        this.dataCriacao = data_criacao;
-    }
-
-    public LocalDate getDataAtualizacao() {
-        return dataAtualizacao;
-    }
-
-    public void setDataAtualizacao(LocalDate data_atualizacao) {
-        this.dataAtualizacao = data_atualizacao;
-    }
-
-    public Float getValorTotal() {
-        return valorTotal;
-    }
-
-    public void setValorTotal(Float valorTotal) {
-        this.valorTotal = valorTotal;
-    }
 }
