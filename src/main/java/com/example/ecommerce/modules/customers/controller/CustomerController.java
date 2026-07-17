@@ -50,7 +50,7 @@ public class CustomerController {
     
     @GetMapping("/{idCustomer}")
     public ResponseEntity<CustomerListDTO> getIdUser(@PathVariable Integer idCustomer){
-        return ResponseEntity.status(HttpStatus.OK).body(customerService.buscarUsuarioPorId(idCustomer));
+        return ResponseEntity.status(HttpStatus.OK).body((customerService.buscarUsuarioPorId(idCustomer)));
     }
 
     @PatchMapping("/{idCustomer}")
@@ -62,7 +62,7 @@ public class CustomerController {
                 customer.getCpf(),
                 customer.getEmail(),
                 customer.getTelefone(),
-                customer.isStatus().name(),
+                customer.getStatus(),
                 customer.getDataAtualizacao()
         );
         return ResponseEntity.status(HttpStatus.OK).body(customerCreateDTO);

@@ -1,6 +1,9 @@
 package com.example.ecommerce.modules.importation.product.service;
 
 import com.example.ecommerce.modules.importation.product.dto.ImportProductRowDTO;
+import com.example.ecommerce.modules.importation.product.exception.ImportFileException;
+import com.example.ecommerce.modules.importation.product.exception.ImportValidationException;
+import com.example.ecommerce.modules.importation.product.exception.InvalidCsvException;
 import com.example.ecommerce.modules.importation.product.exception.ProductImportException;
 import com.example.ecommerce.modules.importation.product.mapper.ImportProductMapper;
 import com.example.ecommerce.modules.product.service.ProductService;
@@ -60,16 +63,15 @@ public class ImportProductService {
             }
 
         } catch (IOException exception) {
-            throw new RuntimeException(
-                    "Não foi possível ler o arquivo CSV",
-                    exception
+            throw new ImportFileException(
+                    "Não foi possível ler o arquivo CSV"
             );
         }
     }
 
     private void validateFile(MultipartFile file) {
         if (file == null || file.isEmpty()) {
-            throw new IllegalArgumentException(
+            throw new InvalidCsvException(
                     "O arquivo CSV não pode estar vazio"
             );
         }
@@ -77,7 +79,7 @@ public class ImportProductService {
 
     private void validateValues(ImportProductRowDTO dto, long line) {
         if (dto.preco().compareTo(BigDecimal.ZERO) < 0) {
-            throw new ProductImportException(
+            throw new ImportValidationException(
                     line,
                     "O preço não pode ser negativo"
             );
@@ -85,21 +87,21 @@ public class ImportProductService {
 
         if (dto.precoPromocional() != null
                 && dto.precoPromocional().compareTo(dto.preco()) >= 0) {
-            throw new ProductImportException(
+            throw new ImportValidationException(
                     line,
                     "O preço promocional deve ser menor que o preço normal"
             );
         }
 
         if (dto.quantidadeEstoque() < 0) {
-            throw new ProductImportException(
+            throw new ImportValidationException(
                     line,
                     "A quantidade em estoque não pode ser negativa"
             );
         }
 
         if (dto.estoqueMinimo() < 0) {
-            throw new ProductImportException(
+            throw new ImportValidationException(
                     line,
                     "O estoque mínimo não pode ser negativo"
             );
@@ -127,7 +129,7 @@ public class ImportProductService {
 
         for (String header : requiredHeaders) {
             if (!parser.getHeaderMap().containsKey(header)) {
-                throw new IllegalArgumentException(
+                throw new InvalidCsvException(
                         "A coluna obrigatória '" + header
                                 + "' não foi encontrada"
                 );

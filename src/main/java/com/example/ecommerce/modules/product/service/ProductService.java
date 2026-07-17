@@ -1,11 +1,13 @@
 package com.example.ecommerce.modules.product.service;
 
+import com.example.ecommerce.modules.category.exceptions.CategoryNotFoundException;
+import com.example.ecommerce.modules.category.exceptions.InactiveCategoryException;
 import com.example.ecommerce.modules.importation.product.dto.ImportProductRowDTO;
 import com.example.ecommerce.modules.product.dto.ProductCreateDTO;
 import com.example.ecommerce.modules.product.dto.ProductResponseDTO;
 import com.example.ecommerce.modules.category.model.Category;
 import com.example.ecommerce.modules.product.dto.ProductUpdateDTO;
-import com.example.ecommerce.modules.product.exception.ProductException;
+import com.example.ecommerce.modules.product.exception.*;
 import com.example.ecommerce.modules.product.mapper.ProductMapper;
 import com.example.ecommerce.modules.product.model.Product;
 import com.example.ecommerce.modules.category.repository.RepositoryCategory;
@@ -36,10 +38,10 @@ public class ProductService {
         List<Product> productConsulta = productRepository.findByNomeContainingIgnoreCase(productDTO.nome());
         Product p = productRepository.findBySkuContainingIgnoreCase(productDTO.sku());
         if (!productConsulta.isEmpty()) {
-            throw new ProductException("Nome de produto já existe!");
+            throw new ProductAlreadyExistsException("Nome de produto já existe!");
         }
         if (p != null) {
-            throw new ProductException("SKU do produto já existe!");
+            throw new DuplicateProductException("SKU do produto já existe!");
         }
 
         Long categoryId = productDTO.categoriaId();
@@ -49,7 +51,7 @@ public class ProductService {
                 || productDTO.estoqueMinimo() == null || productDTO.estoqueMinimo() < 1
                 || categoryId == null || productDTO.quantidadeEstoque() <= 0) {
 
-            throw new RuntimeException(
+            throw new InvalidProductDataException(
                     "É necessário informar o Nome, preço, estoque mínimo maior que 0, quantidade estoque maior que 0, e o ID da Categoria"
             );
         }
@@ -75,11 +77,11 @@ public class ProductService {
         product.setStatus(productDTO.status());
 
         Category category = categoryRepository.findById(categoryId).orElseThrow(
-                () -> new ProductException("Categoria não existe!")
+                () -> new CategoryNotFoundException("Categoria não existe!")
         );
 
         if (!category.isAtivo()){
-            throw new ProductException("Não é possível vincular uma categoria Inativa a um Produto");
+            throw new InactiveCategoryException("Não é possível vincular uma categoria Inativa a um Produto");
         }
 
         product.setCategory(category);
@@ -112,7 +114,7 @@ public class ProductService {
 
     public ProductResponseDTO deletarUmProduto(Integer produtoId){
         Product produto = productRepository.findById(produtoId).orElseThrow(
-                () -> new ProductException("Produto não encontrado!")
+                () -> new ProductNotFoundException("Produto não encontrado!")
         );
         productRepository.delete(produto);
         return ProductMapper.toProductResponseDTO(produto);
@@ -147,12 +149,12 @@ public class ProductService {
 
     public ProductResponseDTO alterarDadosProdutos(Integer produtoId, ProductUpdateDTO produtos){
         Product produto = productRepository.findById(produtoId).orElseThrow(
-                () -> new ProductException("Produto não encontrado!")
+                () -> new ProductNotFoundException("Produto não encontrado!")
         );
         if (produtos.nome() != null && !produtos.nome().isBlank()){
             List<Product> productConsulta = productRepository.findByNomeContainingIgnoreCase(produtos.nome());
             if (!productConsulta.isEmpty()) {
-                throw new ProductException("Nome de produto já existe!");
+                throw new ProductAlreadyExistsException("Nome de produto já existe!");
             }
             produto.setNome(produtos.nome());
         }
@@ -167,7 +169,7 @@ public class ProductService {
         }
         if (produtos.categoriaId() != null){
             Category category = categoryRepository.findById(produtos.categoriaId()).orElseThrow(
-                    () -> new ProductException("Categoria não existe!")
+                    () -> new CategoryNotFoundException("Categoria não existe!")
             );
             produto.setCategory(category);
         }
@@ -202,19 +204,19 @@ public class ProductService {
     @Transactional
     public void createFromImport(ImportProductRowDTO dto) {
         if (productRepository.existsBySku(dto.sku())) {
-            throw new IllegalArgumentException(
+            throw new DuplicateProductException(
                     "Já existe um produto com o SKU: " + dto.sku()
             );
         }
 
         if (productRepository.existsBySlug(dto.slug())) {
-            throw new IllegalArgumentException(
+            throw new DuplicateProductException(
                     "Já existe um produto com o slug: " + dto.slug()
             );
         }
 
         Category category = categoryRepository.findById(dto.categoriaId())
-                .orElseThrow(() -> new IllegalArgumentException(
+                .orElseThrow(() -> new CategoryNotFoundException(
                         "Categoria não encontrada: " + dto.categoriaId()
                 ));
 

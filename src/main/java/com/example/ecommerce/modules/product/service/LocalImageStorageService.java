@@ -1,6 +1,7 @@
 package com.example.ecommerce.modules.product.service;
 
 import com.example.ecommerce.externalServices.storage.ImageStorageService;
+import com.example.ecommerce.modules.product.exception.ImageUploadException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,9 +40,8 @@ public class LocalImageStorageService implements ImageStorageService {
         try {
             Files.createDirectories(this.uploadDirectory);
         } catch (IOException exception) {
-            throw new RuntimeException(
-                    "Não foi possível criar o diretório de imagens",
-                    exception
+            throw new ImageUploadException(
+                    "Não foi possível criar o diretório de imagens"
             );
         }
     }
@@ -58,7 +58,7 @@ public class LocalImageStorageService implements ImageStorageService {
                 .normalize();
 
         if (!destino.startsWith(uploadDirectory)) {
-            throw new RuntimeException("Caminho de arquivo inválido");
+            throw new ImageUploadException("Caminho de arquivo inválido");
         }
 
         try {
@@ -68,7 +68,7 @@ public class LocalImageStorageService implements ImageStorageService {
                     StandardCopyOption.REPLACE_EXISTING
             );
         } catch (IOException exception) {
-            throw new RuntimeException("Erro ao salvar a imagem", exception);
+            throw new ImageUploadException("Erro ao salvar a imagem");
         }
 
         return baseUrl + "/" + novoNomeArquivo;

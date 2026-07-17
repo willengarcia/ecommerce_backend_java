@@ -10,51 +10,28 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
+@Getter
+@Setter
 @Entity
 public class Customers {
-    @Getter
-    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Getter
-    @Setter
     private String nomeCompleto;
-    @Getter
-    @Setter
     @Column(unique = true)
     private String cpf;
-    @Getter
-    @Setter
     @Column(unique = true)
     private String email;
-    @Getter
-    @Setter
     private String telefone;
-    @Getter
-    @Setter
     private String senhaHash;
-    @Getter
-    @Setter
     @Enumerated(EnumType.STRING)
     private CustomerEnum status;
-    @Getter
-    @Setter
     private LocalDate dataCriacao;
-    @Getter
-    @Setter
     private LocalDate dataAtualizacao;
-
-    @Getter
     @OneToMany(mappedBy= "usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Address> enderecos =  new ArrayList<>();
-
-    @Getter
     @OneToMany(mappedBy= "usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Order> orders =  new ArrayList<>();
-
-    @Getter
     @OneToMany(mappedBy = "usuario")
     private List<Cart> carts = new ArrayList<>();
 

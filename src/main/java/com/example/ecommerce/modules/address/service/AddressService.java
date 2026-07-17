@@ -2,10 +2,12 @@ package com.example.ecommerce.modules.address.service;
 
 import com.example.ecommerce.modules.address.dto.AddressListDTO;
 import com.example.ecommerce.modules.address.dto.AddressUpdateDTO;
-import com.example.ecommerce.modules.address.exception.AddressException;
+import com.example.ecommerce.modules.address.exception.*;
 import com.example.ecommerce.modules.address.mapper.AddressMapper;
 import com.example.ecommerce.modules.address.model.Address;
 import com.example.ecommerce.modules.address.repository.AddressRepository;
+import com.example.ecommerce.modules.customers.exception.CustomerNotFoundException;
+import com.example.ecommerce.modules.customers.exception.InactiveCustomerException;
 import com.example.ecommerce.modules.customers.model.CustomerEnum;
 import com.example.ecommerce.modules.customers.model.Customers;
 import com.example.ecommerce.modules.customers.repository.CustomerRepository;
@@ -27,19 +29,19 @@ public class AddressService {
     public Address criarAddress(Address address) {
 
         if (address.getUsuario() == null || address.getUsuario().getId() == null) {
-            throw new AddressException("É necessário informar o usuário");
+            throw new InvalidAddressDataException("É necessário informar o usuário");
         }
 
         if (!address.getCep().matches("^(?:\\d{5}-\\d{3}|\\d{8}|S\\/N)$")){
-            throw new AddressException("Formato de CEP inválido, deve conter 8 números ou caso não tenha, informar 'S/N' " +
+            throw new InvalidZipCodeException("Formato de CEP inválido, deve conter 8 números ou caso não tenha, informar 'S/N' " +
                     "\nEx: 00000000 ou 99999-000");
         }
 
         Customers customers = customerRepository.findById(address.getUsuario().getId())
-                .orElseThrow(() -> new AddressException("Usuário não encontrado"));
+                .orElseThrow(() -> new CustomerNotFoundException("Usuário não encontrado"));
 
         if (customers.isStatus().equals(CustomerEnum.INATIVO) || customers.isStatus().equals(CustomerEnum.BLOQUEADO)) {
-            throw new AddressException("Usuário Inativo ou Bloqueado!");
+            throw new InactiveCustomerException("Usuário Inativo ou Bloqueado!");
         }
 
         // adicionar validação de endereço, do qual se já existir um cep para o cliente cadastrado, ele tem que transformar esse endereço em TRUE
@@ -51,7 +53,7 @@ public class AddressService {
                 || address.getEstado() == null || address.getEstado().isEmpty()
                 || address.getRua() == null || address.getRua().isEmpty()
                 || address.getNomeDestinatario() == null || address.getNomeDestinatario().isEmpty()) {
-            throw new AddressException("É necessário informar a Cidade, Bairro, Número, Estado, Rua, CEP e o Nome do Destinatário");
+            throw new InvalidAddressDataException("É necessário informar a Cidade, Bairro, Número, Estado, Rua, CEP e o Nome do Destinatário");
         }
 
         address.setUsuario(customers);
@@ -68,7 +70,9 @@ public class AddressService {
     }
 
     public AddressListDTO findById(Integer id){
-        Address address = addressRepository.findById(id).orElseThrow();
+        Address address = addressRepository.findById(id).orElseThrow(
+
+        );
         return AddressMapper.toAddressList(address);
     }
 
@@ -77,10 +81,14 @@ public class AddressService {
     }
 
     public AddressUpdateDTO alterAddressById(Integer idAddress, Integer idCustomer, AddressUpdateDTO addressUpdateDTO){
-        Address address = addressRepository.findById(idAddress).orElseThrow();
-        Customers customers = customerRepository.findById(idCustomer).orElseThrow();
+        Address address = addressRepository.findById(idAddress).orElseThrow(
+                () -> new AddressNotFoundException("Endereço não encontrado pelo ID")
+        );
+        Customers customers = customerRepository.findById(idCustomer).orElseThrow(
+                () -> new CustomerNotFoundException("Usuário não encontrado")
+        );
         if (!address.getUsuario().getId().equals(customers.getId())) {
-            throw new AddressException("Endereço não pertence ao cliente informado");
+            throw new AddressOwnershipException("Endereço não pertence ao cliente informado");
         }
         if (addressUpdateDTO.tipoEndereco() != null) {
             address.setTipoEndereco(addressUpdateDTO.tipoEndereco());
@@ -128,10 +136,10 @@ public class AddressService {
     public void deletarById(Integer id) {
 
         Address address = addressRepository.findById(id)
-                .orElseThrow(() -> new AddressException("Endereço não encontrado"));
+                .orElseThrow(() -> new AddressNotFoundException("Endereço não encontrado"));
 
         if (address.getUsuario().getOrders().stream().anyMatch(a -> a.getAddress().getId().equals(id))) {
-            throw new AddressException("Algum usuário tem pedidos vinculados a esse endereço, com isso não é possível realizar a exclusão do Endereço!");
+            throw new AddressInUseException("Algum usuário tem pedidos vinculados a esse endereço, com isso não é possível realizar a exclusão do Endereço!");
         }
 
         Customers usuario = address.getUsuario();

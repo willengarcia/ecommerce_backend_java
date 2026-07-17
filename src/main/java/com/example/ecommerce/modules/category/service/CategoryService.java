@@ -2,6 +2,7 @@ package com.example.ecommerce.modules.category.service;
 
 import com.example.ecommerce.modules.category.dto.CategoryDTO;
 import com.example.ecommerce.modules.category.exceptions.CategoryException;
+import com.example.ecommerce.modules.category.exceptions.CategoryNotFoundException;
 import com.example.ecommerce.modules.category.model.Category;
 import com.example.ecommerce.modules.category.repository.RepositoryCategory;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,7 @@ public class CategoryService {
     }
 
     public Category buscarPorId(Long id) {
-        return categoryRepository.findById(id).orElseThrow(() -> new CategoryException("Categoria não encontrada"));
+        return categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException("Categoria não encontrada"));
     }
 
     public Category atualizarCategoria(Long id, CategoryDTO novaCategoria) {

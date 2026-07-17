@@ -3,11 +3,12 @@ package com.example.ecommerce.modules.customers.service;
 import com.example.ecommerce.modules.customers.dto.CustomerCreateDTO;
 import com.example.ecommerce.modules.customers.dto.CustomerListDTO;
 import com.example.ecommerce.modules.customers.dto.CustomerUpdateDTO;
-import com.example.ecommerce.modules.customers.exception.CustomerException;
+import com.example.ecommerce.modules.customers.exception.*;
 import com.example.ecommerce.modules.customers.mapper.CustomerMapper;
 import com.example.ecommerce.modules.customers.model.CustomerEnum;
 import com.example.ecommerce.modules.customers.model.Customers;
 import com.example.ecommerce.modules.customers.repository.CustomerRepository;
+import com.example.ecommerce.modules.order.model.OrderEnum;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,13 +24,13 @@ public class CustomerService {
     public Customers criarUsuario(CustomerCreateDTO customerCreateDTO){
         Customers customers = new Customers();
         if(customerCreateDTO.nomeCompleto().isEmpty() || customerCreateDTO.cpf().isEmpty() || customerCreateDTO.email().isEmpty() || customerCreateDTO.telefone().isEmpty() || customerCreateDTO.senhaHash().isEmpty()){
-            throw new CustomerException("É obrigatório informar os campos: Nome, Email, Telefone, Senha, CPF");
+            throw new InvalidCustomerDataException("É obrigatório informar os campos: Nome, Email, Telefone, Senha, CPF");
         } else if (validarCPF(customerCreateDTO.cpf())) {
-            throw new CustomerException("É necessário informar CPF válido!");
+            throw new InvalidCustomerDataException("É necessário informar CPF válido!");
         } if (customerRepository.existsByCpf(customerCreateDTO.cpf())) {
-            throw new CustomerException("CPF já cadastrado");
+            throw new DuplicateCpfException("CPF já cadastrado");
         } if (customerRepository.existsByEmail(customerCreateDTO.email())) {
-            throw new CustomerException("Email já cadastrado");
+            throw new DuplicateEmailException("Email já cadastrado");
         } else {
             customers.setCpf(customerCreateDTO.cpf());
             customers.setNomeCompleto(customerCreateDTO.nomeCompleto());
@@ -48,7 +49,9 @@ public class CustomerService {
     }
 
     public Customers atualizarUsuarioPorId(Integer id, CustomerUpdateDTO customerUpdateDTO){
-        Customers customers = customerRepository.findById(id).orElseThrow();
+        Customers customers = customerRepository.findById(id).orElseThrow(
+                () -> new CustomerNotFoundException("Cliente não encontrado pelo ID, CPF ou e-mail")
+        );
         if (customerUpdateDTO.nomeCompleto() != null) {
             customers.setNomeCompleto(customerUpdateDTO.nomeCompleto());
         }
@@ -58,12 +61,22 @@ public class CustomerService {
         if (customerUpdateDTO.telefone() != null) {
             customers.setTelefone(customerUpdateDTO.telefone());
         }
+        if (customerUpdateDTO.status() != null) {
+            if (customers.getOrders().stream().anyMatch(order -> order.getStatus().equals(OrderEnum.PREPARANDO))
+            || customers.getOrders().stream().anyMatch(order -> order.getStatus().equals(OrderEnum.SEPARADO))
+            || customers.getOrders().stream().anyMatch(order -> order.getStatus().equals(OrderEnum.PROCESSADO))) {
+                throw new CustomerHasOpenOrdersException("Não é permitido excluir/inativar porque existem pedidos pendentes");
+            }
+            customers.setStatus(customerUpdateDTO.status());
+        }
         customers.setDataAtualizacao(LocalDate.now());
         return customerRepository.save(customers);
     }
 
     public CustomerListDTO buscarUsuarioPorId(Integer idCustomer){
-        Customers customers = customerRepository.findById(idCustomer).orElseThrow();
+        Customers customers = customerRepository.findById(idCustomer).orElseThrow(
+                () -> new CustomerNotFoundException("Cliente não encontrado pelo ID, CPF ou e-mail")
+        );
 
         return CustomerMapper.toCustomerListResponseDTO(customers);
     }

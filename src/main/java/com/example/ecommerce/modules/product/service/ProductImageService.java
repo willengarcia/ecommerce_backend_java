@@ -2,6 +2,8 @@ package com.example.ecommerce.modules.product.service;
 
 import com.example.ecommerce.externalServices.storage.ImageStorageService;
 import com.example.ecommerce.modules.product.dto.ProductImageResponseDTO;
+import com.example.ecommerce.modules.product.exception.ImageNotFoundException;
+import com.example.ecommerce.modules.product.exception.ProductNotFoundException;
 import com.example.ecommerce.modules.product.model.Product;
 import com.example.ecommerce.modules.product.model.ProductImages;
 import com.example.ecommerce.modules.product.repository.ProductImageRepository;
@@ -82,7 +84,7 @@ public class ProductImageService {
 
     public List<ProductImageResponseDTO> listarPorProduto(Integer productId) {
         if (!productRepository.existsById(productId)) {
-            throw new RuntimeException("Produto não encontrado");
+            throw new ProductNotFoundException("Produto não encontrado");
         }
 
         return productImageRepository.findByProductId(Long.valueOf(productId))
@@ -95,7 +97,7 @@ public class ProductImageService {
     public void remover(Long imageId) {
         ProductImages image = productImageRepository.findById(imageId)
                 .orElseThrow(() ->
-                        new RuntimeException("Imagem não encontrada")
+                        new ImageNotFoundException("Imagem não encontrada")
                 );
 
         imageStorageService.delete(image.getUrlImagem());

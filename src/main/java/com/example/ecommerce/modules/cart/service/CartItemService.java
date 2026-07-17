@@ -3,11 +3,15 @@ package com.example.ecommerce.modules.cart.service;
 import com.example.ecommerce.modules.cart.dto.CartItemCreateDTO;
 import com.example.ecommerce.modules.cart.dto.CartItemResponseDTO;
 import com.example.ecommerce.modules.cart.exception.CartException;
+import com.example.ecommerce.modules.cart.exception.CartItemNotFoundException;
+import com.example.ecommerce.modules.cart.exception.CartNotFoundException;
 import com.example.ecommerce.modules.cart.mapper.CartMapper;
 import com.example.ecommerce.modules.cart.model.Cart;
 import com.example.ecommerce.modules.cart.model.CartItem;
 import com.example.ecommerce.modules.cart.repository.CartItemRepository;
 import com.example.ecommerce.modules.cart.repository.CartRepository;
+import com.example.ecommerce.modules.product.exception.InsufficientStockException;
+import com.example.ecommerce.modules.product.exception.ProductNotFoundException;
 import com.example.ecommerce.modules.product.model.Product;
 import com.example.ecommerce.modules.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -30,10 +34,10 @@ public class CartItemService extends CartMapper {
     public CartItemResponseDTO create(CartItemCreateDTO dto) {
 
         Cart cart = cartRepository.findById(dto.cartId())
-                .orElseThrow(() -> new CartException("Carrinho não encontrado"));
+                .orElseThrow(() -> new CartNotFoundException("Carrinho não encontrado"));
 
         Product product = productRepository.findById(dto.productId())
-                .orElseThrow(() -> new CartException("Produto não encontrado"));
+                .orElseThrow(() -> new ProductNotFoundException("Produto não encontrado"));
 
         CartItem existente = cartItemRepository
                 .findByCarroIdAndProductId(dto.cartId(), dto.productId());
@@ -43,7 +47,7 @@ public class CartItemService extends CartMapper {
             return adicionarProdutoExistente(product, existente, cart, dto);
         }
         if (product.getQuantidadeEstoque() <= 0){
-            throw new CartException("Quantidade de estoque insuficiente");
+            throw new InsufficientStockException("Quantidade de estoque insuficiente");
         }
         return criarProdutoInCartItem(cart, product);
 
@@ -86,7 +90,7 @@ public class CartItemService extends CartMapper {
 
     public CartItemResponseDTO adicionarProdutoExistente(Product product, CartItem existente, Cart cart, CartItemCreateDTO dto) {
         if (product.getQuantidadeEstoque() <= 0){
-            throw new CartException("Quantidade de estoque insuficiente");
+            throw new InsufficientStockException("Quantidade de estoque insuficiente");
         }
         existente.setQuantidade(existente.getQuantidade() + 1);
         existente.setSubtotal(existente.getPrecoUnitario().multiply(BigDecimal.valueOf(existente.getQuantidade())));
@@ -118,11 +122,11 @@ public class CartItemService extends CartMapper {
         CartItem cartItem = cartItemRepository.findByCarroIdAndId(cartId, cartItemId);
 
         if (cartItem == null) {
-            throw new CartException("Item não encontrado no carrinho");
+            throw new CartItemNotFoundException("Item não encontrado no carrinho");
         }
 
         Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new CartException("Carrinho não encontrado"));
+                .orElseThrow(() -> new CartNotFoundException("Carrinho não encontrado"));
 
         Product product = productRepository.findById(cartItem.getProduct().getId());
         product.setQuantidadeEstoque(product.getQuantidadeEstoque() + cartItem.getQuantidade());

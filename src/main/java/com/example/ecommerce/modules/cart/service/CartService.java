@@ -5,12 +5,13 @@ import com.example.ecommerce.modules.address.model.Address;
 import com.example.ecommerce.modules.cart.dto.CartDetailsResponse;
 import com.example.ecommerce.modules.cart.dto.CartItemResponseDTO;
 import com.example.ecommerce.modules.cart.dto.CartResponseDTO;
-import com.example.ecommerce.modules.cart.exception.CartException;
+import com.example.ecommerce.modules.cart.exception.*;
 import com.example.ecommerce.modules.cart.mapper.CartMapper;
 import com.example.ecommerce.modules.cart.model.Cart;
 import com.example.ecommerce.modules.cart.model.CartEnum;
 import com.example.ecommerce.modules.cart.model.CartItem;
 import com.example.ecommerce.modules.cart.repository.CartRepository;
+import com.example.ecommerce.modules.customers.exception.CustomerNotFoundException;
 import com.example.ecommerce.modules.customers.mapper.CustomerMapper;
 import com.example.ecommerce.modules.customers.model.Customers;
 import com.example.ecommerce.modules.customers.repository.CustomerRepository;
@@ -39,9 +40,9 @@ public class CartService extends CartMapper {
         Customers customer = customerRepository
                 .findById(customerId)
                 .orElseThrow(() ->
-                        new CartException("Cliente não encontrado"));
+                        new CustomerNotFoundException("Cliente não encontrado"));
         if (customer.getCarts().stream().anyMatch(c -> c.getStatus().equals(CartEnum.ATIVO))) {
-            throw new CartException("Usuário tem um carrinho ATIVO");
+            throw new CartIsActiveFromCustomer("Usuário tem um carrinho ATIVO");
         }
         Cart cart = new Cart();
         cart.setUsuario(customer);
@@ -55,7 +56,7 @@ public class CartService extends CartMapper {
     public List<CartItemResponseDTO> getItemsByCart(Integer cartId) {
 
         Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new CartException("Carrinho não encontrado"));
+                .orElseThrow(() -> new CartNotFoundException("Carrinho não encontrado"));
 
         return cart.getItems()
                 .stream()
@@ -73,7 +74,7 @@ public class CartService extends CartMapper {
 
     public Cart clearCart(Integer cartId) {
         Cart cart = cartRepository.findById(cartId).orElseThrow(() ->
-                new CartException("Carrinho não encontrado"));
+                new CartNotFoundException("Carrinho não encontrado"));
         for (CartItem item : cart.getItems()) {
             Product product = item.getProduct();
 
@@ -98,24 +99,23 @@ public class CartService extends CartMapper {
 
     public void deleteCart(Integer cartId) {
         Cart cart = cartRepository.findById(cartId).orElseThrow(
-                () -> new CartException("Carrinho não existente")
+                () -> new CartNotFoundException("Carrinho não existente")
         );
-        if (!cart.getStatus().equals(CartEnum.ATIVO)) {
-            throw new CartException("Só é possível deletar carrrinhos com Status Ativo!");
+        if (cart.getStatus() != CartEnum.ATIVO) {
+            throw new CartAlreadyAbandonedException("Só é possível deletar carrrinhos com Status Ativo!");
         }
-        if (!cart.getItems().isEmpty()) {
-            throw new CartException("Só é possível deletar carrinho se não houver nenhum Item dentro dele.");
-        }
-        cartRepository.delete(cart);
+        cart.setStatus(CartEnum.ABANDONADO);
+        clearCart(cartId);
+        cartRepository.save(cart);
     }
 
     public CartDetailsResponse getDetailsByCart(Integer cartId, Integer customerId) {
         Cart cart = cartRepository.findById(cartId).orElseThrow(
-                () -> new CartException("Carrinho não existe")
+                () -> new CartNotFoundException("Carrinho não existe")
         );
 
         if (!cart.getUsuario().getId().equals(customerId)) {
-            throw new CartException("Esse carrinho não pertence a esse usuário.");
+            throw new CartOwnershipException("Esse carrinho não pertence a esse usuário.");
         }
 
         Address enderecoPrincipal = cart.getUsuario()
@@ -151,4 +151,5 @@ public class CartService extends CartMapper {
                 AddressMapper.toAddressList(enderecoPrincipal)
         );
     }
+
 }

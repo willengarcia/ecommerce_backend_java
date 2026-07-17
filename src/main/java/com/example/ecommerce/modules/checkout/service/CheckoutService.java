@@ -1,11 +1,16 @@
 package com.example.ecommerce.modules.checkout.service;
 
+import com.example.ecommerce.modules.address.exception.AddressNotFoundException;
+import com.example.ecommerce.modules.address.exception.AddressOwnershipException;
 import com.example.ecommerce.modules.address.model.Address;
 import com.example.ecommerce.modules.address.repository.AddressRepository;
+import com.example.ecommerce.modules.cart.exception.CartNotFoundException;
+import com.example.ecommerce.modules.cart.exception.CartOwnershipException;
 import com.example.ecommerce.modules.cart.model.Cart;
 import com.example.ecommerce.modules.cart.model.CartItem;
 import com.example.ecommerce.modules.cart.repository.CartRepository;
 import com.example.ecommerce.modules.checkout.dto.CheckoutRequestDTO;
+import com.example.ecommerce.modules.checkout.exception.EmptyCartException;
 import com.example.ecommerce.modules.order.dto.OrderCreateDTO;
 import com.example.ecommerce.modules.order.exception.OrderException;
 import com.example.ecommerce.modules.order.model.Order;
@@ -35,25 +40,25 @@ public class CheckoutService {
 
     public Cart findCartId(Integer cartId) {
         return cartRepository.findById(cartId)
-                .orElseThrow(() -> new OrderException("Carrinho não encontrado"));
+                .orElseThrow(() -> new CartNotFoundException("Carrinho não encontrado"));
     }
 
     public Address findAddressId(Integer addressId) {
         return addressRepository.findById(addressId)
-                .orElseThrow(() -> new OrderException("Carrinho não encontrado"));
+                .orElseThrow(() -> new AddressNotFoundException("Endererço não encontrado"));
     }
 
     public Order finalizarCompra(CheckoutRequestDTO dto, Integer idCustomer) {
         Cart cart = findCartId(Math.toIntExact(dto.cartId()));
         Address address = findAddressId(dto.addressId());
         if (!cart.getUsuario().getId().equals(idCustomer)) {
-            throw new OrderException("Esse usuário não pertence a esse Carrinho.");
+            throw new CartOwnershipException("Esse usuário não pertence a esse Carrinho.");
         }
         if (!Objects.equals(cart.getUsuario().getId(), address.getUsuario().getId())) {
-            throw new OrderException("Endereço não pertence ao usuário do carrinho");
+            throw new AddressOwnershipException("Endereço não pertence ao usuário do carrinho");
         }
         if (cart.getItems().isEmpty()) {
-            throw new OrderException("Carrinho vazio");
+            throw new EmptyCartException("Carrinho vazio");
         }
         Order orderCriado = orderService.createOrder(new OrderCreateDTO(cart, address, "PIX"), idCustomer);
         List<OrderItem> itemsCriados = create(orderCriado, cart);
