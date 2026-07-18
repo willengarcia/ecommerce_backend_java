@@ -52,8 +52,7 @@ public class Address {
     public Address() {
     }
 
-    public Address(Integer id, String nome_endereco, String nome_destinatario, String cep, String rua, String numero, String complemento, String cidade, String bairro, String estado, String referencia, AddressEnum tipo_endereco, Boolean endereco_principal) {
-        this.id = id;
+    public Address(String nome_endereco, String nome_destinatario, String cep, String rua, String numero, String complemento, String cidade, String bairro, String estado, String referencia, AddressEnum tipo_endereco, Boolean endereco_principal) {
         this.nomeEndereco = nome_endereco;
         this.nomeDestinatario = nome_destinatario;
         this.cep = cep;

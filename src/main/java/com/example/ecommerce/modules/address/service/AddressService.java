@@ -1,5 +1,6 @@
 package com.example.ecommerce.modules.address.service;
 
+import com.example.ecommerce.modules.address.dto.AddressCreateDTO;
 import com.example.ecommerce.modules.address.dto.AddressListDTO;
 import com.example.ecommerce.modules.address.dto.AddressUpdateDTO;
 import com.example.ecommerce.modules.address.exception.*;
@@ -26,41 +27,30 @@ public class AddressService {
         this.customerRepository = customerRepository;
     }
 
-    public Address criarAddress(Address address) {
+    public AddressCreateDTO criarAddress(AddressCreateDTO address) {
 
-        if (address.getUsuario() == null || address.getUsuario().getId() == null) {
-            throw new InvalidAddressDataException("É necessário informar o usuário");
-        }
-
-        if (!address.getCep().matches("^(?:\\d{5}-\\d{3}|\\d{8}|S\\/N)$")){
+        if (!address.cep().matches("^(?:\\d{5}-\\d{3}|\\d{8}|S\\/N)$")){
             throw new InvalidZipCodeException("Formato de CEP inválido, deve conter 8 números ou caso não tenha, informar 'S/N' " +
                     "\nEx: 00000000 ou 99999-000");
         }
 
-        Customers customers = customerRepository.findById(address.getUsuario().getId())
+        Customers customers = customerRepository.findById(address.usuarioId())
                 .orElseThrow(() -> new CustomerNotFoundException("Usuário não encontrado"));
 
         if (customers.isStatus().equals(CustomerEnum.INATIVO) || customers.isStatus().equals(CustomerEnum.BLOQUEADO)) {
             throw new InactiveCustomerException("Usuário Inativo ou Bloqueado!");
         }
 
-        // adicionar validação de endereço, do qual se já existir um cep para o cliente cadastrado, ele tem que transformar esse endereço em TRUE
 
-        if (address.getCep() == null || address.getCep().isEmpty()
-                || address.getBairro() == null || address.getBairro().isEmpty()
-                || address.getCidade() == null || address.getCidade().isEmpty()
-                || address.getNumero() == null || address.getNumero().isEmpty()
-                || address.getEstado() == null || address.getEstado().isEmpty()
-                || address.getRua() == null || address.getRua().isEmpty()
-                || address.getNomeDestinatario() == null || address.getNomeDestinatario().isEmpty()) {
-            throw new InvalidAddressDataException("É necessário informar a Cidade, Bairro, Número, Estado, Rua, CEP e o Nome do Destinatário");
-        }
+        Address addres = AddressMapper.toEntity(address);
 
-        address.setUsuario(customers);
-        address.setDataCriacao(LocalDate.now());
-        address.setDataAtualizacao(LocalDate.now());
+        addres.setUsuario(customers);
+        addres.setDataCriacao(LocalDate.now());
+        addres.setDataAtualizacao(LocalDate.now());
 
-        return addressRepository.save(address);
+        Address savedAddress = addressRepository.save(addres);
+
+        return AddressMapper.toAddressCreate(savedAddress);
     }
 
     public List<AddressListDTO> findAll(){

@@ -6,6 +6,28 @@ import com.example.ecommerce.modules.address.dto.AddressUpdateDTO;
 import com.example.ecommerce.modules.address.model.Address;
 
 public class AddressMapper {
+    public static Address toEntity(AddressCreateDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        Address address = new Address();
+
+        address.setNomeEndereco(dto.nomeEndereco());
+        address.setNomeDestinatario(dto.nomeDestinatario());
+        address.setCep(dto.cep());
+        address.setRua(dto.rua());
+        address.setNumero(dto.numero());
+        address.setCidade(dto.cidade());
+        address.setBairro(dto.bairro());
+        address.setEstado(dto.estado());
+        address.setComplemento(dto.complemento());
+        address.setReferencia(dto.referencia());
+        address.setTipoEndereco(dto.tipoEndereco());
+        address.setEnderecoPrincipal(dto.enderecoPrincipal());
+
+        return address;
+    }
     public static AddressCreateDTO toAddressCreate(Address address){
         return new AddressCreateDTO(
                 address.getNomeEndereco(),
@@ -20,9 +42,7 @@ public class AddressMapper {
                 address.getReferencia(),
                 address.getTipoEndereco(),
                 address.getEnderecoPrincipal(),
-                address.getUsuario().getId(),
-                address.getDataCriacao(),
-                address.getDataAtualizacao()
+                address.getId()
         );
     }
     public static AddressListDTO toAddressList(Address address){

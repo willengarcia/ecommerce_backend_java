@@ -6,6 +6,7 @@ import com.example.ecommerce.modules.address.dto.AddressUpdateDTO;
 import com.example.ecommerce.modules.address.mapper.AddressMapper;
 import com.example.ecommerce.modules.address.model.Address;
 import com.example.ecommerce.modules.address.service.AddressService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,10 +24,10 @@ public class AddressController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createAddress( @RequestBody Address addressCreate) {
-        Address address = addressService.criarAddress(addressCreate);
+    public ResponseEntity<?> createAddress(@Valid @RequestBody AddressCreateDTO addressCreate) {
+        AddressCreateDTO address = addressService.criarAddress(addressCreate);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(AddressMapper.toAddressCreate(address));
+        return ResponseEntity.status(HttpStatus.CREATED).body(address);
     }
 
     @GetMapping
@@ -35,12 +36,12 @@ public class AddressController {
     }
 
     @GetMapping("/{idAddress}")
-    public ResponseEntity<?> getAddress(@PathVariable Integer idAddress){
+    public ResponseEntity<?> getAddress(@Valid @PathVariable Integer idAddress){
         return ResponseEntity.status(HttpStatus.OK).body(addressService.findById(idAddress));
     }
 
     @GetMapping("/user/{idUsuario}")
-    public ResponseEntity<?> getAddressByUsuarioId(@PathVariable Integer idUsuario){
+    public ResponseEntity<?> getAddressByUsuarioId(@Valid @PathVariable Integer idUsuario){
         List<Address> address = addressService.findByUsuarioId(idUsuario);
         List<AddressListDTO> addressListDTO = new ArrayList<>();
         address.forEach(addres -> {
@@ -51,13 +52,13 @@ public class AddressController {
     }
 
     @DeleteMapping("/{idAddress}")
-    public ResponseEntity<?> deleteAddress(@PathVariable Integer idAddress){
+    public ResponseEntity<?> deleteAddress(@Valid @PathVariable Integer idAddress){
         addressService.deletarById(idAddress);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{idAddress}/customer/{idCustomer}")
-    public ResponseEntity<?> updateAddress(@RequestBody AddressUpdateDTO addressUpdateDTO, @PathVariable Integer idAddress,  @PathVariable Integer idCustomer){
+    public ResponseEntity<?> updateAddress(@Valid @RequestBody AddressUpdateDTO addressUpdateDTO, @PathVariable Integer idAddress,  @PathVariable Integer idCustomer){
         AddressUpdateDTO dto = addressService.alterAddressById(idAddress, idCustomer, addressUpdateDTO);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
