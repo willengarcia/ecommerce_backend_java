@@ -1,8 +1,7 @@
 package com.example.ecommerce.modules.category.service;
 
 import com.example.ecommerce.modules.category.dto.CategoryDTO;
-import com.example.ecommerce.modules.category.exceptions.CategoryException;
-import com.example.ecommerce.modules.category.exceptions.CategoryNotFoundException;
+import com.example.ecommerce.modules.category.exceptions.*;
 import com.example.ecommerce.modules.category.model.Category;
 import com.example.ecommerce.modules.category.repository.RepositoryCategory;
 import org.springframework.stereotype.Service;
@@ -22,9 +21,9 @@ public class CategoryService {
 
     public Category criarCategoria(Category category) {
         if (category.getName().isEmpty() || category.getName().isBlank()) {
-            throw new CategoryException("É obrigatório informar o Nome do Categoria");
+            throw new InvalidCategoryDataException("É obrigatório informar o Nome do Categoria");
         } else if (categoryRepository.existsByNameIgnoreCase(category.getName())) {
-            throw new CategoryException("Nome de categoria existente");
+            throw new DuplicateCategoryException("Nome de categoria existente");
         }else {
             return categoryRepository.save(category);
         }
@@ -32,7 +31,7 @@ public class CategoryService {
 
     public List<CategoryDTO> listarCategorias() {
         if (categoryRepository.count() == 0) {
-            throw new CategoryException("Não há categorias registradas");
+            throw new CategoryNotFoundException("Não há categorias registradas");
         }
         return categoryRepository.findAll().stream()
                 .map(category -> new CategoryDTO(category.getId(), category.getName(), category.getDescription(), category.isAtivo(), category.getDataAtualizacao()))
@@ -45,7 +44,7 @@ public class CategoryService {
 
     public Category atualizarCategoria(Long id, CategoryDTO novaCategoria) {
         if (categoryRepository.existsByNameIgnoreCase(novaCategoria.name())) {
-            throw new CategoryException("Nome de categoria existente");
+            throw new DuplicateCategoryException("Nome de categoria existente");
         }
         Category category = buscarPorId(id);
         if (novaCategoria.name() != null && !novaCategoria.name().isBlank()) {
@@ -58,7 +57,7 @@ public class CategoryService {
             category.setAtivo(true);
         } else if (!novaCategoria.ativo()) {
             if (categoryRepository.hasProducts(category.getId())){
-                throw new CategoryException(
+                throw new InactiveCategoryException(
                         "Categoria não pode ficar inativa por ter produtos vinculados à ela."
                 );
             }
@@ -70,7 +69,7 @@ public class CategoryService {
 
     public void deletarCategoria(Long id) {
         if (categoryRepository.hasProducts(id)){
-            throw new CategoryException(
+            throw new CategoryHasProductsException(
                     "Categoria vinculada a um produto"
             );
         }

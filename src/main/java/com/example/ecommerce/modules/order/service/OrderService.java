@@ -1,10 +1,11 @@
 package com.example.ecommerce.modules.order.service;
 
+import com.example.ecommerce.modules.address.exception.AddressNotFoundException;
 import com.example.ecommerce.modules.address.model.Address;
 import com.example.ecommerce.modules.address.repository.AddressRepository;
 import com.example.ecommerce.modules.order.dto.OrderCreateDTO;
 import com.example.ecommerce.modules.order.dto.OrderUpdateAddressDTO;
-import com.example.ecommerce.modules.order.exception.OrderException;
+import com.example.ecommerce.modules.order.exception.*;
 import com.example.ecommerce.modules.order.model.Order;
 import com.example.ecommerce.modules.order.model.OrderEnum;
 import com.example.ecommerce.modules.order.respository.OrderRepository;
@@ -23,23 +24,23 @@ public class OrderService{
 
     public Order createOrder(OrderCreateDTO orderCreateDTO, Integer idCustomer) {
         if (idCustomer == null) {
-            throw new OrderException("É necessário informar o id do Customer.");
+            throw new InvalidOrderDataException("É necessário informar o id do Customer.");
         }
         if (orderCreateDTO == null) {
-            throw new OrderException("Os dados do pedido não foram informados.");
+            throw new InvalidOrderDataException("Os dados do pedido não foram informados.");
         }
         if (orderCreateDTO.cart() == null) {
-            throw new OrderException("O carrinho é obrigatório.");
+            throw new InvalidOrderDataException("O carrinho é obrigatório.");
         }
         if (orderCreateDTO.address() == null) {
-            throw new OrderException("O endereço é obrigatório.");
+            throw new InvalidOrderDataException("O endereço é obrigatório.");
         }
         if (orderCreateDTO.cart().getUsuario() == null) {
-            throw new OrderException("O usuário do carrinho é obrigatório.");
+            throw new InvalidOrderDataException("O usuário do carrinho é obrigatório.");
         }
 
         if (orderCreateDTO.address().getId() == null) {
-            throw new OrderException("O ID do endereço é obrigatório.");
+            throw new InvalidOrderDataException("O ID do endereço é obrigatório.");
         }
         Order order = getOrder(orderCreateDTO);
         return orderRepository.save(order);
@@ -78,16 +79,16 @@ public class OrderService{
     public Order updateOrderAddress(Long orderId, OrderUpdateAddressDTO orderUpdateAddressDTO) {
         Order order = orderRepository.findById(orderId).orElseThrow();
         Address address = addressRepository.findById(orderUpdateAddressDTO.addressId()).orElseThrow(
-                ()-> new OrderException("Endereço não encontrado!")
+                ()-> new AddressNotFoundException("Endereço não encontrado!")
         );
         if (orderUpdateAddressDTO.customerId() == null || !order.getUsuario().getId().equals(orderUpdateAddressDTO.customerId())) {
-            throw new OrderException("Order não pertence ao cliente informado.");
+            throw new OrderOwnershipException("Order não pertence ao cliente informado.");
         }
         if (!Objects.equals(order.getUsuario().getId(), address.getUsuario().getId())) {
-            throw new OrderException("Endereço não pertence ao usuário do carrinho");
+            throw new OrderAddressOwnershipException("Endereço não pertence ao usuário do carrinho");
         }
         if (!order.getStatus().equals(OrderEnum.CRIADO)) {
-            throw new OrderException("Endereço do pedido não pode ser alterado, pois está "+order.getStatus());
+            throw new InvalidOrderStatusException("Endereço do pedido não pode ser alterado, pois está "+order.getStatus());
         }
         order.setAddress(address);
         order.setIdAddress(address.getId());
