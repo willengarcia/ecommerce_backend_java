@@ -8,29 +8,18 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
+@Getter
+@Setter
 @Entity
 public class Category {
-    @Setter
-    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Setter
-    @Getter
     @Column(unique = true)
     private String name;
-    @Setter
-    @Getter
     private String description;
-    @Setter
-    @Getter
     private boolean ativo;
-    @Setter
-    @Getter
     private LocalDate dataCriacao;
-    @Setter
-    @Getter
     private LocalDate dataAtualizacao;
 
     @OneToMany(mappedBy= "category", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -38,13 +27,10 @@ public class Category {
 
     public Category() {
     }
-    public Category(Long id, String name, String description, boolean ativo) {
-        this.id = id;
+    public Category(String name, String description, boolean ativo) {
         this.name = name;
         this.description = description;
         this.ativo = ativo;
-        this.dataCriacao = LocalDate.now();
-        this.dataAtualizacao = LocalDate.now();
     }
 
 }

@@ -42,7 +42,7 @@ public class AddressService {
         }
 
 
-        Address addres = AddressMapper.toEntity(address);
+        Address addres = AddressMapper.toEntityAddress(address);
 
         addres.setUsuario(customers);
         addres.setDataCriacao(LocalDate.now());

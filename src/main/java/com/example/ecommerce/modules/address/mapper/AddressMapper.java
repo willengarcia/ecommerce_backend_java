@@ -6,7 +6,7 @@ import com.example.ecommerce.modules.address.dto.AddressUpdateDTO;
 import com.example.ecommerce.modules.address.model.Address;
 
 public class AddressMapper {
-    public static Address toEntity(AddressCreateDTO dto) {
+    public static Address toEntityAddress(AddressCreateDTO dto) {
         if (dto == null) {
             return null;
         }

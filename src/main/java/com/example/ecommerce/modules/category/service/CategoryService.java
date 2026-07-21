@@ -1,7 +1,9 @@
 package com.example.ecommerce.modules.category.service;
 
-import com.example.ecommerce.modules.category.dto.CategoryDTO;
+import com.example.ecommerce.modules.category.dto.CategoryCreateDTO;
+import com.example.ecommerce.modules.category.dto.CategoryListDTO;
 import com.example.ecommerce.modules.category.exceptions.*;
+import com.example.ecommerce.modules.category.mapper.CategoryMapper;
 import com.example.ecommerce.modules.category.model.Category;
 import com.example.ecommerce.modules.category.repository.RepositoryCategory;
 import org.springframework.stereotype.Service;
@@ -19,22 +21,21 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public Category criarCategoria(Category category) {
-        if (category.getName().isEmpty() || category.getName().isBlank()) {
-            throw new InvalidCategoryDataException("É obrigatório informar o Nome do Categoria");
-        } else if (categoryRepository.existsByNameIgnoreCase(category.getName())) {
+    public CategoryCreateDTO criarCategoria(CategoryCreateDTO category) {
+        if (categoryRepository.existsByNameIgnoreCase(category.name())) {
             throw new DuplicateCategoryException("Nome de categoria existente");
         }else {
-            return categoryRepository.save(category);
+            Category cate = categoryRepository.save(CategoryMapper.toCategoryCreateDTO(category));
+            return CategoryMapper.toCategoryCreateDTO(cate);
         }
     }
 
-    public List<CategoryDTO> listarCategorias() {
+    public List<CategoryListDTO> listarCategorias() {
         if (categoryRepository.count() == 0) {
             throw new CategoryNotFoundException("Não há categorias registradas");
         }
         return categoryRepository.findAll().stream()
-                .map(category -> new CategoryDTO(category.getId(), category.getName(), category.getDescription(), category.isAtivo(), category.getDataAtualizacao()))
+                .map(category -> new CategoryListDTO(category.getId(), category.getName(), category.getDescription(), category.isAtivo(), category.getDataAtualizacao()))
                 .collect(Collectors.toList());
     }
 
@@ -42,7 +43,7 @@ public class CategoryService {
         return categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException("Categoria não encontrada"));
     }
 
-    public Category atualizarCategoria(Long id, CategoryDTO novaCategoria) {
+    public CategoryCreateDTO atualizarCategoria(Long id, CategoryCreateDTO novaCategoria) {
         if (categoryRepository.existsByNameIgnoreCase(novaCategoria.name())) {
             throw new DuplicateCategoryException("Nome de categoria existente");
         }
@@ -64,7 +65,8 @@ public class CategoryService {
             category.setAtivo(false);
         }
         category.setDataAtualizacao(LocalDate.now());
-        return categoryRepository.save(category);
+        Category cat = categoryRepository.save(category);
+        return CategoryMapper.toCategoryCreateDTO(cat);
     }
 
     public void deletarCategoria(Long id) {
