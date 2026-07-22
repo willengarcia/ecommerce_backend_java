@@ -4,6 +4,7 @@ import com.example.ecommerce.modules.cart.dto.CartItemCreateDTO;
 import com.example.ecommerce.modules.cart.dto.CartItemResponseDTO;
 import com.example.ecommerce.modules.cart.mapper.CartMapper;
 import com.example.ecommerce.modules.cart.service.CartItemService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,7 @@ public class CartItemController extends CartMapper {
     }
 
     @PostMapping
-    public ResponseEntity<?> createCartItem(@RequestBody CartItemCreateDTO dto) {
+    public ResponseEntity<?> createCartItem(@Valid @RequestBody CartItemCreateDTO dto) {
         CartItemResponseDTO cartItem = cartItemService.create(dto);
         return ResponseEntity.ok(cartItem);
     }

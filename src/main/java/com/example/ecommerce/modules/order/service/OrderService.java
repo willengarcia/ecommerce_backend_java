@@ -10,6 +10,8 @@ import com.example.ecommerce.modules.order.model.Order;
 import com.example.ecommerce.modules.order.model.OrderEnum;
 import com.example.ecommerce.modules.order.respository.OrderRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -22,6 +24,7 @@ public class OrderService{
         this.addressRepository = addressRepository;
     }
 
+    @Transactional
     public Order createOrder(OrderCreateDTO orderCreateDTO, Integer idCustomer) {
         if (idCustomer == null) {
             throw new InvalidOrderDataException("É necessário informar o id do Customer.");
@@ -45,6 +48,7 @@ public class OrderService{
         Order order = getOrder(orderCreateDTO);
         return orderRepository.save(order);
     }
+
     private static Order getOrder(OrderCreateDTO orderCreateDTO) {
         Order order = new Order();
         order.setStatus(OrderEnum.AGUARDANDO_PAGAMENTO);
@@ -76,6 +80,7 @@ public class OrderService{
         return order.stream().toList();
     }
 
+    @Transactional
     public Order updateOrderAddress(Long orderId, OrderUpdateAddressDTO orderUpdateAddressDTO) {
         Order order = orderRepository.findById(orderId).orElseThrow();
         Address address = addressRepository.findById(orderUpdateAddressDTO.addressId()).orElseThrow(

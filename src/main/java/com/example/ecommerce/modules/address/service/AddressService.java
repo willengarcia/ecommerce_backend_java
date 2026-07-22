@@ -13,6 +13,7 @@ import com.example.ecommerce.modules.customers.model.CustomerEnum;
 import com.example.ecommerce.modules.customers.model.Customers;
 import com.example.ecommerce.modules.customers.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,6 +28,7 @@ public class AddressService {
         this.customerRepository = customerRepository;
     }
 
+    @Transactional
     public AddressCreateDTO criarAddress(AddressCreateDTO address) {
 
         if (!address.cep().matches("^(?:\\d{5}-\\d{3}|\\d{8}|S\\/N)$")){
@@ -70,6 +72,7 @@ public class AddressService {
         return addressRepository.findByUsuarioId(id);
     }
 
+    @Transactional
     public AddressUpdateDTO alterAddressById(Integer idAddress, Integer idCustomer, AddressUpdateDTO addressUpdateDTO){
         Address address = addressRepository.findById(idAddress).orElseThrow(
                 () -> new AddressNotFoundException("Endereço não encontrado pelo ID")
@@ -123,6 +126,7 @@ public class AddressService {
         return AddressMapper.toAddressUpdate(address);
     }
 
+    @Transactional
     public void deletarById(Integer id) {
 
         Address address = addressRepository.findById(id)

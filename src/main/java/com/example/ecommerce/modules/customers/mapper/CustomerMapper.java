@@ -7,7 +7,7 @@ import com.example.ecommerce.modules.customers.model.Customers;
 
 public class CustomerMapper {
     public static CustomerListDTO toCustomerListResponseDTO(Customers customers) {
-        CustomerListDTO dto = new CustomerListDTO(
+        return new CustomerListDTO(
                 customers.getId(),
                 customers.getNomeCompleto(),
                 customers.getCpf(),
@@ -37,11 +37,10 @@ public class CustomerMapper {
                 customers.getDataCriacao(),
                 customers.getDataAtualizacao()
         );
-        return dto;
     }
 
     public static CustomerResponseDTO toCustomerResponseDTO(Customers customers) {
-        CustomerResponseDTO dto = new CustomerResponseDTO(
+        return new CustomerResponseDTO(
                 customers.getId(),
                 customers.getNomeCompleto(),
                 customers.getCpf(),
@@ -49,6 +48,5 @@ public class CustomerMapper {
                 customers.getTelefone(),
                 customers.isStatus()
         );
-        return dto;
     }
 }

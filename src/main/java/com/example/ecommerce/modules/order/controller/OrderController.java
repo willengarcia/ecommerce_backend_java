@@ -7,6 +7,7 @@ import com.example.ecommerce.modules.order.dto.OrderUpdateAddressDTO;
 import com.example.ecommerce.modules.order.mapper.OrderMapper;
 import com.example.ecommerce.modules.order.model.Order;
 import com.example.ecommerce.modules.order.service.OrderService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class OrderController {
     }
 
     @PostMapping("/{idCustomer}")
-    public ResponseEntity<OrderResponseDTO> createOrder(@RequestBody CheckoutRequestDTO orderCreateDTO, @PathVariable Integer idCustomer) {
+    public ResponseEntity<OrderResponseDTO> createOrder(@Valid @RequestBody CheckoutRequestDTO orderCreateDTO, @PathVariable Integer idCustomer) {
         Order order = checkoutService.finalizarCompra(orderCreateDTO,  idCustomer);
         return ResponseEntity.status(HttpStatus.CREATED).body(OrderMapper.toOrderResponseDTO(order));
     }
@@ -51,7 +52,7 @@ public class OrderController {
     }
 
     @PutMapping("/{idOrder}/address")
-    public ResponseEntity<OrderResponseDTO> updateOrderAddress(@PathVariable Long idOrder, @RequestBody OrderUpdateAddressDTO orderUpdateAddressDTO) {
+    public ResponseEntity<OrderResponseDTO> updateOrderAddress(@PathVariable Long idOrder, @Valid @RequestBody OrderUpdateAddressDTO orderUpdateAddressDTO) {
         Order order = orderService.updateOrderAddress(idOrder, orderUpdateAddressDTO);
         return ResponseEntity.status(HttpStatus.OK).body(OrderMapper.toOrderResponseDTO(order));
     }

@@ -12,7 +12,6 @@ import com.example.ecommerce.modules.cart.repository.CartRepository;
 import com.example.ecommerce.modules.checkout.dto.CheckoutRequestDTO;
 import com.example.ecommerce.modules.checkout.exception.EmptyCartException;
 import com.example.ecommerce.modules.order.dto.OrderCreateDTO;
-import com.example.ecommerce.modules.order.exception.OrderException;
 import com.example.ecommerce.modules.order.model.Order;
 import com.example.ecommerce.modules.order.model.OrderItem;
 import com.example.ecommerce.modules.order.respository.OrderItemRepository;

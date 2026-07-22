@@ -33,7 +33,7 @@ public class ProductService {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
     }
-
+    @Transactional
     public Product criarProduct(ProductCreateDTO productDTO) {
         List<Product> productConsulta = productRepository.findByNomeContainingIgnoreCase(productDTO.nome());
         Product p = productRepository.findBySkuContainingIgnoreCase(productDTO.sku());
@@ -101,17 +101,7 @@ public class ProductService {
         return ProductMapper.toProductResponseDTO(produto);
     }
 
-    public ProductResponseDTO atualizarInformacoesPrincipais(Integer produtoId, ProductCreateDTO produtos){
-        Product produto = productRepository.findById(produtoId).orElseThrow();
-
-        produto.setNome(produtos.nome());
-        produto.setPreco(produtos.preco());
-        produto.setQuantidadeEstoque(produtos.quantidadeEstoque());
-        produto.setStatus(produtos.status());
-        productRepository.save(produto);
-        return ProductMapper.toProductResponseDTO(produto);
-    }
-
+    @Transactional
     public ProductResponseDTO deletarUmProduto(Integer produtoId){
         Product produto = productRepository.findById(produtoId).orElseThrow(
                 () -> new ProductNotFoundException("Produto não encontrado!")
@@ -147,6 +137,7 @@ public class ProductService {
                 .toList();
     }
 
+    @Transactional
     public ProductResponseDTO alterarDadosProdutos(Integer produtoId, ProductUpdateDTO produtos){
         Product produto = productRepository.findById(produtoId).orElseThrow(
                 () -> new ProductNotFoundException("Produto não encontrado!")

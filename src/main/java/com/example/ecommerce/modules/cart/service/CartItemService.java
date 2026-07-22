@@ -15,6 +15,7 @@ import com.example.ecommerce.modules.product.exception.ProductNotFoundException;
 import com.example.ecommerce.modules.product.model.Product;
 import com.example.ecommerce.modules.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -31,6 +32,7 @@ public class CartItemService extends CartMapper {
         this.cartRepository = cartRepository;
     }
 
+    @Transactional
     public CartItemResponseDTO create(CartItemCreateDTO dto) {
 
         Cart cart = cartRepository.findById(dto.cartId())
@@ -53,6 +55,7 @@ public class CartItemService extends CartMapper {
 
     }
 
+    @Transactional
     public CartItemResponseDTO criarProdutoInCartItem(Cart cart, Product product) {
         CartItem created = new CartItem();
         created.setCarro(cart);
@@ -88,6 +91,7 @@ public class CartItemService extends CartMapper {
                 conversorProductDTO(created));
     }
 
+    @Transactional
     public CartItemResponseDTO adicionarProdutoExistente(Product product, CartItem existente, Cart cart, CartItemCreateDTO dto) {
         if (product.getQuantidadeEstoque() <= 0){
             throw new InsufficientStockException("Quantidade de estoque insuficiente");
@@ -118,6 +122,7 @@ public class CartItemService extends CartMapper {
         return cartItemRepository.findAllByCarroId(cartId).stream().map(CartItem::getSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    @Transactional
     public void deleteItem(Integer cartId, Integer cartItemId){
         CartItem cartItem = cartItemRepository.findByCarroIdAndId(cartId, cartItemId);
 

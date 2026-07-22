@@ -7,6 +7,7 @@ import com.example.ecommerce.modules.category.mapper.CategoryMapper;
 import com.example.ecommerce.modules.category.model.Category;
 import com.example.ecommerce.modules.category.repository.RepositoryCategory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,6 +22,7 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
+    @Transactional
     public CategoryCreateDTO criarCategoria(CategoryCreateDTO category) {
         if (categoryRepository.existsByNameIgnoreCase(category.name())) {
             throw new DuplicateCategoryException("Nome de categoria existente");
@@ -43,6 +45,7 @@ public class CategoryService {
         return categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException("Categoria não encontrada"));
     }
 
+    @Transactional
     public CategoryCreateDTO atualizarCategoria(Long id, CategoryCreateDTO novaCategoria) {
         if (categoryRepository.existsByNameIgnoreCase(novaCategoria.name())) {
             throw new DuplicateCategoryException("Nome de categoria existente");
@@ -69,6 +72,7 @@ public class CategoryService {
         return CategoryMapper.toCategoryCreateDTO(cat);
     }
 
+    @Transactional
     public void deletarCategoria(Long id) {
         if (categoryRepository.hasProducts(id)){
             throw new CategoryHasProductsException(

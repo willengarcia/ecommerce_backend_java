@@ -6,6 +6,7 @@ import com.example.ecommerce.modules.customers.dto.CustomerUpdateDTO;
 import com.example.ecommerce.modules.customers.mapper.CustomerMapper;
 import com.example.ecommerce.modules.customers.model.Customers;
 import com.example.ecommerce.modules.customers.service.CustomerService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,19 +23,9 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createCustomer(@RequestBody CustomerCreateDTO dto) {
+    public ResponseEntity<?> createCustomer(@Valid @RequestBody CustomerCreateDTO dto) {
         Customers customer = customerService.criarUsuario(dto);
-        CustomerCreateDTO customerCreateDTO = new CustomerCreateDTO(
-                customer.getId(),
-                customer.getNomeCompleto(),
-                customer.getCpf(),
-                customer.getEmail(),
-                customer.getTelefone(),
-                customer.getSenhaHash(),
-                customer.isStatus(),
-                customer.getDataCriacao(),
-                customer.getDataAtualizacao()
-        );
+        CustomerListDTO customerCreateDTO = CustomerMapper.toCustomerListResponseDTO(customer);
         return ResponseEntity.status(HttpStatus.CREATED).body(customerCreateDTO);
     }
 
@@ -57,7 +48,6 @@ public class CustomerController {
     public ResponseEntity<CustomerUpdateDTO>  updateCustomer(@PathVariable Integer idCustomer, @RequestBody CustomerUpdateDTO dto) {
         Customers customer = customerService.atualizarUsuarioPorId(idCustomer, dto);
         CustomerUpdateDTO customerCreateDTO = new CustomerUpdateDTO(
-                customer.getId(),
                 customer.getNomeCompleto(),
                 customer.getCpf(),
                 customer.getEmail(),

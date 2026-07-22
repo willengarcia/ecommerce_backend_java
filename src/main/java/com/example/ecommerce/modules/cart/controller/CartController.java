@@ -7,6 +7,7 @@ import com.example.ecommerce.modules.cart.dto.CartResponseDTO;
 import com.example.ecommerce.modules.cart.mapper.CartMapper;
 import com.example.ecommerce.modules.cart.model.Cart;
 import com.example.ecommerce.modules.cart.service.CartService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class CartController {
         this.cartService = cartService;
     }
     @PostMapping
-    public ResponseEntity<CartResponseDTO> create(@RequestBody CartCreateDTO dto) {
+    public ResponseEntity<CartResponseDTO> create(@Valid @RequestBody CartCreateDTO dto) {
         Cart cart = cartService.createCart(dto.customerId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(CartMapper.conversorCartResponseDTO(cart));

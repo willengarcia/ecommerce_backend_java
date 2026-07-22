@@ -7,6 +7,7 @@ import com.example.ecommerce.modules.product.dto.ProductUpdateDTO;
 import com.example.ecommerce.modules.product.model.Product;
 import com.example.ecommerce.modules.product.service.ProductImageService;
 import com.example.ecommerce.modules.product.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -31,7 +32,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<?> criarProduto(@RequestBody ProductCreateDTO productCreateDTO){
+    public ResponseEntity<?> criarProduto(@Valid @RequestBody ProductCreateDTO productCreateDTO){
         try{
             Product produto = productService.criarProduct(productCreateDTO);
             return ResponseEntity
@@ -81,11 +82,6 @@ public class ProductController {
         return productService.buscarUmProduto(productId);
     }
 
-    @PutMapping("/{productId}")
-    public ProductResponseDTO alterarInformacoesEssenciaisProduto(@PathVariable Integer productId, @RequestBody ProductCreateDTO produto){
-        return productService.atualizarInformacoesPrincipais(productId, produto);
-    }
-
     @DeleteMapping("/{productId}")
     public ResponseEntity<?> deletarProduto(@PathVariable Integer productId){
         ProductResponseDTO dto = productService.deletarUmProduto(productId);
@@ -126,7 +122,7 @@ public class ProductController {
     }
 
     @PatchMapping("/{idProduct}")
-    public ResponseEntity<ProductResponseDTO> updateDataProduct(@PathVariable Integer idProduct, @RequestBody ProductUpdateDTO productUpdateDTO){
+    public ResponseEntity<ProductResponseDTO> updateDataProduct(@PathVariable Integer idProduct, @Valid @RequestBody ProductUpdateDTO productUpdateDTO){
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(productService.alterarDadosProdutos(idProduct, productUpdateDTO));
     }
 }

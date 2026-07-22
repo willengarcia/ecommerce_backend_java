@@ -19,6 +19,7 @@ import com.example.ecommerce.modules.product.mapper.ProductMapper;
 import com.example.ecommerce.modules.product.model.Product;
 import com.example.ecommerce.modules.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -35,6 +36,7 @@ public class CartService extends CartMapper {
         this.productRepository = productRepository;
     }
 
+    @Transactional
     public Cart createCart(Integer customerId) {
 
         Customers customer = customerRepository
