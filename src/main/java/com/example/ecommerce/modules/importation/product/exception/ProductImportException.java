@@ -1,5 +1,8 @@
 package com.example.ecommerce.modules.importation.product.exception;
 
+import lombok.Getter;
+
+@Getter
 public class ProductImportException extends RuntimeException {
     private final long line;
 
@@ -13,7 +16,4 @@ public class ProductImportException extends RuntimeException {
         this.line = line;
     }
 
-    public long getLine() {
-        return line;
-    }
 }

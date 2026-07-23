@@ -3,6 +3,7 @@ package com.example.ecommerce.modules.product.service;
 import com.example.ecommerce.modules.category.exceptions.CategoryNotFoundException;
 import com.example.ecommerce.modules.category.exceptions.InactiveCategoryException;
 import com.example.ecommerce.modules.importation.product.dto.ImportProductRowDTO;
+import com.example.ecommerce.modules.importation.product.exception.ImportValidationException;
 import com.example.ecommerce.modules.product.dto.ProductCreateDTO;
 import com.example.ecommerce.modules.product.dto.ProductResponseDTO;
 import com.example.ecommerce.modules.category.model.Category;
@@ -20,12 +21,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
-
     private final RepositoryCategory categoryRepository;
 
 
@@ -194,6 +195,7 @@ public class ProductService {
 
     @Transactional
     public void createFromImport(ImportProductRowDTO dto) {
+
         if (productRepository.existsBySku(dto.sku())) {
             throw new DuplicateProductException(
                     "Já existe um produto com o SKU: " + dto.sku()

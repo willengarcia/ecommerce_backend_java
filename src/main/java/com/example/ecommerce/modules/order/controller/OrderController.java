@@ -8,14 +8,17 @@ import com.example.ecommerce.modules.order.mapper.OrderMapper;
 import com.example.ecommerce.modules.order.model.Order;
 import com.example.ecommerce.modules.order.service.OrderService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@Validated
 @RequestMapping("/order")
 public class OrderController {
     private final OrderService orderService;
@@ -26,7 +29,7 @@ public class OrderController {
     }
 
     @PostMapping("/{idCustomer}")
-    public ResponseEntity<OrderResponseDTO> createOrder(@Valid @RequestBody CheckoutRequestDTO orderCreateDTO, @PathVariable Integer idCustomer) {
+    public ResponseEntity<OrderResponseDTO> createOrder(@Valid @RequestBody CheckoutRequestDTO orderCreateDTO, @Positive(message = "O ID do Customer tem que ser maior que 0") @PathVariable Integer idCustomer) {
         Order order = checkoutService.finalizarCompra(orderCreateDTO,  idCustomer);
         return ResponseEntity.status(HttpStatus.CREATED).body(OrderMapper.toOrderResponseDTO(order));
     }
@@ -41,9 +44,9 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(orderResponseDTOList);
     }
 
-    @GetMapping("/user/{idUser}")
-    public ResponseEntity<List<OrderResponseDTO>> getOrdersByUser(@PathVariable Long idUser) {
-        List<Order> orders = orderService.getOrdersByUserId(idUser);
+    @GetMapping("/user/{idCustomer}")
+    public ResponseEntity<List<OrderResponseDTO>> getOrdersByUser(@Positive(message = "O ID do Customer tem que ser maior que 0") @PathVariable Long idCustomer) {
+        List<Order> orders = orderService.getOrdersByUserId(idCustomer);
         List<OrderResponseDTO> dto =  new ArrayList<>();
         for (Order order : orders) {
             dto.add(OrderMapper.toOrderResponseDTO(order));
@@ -52,7 +55,7 @@ public class OrderController {
     }
 
     @PutMapping("/{idOrder}/address")
-    public ResponseEntity<OrderResponseDTO> updateOrderAddress(@PathVariable Long idOrder, @Valid @RequestBody OrderUpdateAddressDTO orderUpdateAddressDTO) {
+    public ResponseEntity<OrderResponseDTO> updateOrderAddress(@Positive(message = "O ID do Order tem que ser maior que 0") @PathVariable Long idOrder, @Valid @RequestBody OrderUpdateAddressDTO orderUpdateAddressDTO) {
         Order order = orderService.updateOrderAddress(idOrder, orderUpdateAddressDTO);
         return ResponseEntity.status(HttpStatus.OK).body(OrderMapper.toOrderResponseDTO(order));
     }

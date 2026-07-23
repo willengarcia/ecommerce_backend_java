@@ -4,9 +4,10 @@ import com.example.ecommerce.modules.importation.product.dto.ImportProductRowDTO
 import com.example.ecommerce.modules.importation.product.exception.ImportFileException;
 import com.example.ecommerce.modules.importation.product.exception.ImportValidationException;
 import com.example.ecommerce.modules.importation.product.exception.InvalidCsvException;
-import com.example.ecommerce.modules.importation.product.exception.ProductImportException;
 import com.example.ecommerce.modules.importation.product.mapper.ImportProductMapper;
 import com.example.ecommerce.modules.product.service.ProductService;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -17,20 +18,23 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ImportProductService {
     private final ImportProductMapper productImportMapper;
     private final ProductService productService;
+    private final Validator validator;
 
     public ImportProductService(
             ImportProductMapper productImportMapper,
-            ProductService productService
+            ProductService productService, Validator validator
     ) {
         this.productImportMapper = productImportMapper;
         this.productService = productService;
+        this.validator = validator;
     }
 
     @Transactional
@@ -55,10 +59,20 @@ public class ImportProductService {
             validateHeader(parser);
 
             for (CSVRecord record : parser) {
-                ImportProductRowDTO dto = productImportMapper.toDTO(record);
+                long line = record.getRecordNumber() + 1;
 
-                validateValues(dto, record.getRecordNumber() + 1);
+                ImportProductRowDTO dto;
 
+                try {
+                    dto = productImportMapper.toDTO(record);
+                } catch (IllegalArgumentException exception) {
+                    throw new ImportValidationException(
+                            line,
+                            "A linha possui um valor inválido ou em formato incorreto"
+                    );
+                }
+
+                validateValues(dto, line);
                 productService.createFromImport(dto);
             }
 
@@ -75,36 +89,27 @@ public class ImportProductService {
                     "O arquivo CSV não pode estar vazio"
             );
         }
+        String filename = file.getOriginalFilename();
+
+        if (filename == null
+                || !filename.toLowerCase().endsWith(".csv")) {
+            throw new InvalidCsvException(
+                    "O arquivo deve estar no formato CSV"
+            );
+        }
     }
 
     private void validateValues(ImportProductRowDTO dto, long line) {
-        if (dto.preco().compareTo(BigDecimal.ZERO) < 0) {
-            throw new ImportValidationException(
-                    line,
-                    "O preço não pode ser negativo"
-            );
-        }
+        Set<ConstraintViolation<ImportProductRowDTO>> violations =
+                validator.validate(dto);
 
-        if (dto.precoPromocional() != null
-                && dto.precoPromocional().compareTo(dto.preco()) >= 0) {
-            throw new ImportValidationException(
-                    line,
-                    "O preço promocional deve ser menor que o preço normal"
-            );
-        }
+        if (!violations.isEmpty()) {
+            String message = violations.stream()
+                    .map(ConstraintViolation::getMessage)
+                    .sorted()
+                    .collect(Collectors.joining("; "));
 
-        if (dto.quantidadeEstoque() < 0) {
-            throw new ImportValidationException(
-                    line,
-                    "A quantidade em estoque não pode ser negativa"
-            );
-        }
-
-        if (dto.estoqueMinimo() < 0) {
-            throw new ImportValidationException(
-                    line,
-                    "O estoque mínimo não pode ser negativo"
-            );
+            throw new ImportValidationException(line, message);
         }
     }
 

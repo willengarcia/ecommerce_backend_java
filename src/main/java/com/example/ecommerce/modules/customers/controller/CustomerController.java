@@ -7,13 +7,16 @@ import com.example.ecommerce.modules.customers.mapper.CustomerMapper;
 import com.example.ecommerce.modules.customers.model.Customers;
 import com.example.ecommerce.modules.customers.service.CustomerService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@Validated
 @RequestMapping("/customer")
 public class CustomerController {
     private final CustomerService customerService;
@@ -40,12 +43,12 @@ public class CustomerController {
     }
     
     @GetMapping("/{idCustomer}")
-    public ResponseEntity<CustomerListDTO> getIdUser(@PathVariable Integer idCustomer){
+    public ResponseEntity<CustomerListDTO> getIdUser(@Positive(message = "O ID do Customer tem que ser maior que 0") @PathVariable Integer idCustomer){
         return ResponseEntity.status(HttpStatus.OK).body((customerService.buscarUsuarioPorId(idCustomer)));
     }
 
     @PatchMapping("/{idCustomer}")
-    public ResponseEntity<CustomerUpdateDTO>  updateCustomer(@PathVariable Integer idCustomer, @RequestBody CustomerUpdateDTO dto) {
+    public ResponseEntity<CustomerUpdateDTO>  updateCustomer(@Positive(message = "O ID do Customer tem que ser maior que 0") @PathVariable Integer idCustomer, @Valid @RequestBody CustomerUpdateDTO dto) {
         Customers customer = customerService.atualizarUsuarioPorId(idCustomer, dto);
         CustomerUpdateDTO customerCreateDTO = new CustomerUpdateDTO(
                 customer.getNomeCompleto(),

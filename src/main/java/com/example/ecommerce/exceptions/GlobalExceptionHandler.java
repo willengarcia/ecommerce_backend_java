@@ -10,6 +10,8 @@ import com.example.ecommerce.modules.importation.product.exception.ImportValidat
 import com.example.ecommerce.modules.importation.product.exception.InvalidCsvException;
 import com.example.ecommerce.modules.order.exception.*;
 import com.example.ecommerce.modules.product.exception.*;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -135,6 +138,29 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
+                .body(response);
+    }
+
+    // Validação de Patchvariable
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ResponseError> handleConstraintViolation(
+            ConstraintViolationException exception
+    ) {
+        String message = exception.getConstraintViolations()
+                .stream()
+                .map(ConstraintViolation::getMessage)
+                .distinct()
+                .sorted()
+                .collect(Collectors.joining("; "));
+
+        ResponseError response = new ResponseError(
+                message,
+                HttpStatus.BAD_REQUEST,
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(response);
     }
 

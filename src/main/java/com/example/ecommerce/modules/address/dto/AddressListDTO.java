@@ -9,37 +9,26 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
 public record AddressListDTO(
-        @NotNull(message = "O ID é obrigatório")
         Integer id,
 
-        @Size(max = 100, message = "O nome do endereço deve ter no máximo 100 caracteres")
         String nomeEndereco,
 
-        @Size(max = 100, message = "O nome do destinatário deve ter no máximo 100 caracteres")
         String nomeDestinatario,
 
-        @Pattern(regexp = "\\d{8}", message = "O CEP deve conter exatamente 8 dígitos")
         String cep,
 
-        @Size(max = 150, message = "A rua deve ter no máximo 150 caracteres")
         String rua,
 
-        @Size(max = 10, message = "O número deve ter no máximo 10 caracteres")
         String numero,
 
-        @Size(max = 255, message = "O complemento deve ter no máximo 255 caracteres")
         String complemento,
 
-        @Size(max = 100, message = "O bairro deve ter no máximo 100 caracteres")
         String bairro,
 
-        @Size(max = 100, message = "A cidade deve ter no máximo 100 caracteres")
         String cidade,
 
-        @Size(min = 2, max = 2, message = "O estado deve conter a sigla com 2 caracteres")
         String estado,
 
-        @Size(max = 255, message = "A referência deve ter no máximo 255 caracteres")
         String referencia,
 
         AddressEnum tipoEndereco,

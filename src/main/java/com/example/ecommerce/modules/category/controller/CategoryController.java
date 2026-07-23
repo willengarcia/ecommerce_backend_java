@@ -5,13 +5,16 @@ import com.example.ecommerce.modules.category.dto.CategoryListDTO;
 import com.example.ecommerce.modules.category.model.Category;
 import com.example.ecommerce.modules.category.service.CategoryService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@Validated
 @RequestMapping("/categories")
 public class CategoryController {
     private final CategoryService categoryService;
@@ -32,17 +35,17 @@ public class CategoryController {
         return categoryService.listarCategorias();
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<?> atualizarCategoria(@PathVariable Long id, @Valid @RequestBody CategoryCreateDTO category) {
-        CategoryCreateDTO novaCategoria = categoryService.atualizarCategoria(id, category);
+    @PatchMapping("/{idCategory}")
+    public ResponseEntity<?> atualizarCategoria(@Positive(message = "O ID do Category tem que ser maior que 0") @PathVariable Long idCategory, @Valid @RequestBody CategoryCreateDTO category) {
+        CategoryCreateDTO novaCategoria = categoryService.atualizarCategoria(idCategory, category);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(novaCategoria);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletarCategoria(@PathVariable Long id) {
-        categoryService.deletarCategoria(id);
+    @DeleteMapping("/{idCategory}")
+    public ResponseEntity<?> deletarCategoria(@Positive(message = "O ID do Category tem que ser maior que 0") @PathVariable Long idCategory) {
+        categoryService.deletarCategoria(idCategory);
         return ResponseEntity.noContent().build();
     }
 }
