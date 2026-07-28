@@ -11,10 +11,10 @@ import com.example.ecommerce.modules.cart.model.Cart;
 import com.example.ecommerce.modules.cart.model.CartEnum;
 import com.example.ecommerce.modules.cart.model.CartItem;
 import com.example.ecommerce.modules.cart.repository.CartRepository;
-import com.example.ecommerce.modules.customers.exception.CustomerNotFoundException;
-import com.example.ecommerce.modules.customers.mapper.CustomerMapper;
-import com.example.ecommerce.modules.customers.model.Customers;
-import com.example.ecommerce.modules.customers.repository.CustomerRepository;
+import com.example.ecommerce.modules.customer.exception.CustomerNotFoundException;
+import com.example.ecommerce.modules.customer.mapper.CustomerMapper;
+import com.example.ecommerce.modules.customer.model.Customer;
+import com.example.ecommerce.modules.customer.repository.CustomerRepository;
 import com.example.ecommerce.modules.product.mapper.ProductMapper;
 import com.example.ecommerce.modules.product.model.Product;
 import com.example.ecommerce.modules.product.repository.ProductRepository;
@@ -39,7 +39,7 @@ public class CartService extends CartMapper {
     @Transactional
     public Cart createCart(Integer customerId) {
 
-        Customers customer = customerRepository
+        Customer customer = customerRepository
                 .findById(customerId)
                 .orElseThrow(() ->
                         new CustomerNotFoundException("Cliente não encontrado"));

@@ -2,7 +2,6 @@ package com.example.ecommerce.modules.category.controller;
 
 import com.example.ecommerce.modules.category.dto.CategoryCreateDTO;
 import com.example.ecommerce.modules.category.dto.CategoryListDTO;
-import com.example.ecommerce.modules.category.model.Category;
 import com.example.ecommerce.modules.category.service.CategoryService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -23,29 +22,29 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<?> criarCategoria(@Valid @RequestBody CategoryCreateDTO category) {
-        CategoryCreateDTO novaCategoria = categoryService.criarCategoria(category);
+    public ResponseEntity<?> createCategory(@Valid @RequestBody CategoryCreateDTO category) {
+        CategoryCreateDTO novaCategoria = categoryService.createCategory(category);
             return ResponseEntity
                     .status(HttpStatus.CREATED)
                     .body(novaCategoria);
     }
 
     @GetMapping
-    public List<CategoryListDTO> listarCategorias() {
-        return categoryService.listarCategorias();
+    public List<CategoryListDTO> listCategories() {
+        return categoryService.listCategories();
     }
 
     @PatchMapping("/{idCategory}")
-    public ResponseEntity<?> atualizarCategoria(@Positive(message = "O ID do Category tem que ser maior que 0") @PathVariable Long idCategory, @Valid @RequestBody CategoryCreateDTO category) {
-        CategoryCreateDTO novaCategoria = categoryService.atualizarCategoria(idCategory, category);
+    public ResponseEntity<?> updateCategory(@Positive(message = "O ID do Category tem que ser maior que 0") @PathVariable Long idCategory, @Valid @RequestBody CategoryCreateDTO category) {
+        CategoryCreateDTO novaCategoria = categoryService.updateCategory(idCategory, category);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(novaCategoria);
     }
 
     @DeleteMapping("/{idCategory}")
-    public ResponseEntity<?> deletarCategoria(@Positive(message = "O ID do Category tem que ser maior que 0") @PathVariable Long idCategory) {
-        categoryService.deletarCategoria(idCategory);
+    public ResponseEntity<?> deleteCategory(@Positive(message = "O ID do Category tem que ser maior que 0") @PathVariable Long idCategory) {
+        categoryService.deleteCategory(idCategory);
         return ResponseEntity.noContent().build();
     }
 }

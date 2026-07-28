@@ -49,7 +49,7 @@ public class Product {
     private LocalDate dataAtualizacao;
 
     @OneToMany(mappedBy= "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private final List<ProductImages> imagem =  new ArrayList<>();
+    private final List<ProductImage> imagem =  new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)

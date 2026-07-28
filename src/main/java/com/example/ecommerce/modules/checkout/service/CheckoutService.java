@@ -14,7 +14,7 @@ import com.example.ecommerce.modules.checkout.exception.EmptyCartException;
 import com.example.ecommerce.modules.order.dto.OrderCreateDTO;
 import com.example.ecommerce.modules.order.model.Order;
 import com.example.ecommerce.modules.order.model.OrderItem;
-import com.example.ecommerce.modules.order.respository.OrderItemRepository;
+import com.example.ecommerce.modules.order.repository.OrderItemRepository;
 import com.example.ecommerce.modules.order.service.OrderService;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +47,7 @@ public class CheckoutService {
                 .orElseThrow(() -> new AddressNotFoundException("Endererço não encontrado"));
     }
 
-    public Order finalizarCompra(CheckoutRequestDTO dto, Integer idCustomer) {
+    public Order completePurchase(CheckoutRequestDTO dto, Integer idCustomer) {
         Cart cart = findCartId(Math.toIntExact(dto.cartId()));
         Address address = findAddressId(dto.addressId());
         if (!cart.getUsuario().getId().equals(idCustomer)) {
@@ -60,12 +60,12 @@ public class CheckoutService {
             throw new EmptyCartException("Carrinho vazio");
         }
         Order orderCriado = orderService.createOrder(new OrderCreateDTO(cart, address, "PIX"), idCustomer);
-        List<OrderItem> itemsCriados = create(orderCriado, cart);
+        List<OrderItem> itemsCriados = createOrderItem(orderCriado, cart);
         orderCriado.setOrderItem(itemsCriados);
         return orderCriado;
     }
 
-    public List<OrderItem> create(Order order, Cart cart) {
+    public List<OrderItem> createOrderItem(Order order, Cart cart) {
         List<OrderItem> orderItems = new ArrayList<>();
         List<CartItem> cartItems = cart.getItems();
         cartItems.forEach(cartItem -> {

@@ -61,7 +61,7 @@ com.example.ecommerce
 |   |
 |   |__ checkout
 |   |
-|   |__ customers
+|   |__ customer
 |   |
 |   |__ importation
 |   |   |__ category

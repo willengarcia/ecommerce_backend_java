@@ -2,7 +2,6 @@ package com.example.ecommerce.modules.cart.service;
 
 import com.example.ecommerce.modules.cart.dto.CartItemCreateDTO;
 import com.example.ecommerce.modules.cart.dto.CartItemResponseDTO;
-import com.example.ecommerce.modules.cart.exception.CartException;
 import com.example.ecommerce.modules.cart.exception.CartItemNotFoundException;
 import com.example.ecommerce.modules.cart.exception.CartNotFoundException;
 import com.example.ecommerce.modules.cart.mapper.CartMapper;
@@ -33,7 +32,7 @@ public class CartItemService extends CartMapper {
     }
 
     @Transactional
-    public CartItemResponseDTO create(CartItemCreateDTO dto) {
+    public CartItemResponseDTO createItem(CartItemCreateDTO dto) {
 
         Cart cart = cartRepository.findById(dto.cartId())
                 .orElseThrow(() -> new CartNotFoundException("Carrinho não encontrado"));
@@ -46,17 +45,17 @@ public class CartItemService extends CartMapper {
 
         if (existente != null) {
             // Verifica Estoque
-            return adicionarProdutoExistente(product, existente, cart, dto);
+            return addExistingProduct(product, existente, cart, dto);
         }
         if (product.getQuantidadeEstoque() <= 0){
             throw new InsufficientStockException("Quantidade de estoque insuficiente");
         }
-        return criarProdutoInCartItem(cart, product);
+        return createProductInCartItem(cart, product);
 
     }
 
     @Transactional
-    public CartItemResponseDTO criarProdutoInCartItem(Cart cart, Product product) {
+    public CartItemResponseDTO createProductInCartItem(Cart cart, Product product) {
         CartItem created = new CartItem();
         created.setCarro(cart);
         created.setProduct(product);
@@ -92,7 +91,7 @@ public class CartItemService extends CartMapper {
     }
 
     @Transactional
-    public CartItemResponseDTO adicionarProdutoExistente(Product product, CartItem existente, Cart cart, CartItemCreateDTO dto) {
+    public CartItemResponseDTO addExistingProduct(Product product, CartItem existente, Cart cart, CartItemCreateDTO dto) {
         if (product.getQuantidadeEstoque() <= 0){
             throw new InsufficientStockException("Quantidade de estoque insuficiente");
         }

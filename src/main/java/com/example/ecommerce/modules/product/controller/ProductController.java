@@ -36,9 +36,9 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<?> criarProduto(@Valid @RequestBody ProductCreateDTO productCreateDTO){
+    public ResponseEntity<?> createProduct(@Valid @RequestBody ProductCreateDTO productCreateDTO){
         try{
-            Product produto = productService.criarProduct(productCreateDTO);
+            Product produto = productService.createProduct(productCreateDTO);
             return ResponseEntity
                     .status(HttpStatus.CREATED)
                     .body(produto);
@@ -63,14 +63,14 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}/images")
-    public ResponseEntity<List<ProductImageResponseDTO>> listar(@Positive(message = "O ID do Product tem que ser maior que 0") @PathVariable Integer productId){
+    public ResponseEntity<List<ProductImageResponseDTO>> list(@Positive(message = "O ID do Product tem que ser maior que 0") @PathVariable Integer productId){
         return ResponseEntity.ok(
-                productImageService.listarPorProduto(productId)
+                productImageService.listByProduct(productId)
         );
     }
 
     @GetMapping
-    public ResponseEntity<?> buscarTodosProdutos() {
+    public ResponseEntity<?> fetchAllProducts() {
         try {
             List<ProductResponseDTO> products = productService.findAll();
             return ResponseEntity.ok(products);
@@ -82,24 +82,24 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public ProductResponseDTO buscarUmProduto(@Positive(message = "O ID do Product tem que ser maior que 0") @PathVariable Integer productId){
-        return productService.buscarUmProduto(productId);
+    public ProductResponseDTO searchForOneProduct(@Positive(message = "O ID do Product tem que ser maior que 0") @PathVariable Integer productId){
+        return productService.findOneProduct(productId);
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<?> deletarProduto(@Positive(message = "O ID do Product tem que ser maior que 0") @PathVariable Integer productId){
-        ProductResponseDTO dto = productService.deletarUmProduto(productId);
+    public ResponseEntity<?> deleteProduto(@Positive(message = "O ID do Product tem que ser maior que 0") @PathVariable Integer productId){
+        ProductResponseDTO dto = productService.deleteOneProduct(productId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(dto);
     }
 
     @DeleteMapping("/images/{imageId}")
-    public ResponseEntity<Void> remover(@Positive(message = "O ID do Image tem que ser maior que 0") @PathVariable Long imageId) {
+    public ResponseEntity<Void> remove(@Positive(message = "O ID do Image tem que ser maior que 0") @PathVariable Long imageId) {
         productImageService.remover(imageId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/page")
-    public ResponseEntity<Page<ProductResponseDTO>> listarProdutos(@PageableDefault(sort = "id") Pageable pageable) {
+    public ResponseEntity<Page<ProductResponseDTO>> listProduct(@PageableDefault(sort = "id") Pageable pageable) {
 
         Page<ProductResponseDTO> produtos = productService.findAllPaginado(pageable);
 
@@ -107,26 +107,26 @@ public class ProductController {
     }
 
     @GetMapping("/category/{idCategory}")
-    public ResponseEntity<List<ProductResponseDTO>> listarProdutosPorCategoria(@Positive(message = "O ID do Product tem que ser maior que 0") @PathVariable Long idCategory) {
-        List<ProductResponseDTO> produtos = productService.listarProdutosPorCategoria(idCategory);
+    public ResponseEntity<List<ProductResponseDTO>> listProductsByCategory(@Positive(message = "O ID do Product tem que ser maior que 0") @PathVariable Long idCategory) {
+        List<ProductResponseDTO> produtos = productService.listProductsByCategory(idCategory);
         return ResponseEntity.status(HttpStatus.OK).body(produtos);
     }
 
     @GetMapping("/nome/{nome}")
-    public ResponseEntity<List<ProductResponseDTO>> listarProdutosPorNome(@NotBlank(message = "O Nome não pode ser vazio")  @PathVariable String nome) {
-        List<ProductResponseDTO> dto = productService.buscarProdutoPorNome(nome);
+    public ResponseEntity<List<ProductResponseDTO>> listProductsByName(@NotBlank(message = "O Nome não pode ser vazio")  @PathVariable String nome) {
+        List<ProductResponseDTO> dto = productService.searchProductByName(nome);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
     @GetMapping("/preco")
-    public ResponseEntity<List<ProductResponseDTO>> listarProdutosPorPreco() {
-        List<ProductResponseDTO> dto = productService.buscarProdutoPorPrecoPorOrdem();
+    public ResponseEntity<List<ProductResponseDTO>> listProductsByPrice() {
+        List<ProductResponseDTO> dto = productService.searchProductByPriceAndOrder();
         return  ResponseEntity.status(HttpStatus.OK).body(dto);
 
     }
 
     @PatchMapping("/{idProduct}")
     public ResponseEntity<ProductResponseDTO> updateDataProduct(@Positive(message = "O ID do Product tem que ser maior que 0") @PathVariable Integer idProduct, @Valid @RequestBody ProductUpdateDTO productUpdateDTO){
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(productService.alterarDadosProdutos(idProduct, productUpdateDTO));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(productService.updateProductData(idProduct, productUpdateDTO));
     }
 }

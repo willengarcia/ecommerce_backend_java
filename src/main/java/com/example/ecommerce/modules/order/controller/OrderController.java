@@ -30,7 +30,7 @@ public class OrderController {
 
     @PostMapping("/{idCustomer}")
     public ResponseEntity<OrderResponseDTO> createOrder(@Valid @RequestBody CheckoutRequestDTO orderCreateDTO, @Positive(message = "O ID do Customer tem que ser maior que 0") @PathVariable Integer idCustomer) {
-        Order order = checkoutService.finalizarCompra(orderCreateDTO,  idCustomer);
+        Order order = checkoutService.completePurchase(orderCreateDTO,  idCustomer);
         return ResponseEntity.status(HttpStatus.CREATED).body(OrderMapper.toOrderResponseDTO(order));
     }
 

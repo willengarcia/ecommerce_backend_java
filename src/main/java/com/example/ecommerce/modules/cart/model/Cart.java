@@ -1,6 +1,6 @@
 package com.example.ecommerce.modules.cart.model;
 
-import com.example.ecommerce.modules.customers.model.Customers;
+import com.example.ecommerce.modules.customer.model.Customer;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,9 +28,9 @@ public class Cart {
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
-    private Customers usuario;
+    private Customer usuario;
 
-    public Cart(Long id, CartEnum status, LocalDate data_criacao, LocalDate data_atualizacao, Customers usuario, BigDecimal valorTotal) {
+    public Cart(Long id, CartEnum status, LocalDate data_criacao, LocalDate data_atualizacao, Customer usuario, BigDecimal valorTotal) {
         this.id = id;
         this.status = status;
         this.dataCriacao = data_criacao;

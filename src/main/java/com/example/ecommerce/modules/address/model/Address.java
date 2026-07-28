@@ -1,6 +1,6 @@
 package com.example.ecommerce.modules.address.model;
 
-import com.example.ecommerce.modules.customers.model.Customers;
+import com.example.ecommerce.modules.customer.model.Customer;
 import com.example.ecommerce.modules.order.model.Order;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -44,7 +44,7 @@ public class Address {
     private LocalDate dataAtualizacao;
 
     @ManyToOne
-    private Customers usuario;
+    private Customer usuario;
 
     @OneToMany(mappedBy= "address", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Order> orders =  new ArrayList<>();

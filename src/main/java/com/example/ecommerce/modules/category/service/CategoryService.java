@@ -2,7 +2,7 @@ package com.example.ecommerce.modules.category.service;
 
 import com.example.ecommerce.modules.category.dto.CategoryCreateDTO;
 import com.example.ecommerce.modules.category.dto.CategoryListDTO;
-import com.example.ecommerce.modules.category.exceptions.*;
+import com.example.ecommerce.modules.category.exception.*;
 import com.example.ecommerce.modules.category.mapper.CategoryMapper;
 import com.example.ecommerce.modules.category.model.Category;
 import com.example.ecommerce.modules.category.repository.RepositoryCategory;
@@ -23,7 +23,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public CategoryCreateDTO criarCategoria(CategoryCreateDTO category) {
+    public CategoryCreateDTO createCategory(CategoryCreateDTO category) {
         if (categoryRepository.existsByNameIgnoreCase(category.name())) {
             throw new DuplicateCategoryException("Nome de categoria existente");
         }else {
@@ -32,7 +32,7 @@ public class CategoryService {
         }
     }
 
-    public List<CategoryListDTO> listarCategorias() {
+    public List<CategoryListDTO> listCategories() {
         if (categoryRepository.count() == 0) {
             throw new CategoryNotFoundException("Não há categorias registradas");
         }
@@ -41,16 +41,16 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
-    public Category buscarPorId(Long id) {
+    public Category findById(Long id) {
         return categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException("Categoria não encontrada"));
     }
 
     @Transactional
-    public CategoryCreateDTO atualizarCategoria(Long id, CategoryCreateDTO novaCategoria) {
+    public CategoryCreateDTO updateCategory(Long id, CategoryCreateDTO novaCategoria) {
         if (categoryRepository.existsByNameIgnoreCase(novaCategoria.name())) {
             throw new DuplicateCategoryException("Nome de categoria existente");
         }
-        Category category = buscarPorId(id);
+        Category category = findById(id);
         if (novaCategoria.name() != null && !novaCategoria.name().isBlank()) {
             category.setName(novaCategoria.name());
         }
@@ -73,7 +73,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public void deletarCategoria(Long id) {
+    public void deleteCategory(Long id) {
         if (categoryRepository.hasProducts(id)){
             throw new CategoryHasProductsException(
                     "Categoria vinculada a um produto"

@@ -2,7 +2,7 @@ package com.example.ecommerce.modules.order.model;
 
 import com.example.ecommerce.modules.address.model.Address;
 import com.example.ecommerce.modules.address.model.AddressEnum;
-import com.example.ecommerce.modules.customers.model.Customers;
+import com.example.ecommerce.modules.customer.model.Customer;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,7 +41,7 @@ public class Order {
     private LocalDate dataAtualizacao;
     @ManyToOne
     @JoinColumn(name = "usuario_id")
-    private Customers usuario;
+    private Customer usuario;
     @ManyToOne
     @JoinColumn(name = "address_id")
     private Address address;

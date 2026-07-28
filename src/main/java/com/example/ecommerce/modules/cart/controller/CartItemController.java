@@ -22,7 +22,7 @@ public class CartItemController extends CartMapper {
 
     @PostMapping
     public ResponseEntity<?> createCartItem(@Valid @RequestBody CartItemCreateDTO dto) {
-        CartItemResponseDTO cartItem = cartItemService.create(dto);
+        CartItemResponseDTO cartItem = cartItemService.createItem(dto);
         return ResponseEntity.ok(cartItem);
     }
 

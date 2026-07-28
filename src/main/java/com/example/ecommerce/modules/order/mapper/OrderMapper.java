@@ -1,8 +1,7 @@
 package com.example.ecommerce.modules.order.mapper;
 
 import com.example.ecommerce.modules.address.dto.AddressListDTO;
-import com.example.ecommerce.modules.customers.dto.CustomerListDTO;
-import com.example.ecommerce.modules.customers.dto.CustomerResponseDTO;
+import com.example.ecommerce.modules.customer.dto.CustomerResponseDTO;
 import com.example.ecommerce.modules.order.dto.OrderItemResponseDTO;
 import com.example.ecommerce.modules.order.dto.OrderResponseDTO;
 import com.example.ecommerce.modules.order.model.Order;

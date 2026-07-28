@@ -7,7 +7,6 @@ import com.example.ecommerce.modules.address.mapper.AddressMapper;
 import com.example.ecommerce.modules.address.model.Address;
 import com.example.ecommerce.modules.address.service.AddressService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,19 +28,19 @@ public class AddressController {
 
     @PostMapping
     public ResponseEntity<?> createAddress(@Valid @RequestBody AddressCreateDTO addressCreate) {
-        AddressCreateDTO address = addressService.criarAddress(addressCreate);
+        AddressCreateDTO address = addressService.createAddress(addressCreate);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(address);
     }
 
     @GetMapping
     public ResponseEntity<?> listAddresses(){
-        return ResponseEntity.status(HttpStatus.OK).body(addressService.findAll());
+        return ResponseEntity.status(HttpStatus.OK).body(addressService.findAllAddress());
     }
 
     @GetMapping("/{idAddress}")
     public ResponseEntity<?> getAddress(@Positive(message = "O ID do Address tem que ser maior que 0")  @PathVariable Integer idAddress){
-        return ResponseEntity.status(HttpStatus.OK).body(addressService.findById(idAddress));
+        return ResponseEntity.status(HttpStatus.OK).body(addressService.findByIdAddress(idAddress));
     }
 
     @GetMapping("/user/{idUsuario}")
@@ -57,7 +56,7 @@ public class AddressController {
 
     @DeleteMapping("/{idAddress}")
     public ResponseEntity<?> deleteAddress(@Positive(message = "O ID do Address tem que ser maior que 0") @PathVariable Integer idAddress){
-        addressService.deletarById(idAddress);
+        addressService.deleteById(idAddress);
         return ResponseEntity.noContent().build();
     }
 

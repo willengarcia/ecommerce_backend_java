@@ -1,6 +1,6 @@
 package com.example.ecommerce.modules.product.service;
 
-import com.example.ecommerce.externalServices.storage.ImageStorageService;
+import com.example.ecommerce.externalService.storage.ImageStorageService;
 import com.example.ecommerce.modules.product.exception.ImageUploadException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -48,9 +48,9 @@ public class LocalImageStorageService implements ImageStorageService {
 
     @Override
     public String upload(MultipartFile file) {
-        validarArquivo(file);
+        validateFile(file);
 
-        String extensao = extrairExtensao(file.getOriginalFilename());
+        String extensao = extractExtension(file.getOriginalFilename());
         String novoNomeArquivo = UUID.randomUUID() + extensao;
 
         Path destino = uploadDirectory
@@ -95,11 +95,11 @@ public class LocalImageStorageService implements ImageStorageService {
         try {
             Files.deleteIfExists(arquivo);
         } catch (IOException exception) {
-            throw new RuntimeException("Erro ao remover a imagem", exception);
+            throw new RuntimeException("Erro ao remove a imagem", exception);
         }
     }
 
-    private void validarArquivo(MultipartFile file) {
+    private void validateFile(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new RuntimeException("Imagem não informada");
         }
@@ -119,7 +119,7 @@ public class LocalImageStorageService implements ImageStorageService {
         }
     }
 
-    private String extrairExtensao(String nomeOriginal) {
+    private String extractExtension(String nomeOriginal) {
         if (nomeOriginal == null || !nomeOriginal.contains(".")) {
             throw new RuntimeException("Arquivo sem extensão válida");
         }

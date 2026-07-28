@@ -1,9 +1,8 @@
 package com.example.ecommerce.modules.product.service;
 
-import com.example.ecommerce.modules.category.exceptions.CategoryNotFoundException;
-import com.example.ecommerce.modules.category.exceptions.InactiveCategoryException;
+import com.example.ecommerce.modules.category.exception.CategoryNotFoundException;
+import com.example.ecommerce.modules.category.exception.InactiveCategoryException;
 import com.example.ecommerce.modules.importation.product.dto.ImportProductRowDTO;
-import com.example.ecommerce.modules.importation.product.exception.ImportValidationException;
 import com.example.ecommerce.modules.product.dto.ProductCreateDTO;
 import com.example.ecommerce.modules.product.dto.ProductResponseDTO;
 import com.example.ecommerce.modules.category.model.Category;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,7 +33,7 @@ public class ProductService {
         this.categoryRepository = categoryRepository;
     }
     @Transactional
-    public Product criarProduct(ProductCreateDTO productDTO) {
+    public Product createProduct(ProductCreateDTO productDTO) {
         List<Product> productConsulta = productRepository.findByNomeContainingIgnoreCase(productDTO.nome());
         Product p = productRepository.findBySkuContainingIgnoreCase(productDTO.sku());
         if (!productConsulta.isEmpty()) {
@@ -97,13 +95,13 @@ public class ProductService {
         ).collect(Collectors.toList());
     }
 
-    public ProductResponseDTO buscarUmProduto(Integer productId){
+    public ProductResponseDTO findOneProduct(Integer productId){
         Product produto = productRepository.findById(productId).orElseThrow();
         return ProductMapper.toProductResponseDTO(produto);
     }
 
     @Transactional
-    public ProductResponseDTO deletarUmProduto(Integer produtoId){
+    public ProductResponseDTO deleteOneProduct(Integer produtoId){
         Product produto = productRepository.findById(produtoId).orElseThrow(
                 () -> new ProductNotFoundException("Produto não encontrado!")
         );
@@ -117,21 +115,21 @@ public class ProductService {
         );
     }
 
-    public List<ProductResponseDTO> listarProdutosPorCategoria(Long categoriaId){
+    public List<ProductResponseDTO> listProductsByCategory(Long categoriaId){
         List<Product> produto = productRepository.findByCategory_Id(categoriaId).stream().toList();
         return produto.stream()
                 .map(ProductMapper::toProductResponseDTO)
                 .toList();
     }
 
-    public List<ProductResponseDTO> buscarProdutoPorNome(String nome){
+    public List<ProductResponseDTO> searchProductByName(String nome){
         List<Product> product = productRepository.findByNomeContainingIgnoreCase(nome);
         return product.stream()
                 .map(ProductMapper::toProductResponseDTO)
                 .toList();
     }
 
-    public List<ProductResponseDTO> buscarProdutoPorPrecoPorOrdem(){
+    public List<ProductResponseDTO> searchProductByPriceAndOrder(){
         List<Product> products = productRepository.findAllByOrderByPrecoAsc();
         return products.stream()
                 .map(ProductMapper::toProductResponseDTO)
@@ -139,7 +137,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponseDTO alterarDadosProdutos(Integer produtoId, ProductUpdateDTO produtos){
+    public ProductResponseDTO updateProductData(Integer produtoId, ProductUpdateDTO produtos){
         Product produto = productRepository.findById(produtoId).orElseThrow(
                 () -> new ProductNotFoundException("Produto não encontrado!")
         );

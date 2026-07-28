@@ -1,7 +1,7 @@
 package com.example.ecommerce.modules.cart.dto;
 
 import com.example.ecommerce.modules.address.dto.AddressListDTO;
-import com.example.ecommerce.modules.customers.dto.CustomerResponseDTO;
+import com.example.ecommerce.modules.customer.dto.CustomerResponseDTO;
 
 import java.util.List;
 

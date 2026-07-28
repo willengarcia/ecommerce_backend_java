@@ -1,11 +1,11 @@
 package com.example.ecommerce.modules.product.service;
 
-import com.example.ecommerce.externalServices.storage.ImageStorageService;
+import com.example.ecommerce.externalService.storage.ImageStorageService;
 import com.example.ecommerce.modules.product.dto.ProductImageResponseDTO;
 import com.example.ecommerce.modules.product.exception.ImageNotFoundException;
 import com.example.ecommerce.modules.product.exception.ProductNotFoundException;
 import com.example.ecommerce.modules.product.model.Product;
-import com.example.ecommerce.modules.product.model.ProductImages;
+import com.example.ecommerce.modules.product.model.ProductImage;
 import com.example.ecommerce.modules.product.repository.ProductImageRepository;
 import com.example.ecommerce.modules.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -45,7 +44,7 @@ public class ProductImageService {
         /*
          * Primeira imagem do produto vira principal automaticamente.
          */
-        List<ProductImages> imagensExistentes =
+        List<ProductImage> imagensExistentes =
                 productImageRepository.findByProductId(productId);
 
         if (imagensExistentes.isEmpty()) {
@@ -69,20 +68,20 @@ public class ProductImageService {
 
         String urlImagem = imageStorageService.upload(file);
 
-        ProductImages productImage = new ProductImages();
+        ProductImage productImage = new ProductImage();
         productImage.setNomeImagem(file.getOriginalFilename());
         productImage.setUrlImagem(urlImagem);
         productImage.setImagemPrincipal(principal);
         productImage.setDataCriacao(LocalDate.now());
         productImage.setProduct(product);
 
-        ProductImages imagemSalva =
+        ProductImage imagemSalva =
                 productImageRepository.save(productImage);
 
         return toResponseDTO(imagemSalva);
     }
 
-    public List<ProductImageResponseDTO> listarPorProduto(Integer productId) {
+    public List<ProductImageResponseDTO> listByProduct(Integer productId) {
         if (!productRepository.existsById(productId)) {
             throw new ProductNotFoundException("Produto não encontrado");
         }
@@ -95,7 +94,7 @@ public class ProductImageService {
 
     @Transactional
     public void remover(Long imageId) {
-        ProductImages image = productImageRepository.findById(imageId)
+        ProductImage image = productImageRepository.findById(imageId)
                 .orElseThrow(() ->
                         new ImageNotFoundException("Imagem não encontrada")
                 );
@@ -104,7 +103,7 @@ public class ProductImageService {
         productImageRepository.delete(image);
     }
 
-    private ProductImageResponseDTO toResponseDTO(ProductImages image) {
+    private ProductImageResponseDTO toResponseDTO(ProductImage image) {
         return new ProductImageResponseDTO(
                 image.getId(),
                 image.getNomeImagem(),
