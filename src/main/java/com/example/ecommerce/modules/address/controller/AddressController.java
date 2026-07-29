@@ -33,11 +33,6 @@ public class AddressController {
         return ResponseEntity.status(HttpStatus.CREATED).body(address);
     }
 
-    @GetMapping
-    public ResponseEntity<?> listAddresses(){
-        return ResponseEntity.status(HttpStatus.OK).body(addressService.findAllAddress());
-    }
-
     @GetMapping("/{idAddress}")
     public ResponseEntity<?> getAddress(@Positive(message = "O ID do Address tem que ser maior que 0")  @PathVariable Integer idAddress){
         return ResponseEntity.status(HttpStatus.OK).body(addressService.findByIdAddress(idAddress));
@@ -45,7 +40,7 @@ public class AddressController {
 
     @GetMapping("/user/{idUsuario}")
     public ResponseEntity<?> getAddressByUsuarioId(@Positive(message = "O ID do Customer tem que ser maior que 0") @PathVariable Integer idUsuario){
-        List<Address> address = addressService.findByUsuarioId(idUsuario);
+        List<Address> address = addressService.findByCustomerId(idUsuario);
         List<AddressListDTO> addressListDTO = new ArrayList<>();
         address.forEach(addres -> {
             addressListDTO.add(AddressMapper.toAddressList(addres));

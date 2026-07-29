@@ -28,11 +28,11 @@ public class Customer {
     private CustomerEnum status;
     private LocalDate dataCriacao;
     private LocalDate dataAtualizacao;
-    @OneToMany(mappedBy= "usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy= "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> enderecos =  new ArrayList<>();
-    @OneToMany(mappedBy= "usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy= "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders =  new ArrayList<>();
-    @OneToMany(mappedBy = "usuario")
+    @OneToMany(mappedBy = "customer")
     private List<Cart> carts = new ArrayList<>();
 
     public Customer() {}
@@ -48,7 +48,7 @@ public class Customer {
     }
 
     public void setEnderecos(List<Address> enderecos) {
-        enderecos.forEach(address -> address.setUsuario(this));
+        enderecos.forEach(address -> address.setCustomer(this));
         this.enderecos = enderecos;
     }
 

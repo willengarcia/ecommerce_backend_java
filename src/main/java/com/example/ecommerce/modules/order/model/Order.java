@@ -39,11 +39,9 @@ public class Order {
     private Boolean enderecoPrincipal;
     private LocalDate dataCriacao;
     private LocalDate dataAtualizacao;
-    @ManyToOne
-    @JoinColumn(name = "usuario_id")
-    private Customer usuario;
-    @ManyToOne
-    @JoinColumn(name = "address_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Customer customer;
+    @ManyToOne(fetch = FetchType.LAZY)
     private Address address;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItem = new ArrayList<>();

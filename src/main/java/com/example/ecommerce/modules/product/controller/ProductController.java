@@ -69,17 +69,6 @@ public class ProductController {
         );
     }
 
-    @GetMapping
-    public ResponseEntity<?> fetchAllProducts() {
-        try {
-            List<ProductResponseDTO> products = productService.findAll();
-            return ResponseEntity.ok(products);
-        } catch (Exception ex) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(ex.getMessage());
-        }
-    }
 
     @GetMapping("/{productId}")
     public ProductResponseDTO searchForOneProduct(@Positive(message = "O ID do Product tem que ser maior que 0") @PathVariable Integer productId){

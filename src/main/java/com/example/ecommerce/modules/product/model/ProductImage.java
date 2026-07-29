@@ -19,7 +19,7 @@ public class ProductImage {
     private boolean imagemPrincipal;
     private LocalDate dataCriacao;
     private LocalDate dataAtualizacao;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Product product;
 
     public ProductImage(Long id, String urlImagem, String textoAlternativo, boolean imagemPrincipal, Product product) {

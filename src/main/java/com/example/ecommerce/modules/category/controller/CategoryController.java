@@ -1,9 +1,11 @@
 package com.example.ecommerce.modules.category.controller;
 
 import com.example.ecommerce.modules.category.dto.CategoryCreateDTO;
+import com.example.ecommerce.modules.category.dto.CategoryFindDTO;
 import com.example.ecommerce.modules.category.dto.CategoryListDTO;
 import com.example.ecommerce.modules.category.service.CategoryService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +32,8 @@ public class CategoryController {
     }
 
     @GetMapping
-    public List<CategoryListDTO> listCategories() {
-        return categoryService.listCategories();
+    public List<CategoryListDTO> listCategories(@Valid @RequestBody CategoryFindDTO nameCategory) {
+        return categoryService.listCategoriesByName(nameCategory);
     }
 
     @PatchMapping("/{idCategory}")

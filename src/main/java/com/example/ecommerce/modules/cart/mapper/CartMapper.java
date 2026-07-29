@@ -26,7 +26,7 @@ public class CartMapper {
                 cart.getValorTotal(),
                 cart.getDataCriacao(),
                 cart.getDataAtualizacao(),
-                cart.getUsuario().getId()
+                cart.getCustomer().getId()
         );
     }
 }

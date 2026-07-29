@@ -22,7 +22,7 @@ public class Category {
     private LocalDate dataCriacao;
     private LocalDate dataAtualizacao;
 
-    @OneToMany(mappedBy= "category", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy= "category", cascade = CascadeType.ALL)
     private final List<Product> products =  new ArrayList<>();
 
     public Category() {

@@ -47,7 +47,7 @@ public class CartService extends CartMapper {
             throw new CartIsActiveFromCustomer("Usuário tem um carrinho ATIVO");
         }
         Cart cart = new Cart();
-        cart.setUsuario(customer);
+        cart.setCustomer(customer);
         cart.setStatus(CartEnum.ATIVO);
         cart.setDataCriacao(LocalDate.now());
         cart.setDataAtualizacao(LocalDate.now());
@@ -70,9 +70,6 @@ public class CartService extends CartMapper {
                         conversorProductDTO(item))).toList();
     }
 
-    public List<Cart> getAllCart() {
-        return cartRepository.findAll();
-    }
 
     public Cart clearCart(Integer cartId) {
         Cart cart = cartRepository.findById(cartId).orElseThrow(() ->
@@ -116,11 +113,11 @@ public class CartService extends CartMapper {
                 () -> new CartNotFoundException("Carrinho não existe")
         );
 
-        if (!cart.getUsuario().getId().equals(customerId)) {
+        if (!cart.getCustomer().getId().equals(customerId)) {
             throw new CartOwnershipException("Esse carrinho não pertence a esse usuário.");
         }
 
-        Address enderecoPrincipal = cart.getUsuario()
+        Address enderecoPrincipal = cart.getCustomer()
                 .getEnderecos()
                 .stream()
                 .filter(address -> Boolean.TRUE.equals(address.getEnderecoPrincipal()))
@@ -147,9 +144,9 @@ public class CartService extends CartMapper {
                         cart.getValorTotal(),
                         cart.getDataCriacao(),
                         cart.getDataAtualizacao(),
-                        cart.getUsuario().getId()
+                        cart.getCustomer().getId()
                 ),
-                CustomerMapper.toCustomerResponseDTO(cart.getUsuario()),
+                CustomerMapper.toCustomerResponseDTO(cart.getCustomer()),
                 AddressMapper.toAddressList(enderecoPrincipal)
         );
     }

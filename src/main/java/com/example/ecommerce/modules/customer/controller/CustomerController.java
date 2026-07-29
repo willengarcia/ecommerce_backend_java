@@ -1,6 +1,7 @@
 package com.example.ecommerce.modules.customer.controller;
 
 import com.example.ecommerce.modules.customer.dto.CustomerCreateDTO;
+import com.example.ecommerce.modules.customer.dto.CustomerFindDTO;
 import com.example.ecommerce.modules.customer.dto.CustomerListDTO;
 import com.example.ecommerce.modules.customer.dto.CustomerUpdateDTO;
 import com.example.ecommerce.modules.customer.mapper.CustomerMapper;
@@ -8,6 +9,8 @@ import com.example.ecommerce.modules.customer.model.Customer;
 import com.example.ecommerce.modules.customer.service.CustomerService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -33,8 +36,8 @@ public class CustomerController {
     }
 
     @GetMapping
-    public ResponseEntity<List<?>> getAllCustomers() {
-        List<Customer> customers = customerService.findAll();
+    public ResponseEntity<List<?>> getAllCustomers(Pageable pageable, @Valid @RequestBody CustomerFindDTO nameCustomer) {
+        Page<Customer> customers = customerService.findAllByNameCustomer(nameCustomer, pageable);
         List<CustomerListDTO> response = customers.stream()
                 .map(CustomerMapper::toCustomerListResponseDTO)
                 .toList();

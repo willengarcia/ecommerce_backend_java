@@ -1,6 +1,7 @@
 package com.example.ecommerce.modules.category.service;
 
 import com.example.ecommerce.modules.category.dto.CategoryCreateDTO;
+import com.example.ecommerce.modules.category.dto.CategoryFindDTO;
 import com.example.ecommerce.modules.category.dto.CategoryListDTO;
 import com.example.ecommerce.modules.category.exception.*;
 import com.example.ecommerce.modules.category.mapper.CategoryMapper;
@@ -32,11 +33,11 @@ public class CategoryService {
         }
     }
 
-    public List<CategoryListDTO> listCategories() {
+    public List<CategoryListDTO> listCategoriesByName(CategoryFindDTO nameCategory) {
         if (categoryRepository.count() == 0) {
             throw new CategoryNotFoundException("Não há categorias registradas");
         }
-        return categoryRepository.findAll().stream()
+        return categoryRepository.findAllByNameIgnoreCase(nameCategory.name()).stream()
                 .map(category -> new CategoryListDTO(category.getId(), category.getName(), category.getDescription(), category.isAtivo(), category.getDataAtualizacao()))
                 .collect(Collectors.toList());
     }

@@ -23,19 +23,18 @@ public class Cart {
     private LocalDate dataAtualizacao;
     private BigDecimal valorTotal;
 
-    @OneToMany(mappedBy= "carro", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy= "carro", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> items = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer usuario;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Customer customer;
 
     public Cart(Long id, CartEnum status, LocalDate data_criacao, LocalDate data_atualizacao, Customer usuario, BigDecimal valorTotal) {
         this.id = id;
         this.status = status;
         this.dataCriacao = data_criacao;
         this.dataAtualizacao = data_atualizacao;
-        this.usuario = usuario;
+        this.customer = usuario;
         this.valorTotal = valorTotal;
     }
 

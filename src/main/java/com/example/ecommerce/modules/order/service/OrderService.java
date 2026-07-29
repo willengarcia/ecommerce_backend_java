@@ -38,7 +38,7 @@ public class OrderService{
         if (orderCreateDTO.address() == null) {
             throw new InvalidOrderDataException("O endereço é obrigatório.");
         }
-        if (orderCreateDTO.cart().getUsuario() == null) {
+        if (orderCreateDTO.cart().getCustomer() == null) {
             throw new InvalidOrderDataException("O usuário do carrinho é obrigatório.");
         }
 
@@ -52,7 +52,7 @@ public class OrderService{
     private static Order getOrder(OrderCreateDTO orderCreateDTO) {
         Order order = new Order();
         order.setStatus(OrderEnum.AGUARDANDO_PAGAMENTO);
-        order.setUsuario(orderCreateDTO.cart().getUsuario());
+        order.setCustomer(orderCreateDTO.cart().getCustomer());
         order.setAddress(orderCreateDTO.address());
         order.setIdAddress(orderCreateDTO.address().getId());
         order.setNomeEndereco(orderCreateDTO.address().getNomeEndereco());
@@ -71,12 +71,9 @@ public class OrderService{
         return order;
     }
 
-    public List<Order> getOrderById() {
-        return orderRepository.findAll();
-    }
 
     public List<Order> getOrdersByUserId(Long userId) {
-        List<Order> order = orderRepository.findByUsuarioId(userId);
+        List<Order> order = orderRepository.findByCustomerId(userId);
         return order.stream().toList();
     }
 
@@ -86,10 +83,10 @@ public class OrderService{
         Address address = addressRepository.findById(orderUpdateAddressDTO.addressId()).orElseThrow(
                 ()-> new AddressNotFoundException("Endereço não encontrado!")
         );
-        if (orderUpdateAddressDTO.customerId() == null || !order.getUsuario().getId().equals(orderUpdateAddressDTO.customerId())) {
+        if (orderUpdateAddressDTO.customerId() == null || !order.getCustomer().getId().equals(orderUpdateAddressDTO.customerId())) {
             throw new OrderOwnershipException("Order não pertence ao cliente informado.");
         }
-        if (!Objects.equals(order.getUsuario().getId(), address.getUsuario().getId())) {
+        if (!Objects.equals(order.getCustomer().getId(), address.getCustomer().getId())) {
             throw new OrderAddressOwnershipException("Endereço não pertence ao usuário do carrinho");
         }
         if (!order.getStatus().equals(OrderEnum.CRIADO)) {

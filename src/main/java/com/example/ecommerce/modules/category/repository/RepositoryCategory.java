@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface RepositoryCategory extends JpaRepository<Category, Long> {
     boolean existsByNameIgnoreCase(String name);
     @Query("""
@@ -13,4 +15,5 @@ public interface RepositoryCategory extends JpaRepository<Category, Long> {
         WHERE p.category.id = :categoryId
     """)
     boolean hasProducts(@Param("categoryId") Long categoryId);
+    List<Category> findAllByNameIgnoreCase(String name);
 }

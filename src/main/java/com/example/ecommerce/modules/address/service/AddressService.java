@@ -46,19 +46,13 @@ public class AddressService {
 
         Address addres = AddressMapper.toEntityAddress(addressDTO);
 
-        addres.setUsuario(customer);
+        addres.setCustomer(customer);
         addres.setDataCriacao(LocalDate.now());
         addres.setDataAtualizacao(LocalDate.now());
 
         Address savedAddress = addressRepository.save(addres);
 
         return AddressMapper.toAddressCreate(savedAddress);
-    }
-
-    public List<AddressListDTO> findAllAddress(){
-        List<Address> addresses = addressRepository.findAll();
-        return  addresses.stream().map(
-                AddressMapper::toAddressList).toList();
     }
 
     public AddressListDTO findByIdAddress(Integer idAddress){
@@ -68,11 +62,11 @@ public class AddressService {
         return AddressMapper.toAddressList(address);
     }
 
-    public List<Address> findByUsuarioId(Integer id){
+    public List<Address> findByCustomerId(Integer id){
         Customer customer = customerRepository.findById(id).orElseThrow(
                 ()-> new CustomerNotFoundException("Usuário não encontrado.")
         );
-        return addressRepository.findByUsuarioId(id);
+        return addressRepository.findByCustomerId(id);
     }
 
     @Transactional
@@ -83,7 +77,7 @@ public class AddressService {
         Customer customer = customerRepository.findById(idCustomer).orElseThrow(
                 () -> new CustomerNotFoundException("Usuário não encontrado")
         );
-        if (!address.getUsuario().getId().equals(customer.getId())) {
+        if (!address.getCustomer().getId().equals(customer.getId())) {
             throw new AddressOwnershipException("Endereço não pertence ao cliente informado");
         }
         if (addressUpdateDTO.tipoEndereco() != null) {
@@ -135,11 +129,11 @@ public class AddressService {
         Address address = addressRepository.findById(idAddress)
                 .orElseThrow(() -> new AddressNotFoundException("Endereço não encontrado"));
 
-        if (address.getUsuario().getOrders().stream().anyMatch(a -> a.getAddress().getId().equals(idAddress))) {
+        if (address.getCustomer().getOrders().stream().anyMatch(a -> a.getAddress().getId().equals(idAddress))) {
             throw new AddressInUseException("Algum usuário tem pedidos vinculados a esse endereço, com isso não é possível realizar a exclusão do Endereço!");
         }
 
-        Customer usuario = address.getUsuario();
+        Customer usuario = address.getCustomer();
 
         usuario.getEnderecos().remove(address);
 

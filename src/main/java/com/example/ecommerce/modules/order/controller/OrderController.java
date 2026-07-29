@@ -34,16 +34,6 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(OrderMapper.toOrderResponseDTO(order));
     }
 
-    @GetMapping
-    public ResponseEntity<List<OrderResponseDTO>> getOrder() {
-        List<Order> orders = orderService.getOrderById();
-        List<OrderResponseDTO> orderResponseDTOList = new ArrayList<>();
-        for (Order order : orders){
-            orderResponseDTOList.add(OrderMapper.toOrderResponseDTO(order));
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(orderResponseDTOList);
-    }
-
     @GetMapping("/user/{idCustomer}")
     public ResponseEntity<List<OrderResponseDTO>> getOrdersByUser(@Positive(message = "O ID do Customer tem que ser maior que 0") @PathVariable Long idCustomer) {
         List<Order> orders = orderService.getOrdersByUserId(idCustomer);

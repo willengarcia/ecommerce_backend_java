@@ -88,13 +88,6 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public List<ProductResponseDTO> findAll() {
-
-        return productRepository.findAll().stream().map(
-                ProductMapper::toProductResponseDTO
-        ).collect(Collectors.toList());
-    }
-
     public ProductResponseDTO findOneProduct(Integer productId){
         Product produto = productRepository.findById(productId).orElseThrow();
         return ProductMapper.toProductResponseDTO(produto);

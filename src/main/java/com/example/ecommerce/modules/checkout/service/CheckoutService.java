@@ -50,10 +50,10 @@ public class CheckoutService {
     public Order completePurchase(CheckoutRequestDTO dto, Integer idCustomer) {
         Cart cart = findCartId(Math.toIntExact(dto.cartId()));
         Address address = findAddressId(dto.addressId());
-        if (!cart.getUsuario().getId().equals(idCustomer)) {
+        if (!cart.getCustomer().getId().equals(idCustomer)) {
             throw new CartOwnershipException("Esse usuário não pertence a esse Carrinho.");
         }
-        if (!Objects.equals(cart.getUsuario().getId(), address.getUsuario().getId())) {
+        if (!Objects.equals(cart.getCustomer().getId(), address.getCustomer().getId())) {
             throw new AddressOwnershipException("Endereço não pertence ao usuário do carrinho");
         }
         if (cart.getItems().isEmpty()) {

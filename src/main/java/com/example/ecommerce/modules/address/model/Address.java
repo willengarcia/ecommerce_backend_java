@@ -43,10 +43,10 @@ public class Address {
     private LocalDate dataCriacao;
     private LocalDate dataAtualizacao;
 
-    @ManyToOne
-    private Customer usuario;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Customer customer;
 
-    @OneToMany(mappedBy= "address", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy= "address", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders =  new ArrayList<>();
 
     public Address() {

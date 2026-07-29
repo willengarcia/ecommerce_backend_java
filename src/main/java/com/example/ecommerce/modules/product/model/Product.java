@@ -20,17 +20,12 @@ public class Product {
     private Long id;
     private String nome;
     private String slug;
-    @Column(name = "descricao_curta")
     private String descricaoCurta;
     private String descricao;
     private BigDecimal preco;
-    @Column(name = "preco_promocional")
     private BigDecimal precoPromocional;
-    @Column(name = "quantidadeEstoque")
     private Integer quantidadeEstoque;
-    @Column(name = "quantidade_reservada")
     private Integer quantidadeReservada;
-    @Column(name = "estoqueMinimo")
     private Integer estoqueMinimo;
     @Column(unique = true)
     private String sku;
@@ -38,9 +33,7 @@ public class Product {
     private float altura;
     private float largura;
     private float comprimento;
-    @Column(name = "media_avaliacao")
     private float mediaAvaliacao;
-    @Column(name = "total_avaliacao")
     private Integer totalAvaliacoes;
     @Enumerated(EnumType.STRING)
     private ProductEnum status;
@@ -48,14 +41,14 @@ public class Product {
     private LocalDate dataCriacao;
     private LocalDate dataAtualizacao;
 
-    @OneToMany(mappedBy= "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy= "product", cascade = CascadeType.ALL)
     private final List<ProductImage> imagem =  new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @OneToMany(mappedBy= "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy= "product", cascade = CascadeType.ALL)
     private final List<CartItem> items = new ArrayList<>();
 
 

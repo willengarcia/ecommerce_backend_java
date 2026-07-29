@@ -29,10 +29,10 @@ public class CartItem {
     private LocalDate dataCriacao;
     private LocalDate dataAtualizacao;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Cart carro;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Product product;
 
     public CartItem(Long id, Integer quantidade, BigDecimal precoUnitario, BigDecimal subtotal) {

@@ -1,6 +1,7 @@
 package com.example.ecommerce.modules.customer.service;
 
 import com.example.ecommerce.modules.customer.dto.CustomerCreateDTO;
+import com.example.ecommerce.modules.customer.dto.CustomerFindDTO;
 import com.example.ecommerce.modules.customer.dto.CustomerListDTO;
 import com.example.ecommerce.modules.customer.dto.CustomerUpdateDTO;
 import com.example.ecommerce.modules.customer.exception.*;
@@ -9,6 +10,8 @@ import com.example.ecommerce.modules.customer.model.Customer;
 import com.example.ecommerce.modules.customer.model.CustomerEnum;
 import com.example.ecommerce.modules.customer.repository.CustomerRepository;
 import com.example.ecommerce.modules.order.model.OrderEnum;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,8 +45,8 @@ public class CustomerService {
         }
     }
 
-    public List<Customer> findAll(){
-        return customerRepository.findAll();
+    public Page<Customer> findAllByNameCustomer(CustomerFindDTO nameCustomer, Pageable pageable) {
+        return customerRepository.findAllByNomeCompletoContainingIgnoreCase(nameCustomer.nomeCompleto(), pageable);
     }
 
     @Transactional

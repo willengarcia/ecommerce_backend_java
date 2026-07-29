@@ -17,12 +17,12 @@ public class OrderMapper {
                 orderItems.getSubTotal(),
                 orderItems.getProduct().getId()));
         CustomerResponseDTO customer = new CustomerResponseDTO(
-                order.getUsuario().getId(),
-                order.getUsuario().getNomeCompleto(),
-                order.getUsuario().getCpf(),
-                order.getUsuario().getEmail(),
-                order.getUsuario().getTelefone(),
-                order.getUsuario().getStatus()
+                order.getCustomer().getId(),
+                order.getCustomer().getNomeCompleto(),
+                order.getCustomer().getCpf(),
+                order.getCustomer().getEmail(),
+                order.getCustomer().getTelefone(),
+                order.getCustomer().getStatus()
         );
         AddressListDTO address = new AddressListDTO(
                 order.getIdAddress(),
