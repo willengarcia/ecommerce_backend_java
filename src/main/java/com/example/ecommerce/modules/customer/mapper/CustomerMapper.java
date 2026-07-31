@@ -1,9 +1,12 @@
 package com.example.ecommerce.modules.customer.mapper;
 
 import com.example.ecommerce.modules.address.dto.AddressListDTO;
+import com.example.ecommerce.modules.customer.dto.CustomerCreateDTO;
 import com.example.ecommerce.modules.customer.dto.CustomerListDTO;
 import com.example.ecommerce.modules.customer.dto.CustomerResponseDTO;
 import com.example.ecommerce.modules.customer.model.Customer;
+
+import java.time.LocalDate;
 
 public class CustomerMapper {
     public static CustomerListDTO toCustomerListResponseDTO(Customer customer) {
@@ -13,7 +16,7 @@ public class CustomerMapper {
                 customer.getCpf(),
                 customer.getEmail(),
                 customer.getTelefone(),
-                customer.isStatus(),
+                customer.getStatus(),
                 customer.getEnderecos()
                         .stream()
                         .map(address -> new AddressListDTO(
@@ -46,7 +49,11 @@ public class CustomerMapper {
                 customer.getCpf(),
                 customer.getEmail(),
                 customer.getTelefone(),
-                customer.isStatus()
+                customer.getStatus()
         );
+    }
+
+    public static Customer toEntityCustomer(CustomerCreateDTO customerCreateDTO){
+        return new Customer(customerCreateDTO.nomeCompleto(), customerCreateDTO.cpf(), customerCreateDTO.email(), customerCreateDTO.telefone(), customerCreateDTO.senhaHash());
     }
 }

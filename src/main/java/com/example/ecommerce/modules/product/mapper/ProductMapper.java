@@ -1,5 +1,7 @@
 package com.example.ecommerce.modules.product.mapper;
 
+import com.example.ecommerce.modules.category.model.Category;
+import com.example.ecommerce.modules.product.dto.ProductCreateDTO;
 import com.example.ecommerce.modules.product.dto.ProductResponseDTO;
 import com.example.ecommerce.modules.product.dto.ProductResponseResumeDTO;
 import com.example.ecommerce.modules.product.model.Product;
@@ -29,6 +31,7 @@ public class ProductMapper {
                 product.getCategory().getId()
         );
     }
+
     public static ProductResponseResumeDTO toProductResponseResumeDTO(Product product) {
         return new ProductResponseResumeDTO(
                 product.getId(),
@@ -39,5 +42,25 @@ public class ProductMapper {
                 product.getPreco(),
                 product.getSku()
         );
+    }
+
+    public static Product toEntityProduct(ProductCreateDTO productDTO, Category category) {
+        Product product = new Product(
+            productDTO.nome(),
+            productDTO.slug(),
+            productDTO.descricaoCurta(),
+            productDTO.descricao(),
+            productDTO.preco(),
+            productDTO.precoPromocional(),
+            productDTO.quantidadeEstoque(),
+            productDTO.estoqueMinimo(),
+            productDTO.sku(),
+            productDTO.peso(),
+            productDTO.altura(),
+            productDTO.largura(),
+            productDTO.comprimento()
+        );
+        product.setCategory(category);
+        return product;
     }
 }

@@ -65,6 +65,8 @@ public class Address {
         this.referencia = referencia;
         this.tipoEndereco = tipo_endereco;
         this.enderecoPrincipal = endereco_principal;
+        this.dataAtualizacao = LocalDate.now();
+        this.dataCriacao = LocalDate.now();
     }
 
 }

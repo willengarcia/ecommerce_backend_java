@@ -48,8 +48,7 @@ public class Order {
 
     public Order() {}
 
-    public Order(Long orderId, BigDecimal valorTotal, OrderEnum status, String nomeEndereco, String nomeDestinatario, String cep, String rua, String numero, String complemento, String bairro, String estado, String cidade, String referencia, AddressEnum tipoEndereco, Boolean enderecoPrincipal, Integer idAddress) {
-        this.orderId = orderId;
+    public Order(BigDecimal valorTotal, OrderEnum status, String nomeEndereco, String nomeDestinatario, String cep, String rua, String numero, String complemento, String bairro, String estado, String cidade, String referencia, AddressEnum tipoEndereco, Boolean enderecoPrincipal, Integer idAddress) {
         this.valorTotal = valorTotal;
         this.status = status;
         this.idAddress = idAddress;

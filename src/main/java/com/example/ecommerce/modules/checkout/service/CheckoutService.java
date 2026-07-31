@@ -59,7 +59,7 @@ public class CheckoutService {
         if (cart.getItems().isEmpty()) {
             throw new EmptyCartException("Carrinho vazio");
         }
-        Order orderCriado = orderService.createOrder(new OrderCreateDTO(cart, address, "PIX"), idCustomer);
+        Order orderCriado = orderService.createOrder(new OrderCreateDTO(cart, address, "PIX"));
         List<OrderItem> itemsCriados = createOrderItem(orderCriado, cart);
         orderCriado.setOrderItem(itemsCriados);
         return orderCriado;

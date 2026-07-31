@@ -37,23 +37,15 @@ public class Customer {
 
     public Customer() {}
 
-    public Customer(Integer id, String nome_completo, String cpf, String email, String telefone, String senhaHash, CustomerEnum status) {
-        this.id = id;
+    public Customer(String nome_completo, String cpf, String email, String telefone, String senhaHash) {
         this.nomeCompleto = nome_completo;
         this.cpf = cpf;
         this.email = email;
         this.telefone = telefone;
         this.senhaHash = senhaHash;
-        this.status = status;
-    }
-
-    public void setEnderecos(List<Address> enderecos) {
-        enderecos.forEach(address -> address.setCustomer(this));
-        this.enderecos = enderecos;
-    }
-
-    public CustomerEnum isStatus() { // Remover método
-        return status;
+        this.status = CustomerEnum.ATIVO;
+        this.dataAtualizacao = LocalDate.now();
+        this.dataCriacao = LocalDate.now();
     }
 
 }

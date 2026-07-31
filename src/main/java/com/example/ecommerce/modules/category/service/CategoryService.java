@@ -29,15 +29,12 @@ public class CategoryService {
             throw new DuplicateCategoryException("Nome de categoria existente");
         }else {
             Category cate = categoryRepository.save(CategoryMapper.toCategoryCreateDTO(category));
-            return CategoryMapper.toCategoryCreateDTO(cate);
+            return CategoryMapper.toCategoryListDTO(cate);
         }
     }
 
     public List<CategoryListDTO> listCategoriesByName(CategoryFindDTO nameCategory) {
-        if (categoryRepository.count() == 0) {
-            throw new CategoryNotFoundException("Não há categorias registradas");
-        }
-        return categoryRepository.findAllByNameIgnoreCase(nameCategory.name()).stream()
+        return categoryRepository.findAllByNameContainingIgnoreCase(nameCategory.name()).stream()
                 .map(category -> new CategoryListDTO(category.getId(), category.getName(), category.getDescription(), category.isAtivo(), category.getDataAtualizacao()))
                 .collect(Collectors.toList());
     }
@@ -70,7 +67,7 @@ public class CategoryService {
         }
         category.setDataAtualizacao(LocalDate.now());
         Category cat = categoryRepository.save(category);
-        return CategoryMapper.toCategoryCreateDTO(cat);
+        return CategoryMapper.toCategoryListDTO(cat);
     }
 
     @Transactional

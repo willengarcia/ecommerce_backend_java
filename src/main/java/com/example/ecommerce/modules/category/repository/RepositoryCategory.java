@@ -15,5 +15,5 @@ public interface RepositoryCategory extends JpaRepository<Category, Long> {
         WHERE p.category.id = :categoryId
     """)
     boolean hasProducts(@Param("categoryId") Long categoryId);
-    List<Category> findAllByNameIgnoreCase(String name);
+    List<Category> findAllByNameContainingIgnoreCase(String name);
 }

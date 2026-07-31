@@ -25,25 +25,9 @@ public class OrderService{
     }
 
     @Transactional
-    public Order createOrder(OrderCreateDTO orderCreateDTO, Integer idCustomer) {
-        if (idCustomer == null) {
-            throw new InvalidOrderDataException("É necessário informar o id do Customer.");
-        }
+    public Order createOrder(OrderCreateDTO orderCreateDTO) {
         if (orderCreateDTO == null) {
             throw new InvalidOrderDataException("Os dados do pedido não foram informados.");
-        }
-        if (orderCreateDTO.cart() == null) {
-            throw new InvalidOrderDataException("O carrinho é obrigatório.");
-        }
-        if (orderCreateDTO.address() == null) {
-            throw new InvalidOrderDataException("O endereço é obrigatório.");
-        }
-        if (orderCreateDTO.cart().getCustomer() == null) {
-            throw new InvalidOrderDataException("O usuário do carrinho é obrigatório.");
-        }
-
-        if (orderCreateDTO.address().getId() == null) {
-            throw new InvalidOrderDataException("O ID do endereço é obrigatório.");
         }
         Order order = getOrder(orderCreateDTO);
         return orderRepository.save(order);
@@ -70,7 +54,6 @@ public class OrderService{
         order.setValorTotal(orderCreateDTO.cart().getValorTotal());
         return order;
     }
-
 
     public List<Order> getOrdersByUserId(Long userId) {
         List<Order> order = orderRepository.findByCustomerId(userId);

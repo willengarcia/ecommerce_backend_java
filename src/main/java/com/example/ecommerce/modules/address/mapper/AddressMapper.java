@@ -4,27 +4,26 @@ import com.example.ecommerce.modules.address.dto.AddressCreateDTO;
 import com.example.ecommerce.modules.address.dto.AddressListDTO;
 import com.example.ecommerce.modules.address.dto.AddressUpdateDTO;
 import com.example.ecommerce.modules.address.model.Address;
+import com.example.ecommerce.modules.customer.model.Customer;
 
 public class AddressMapper {
-    public static Address toEntityAddress(AddressCreateDTO dto) {
-        if (dto == null) {
-            return null;
-        }
+    public static Address toEntityAddress(AddressCreateDTO dto, Customer customer) {
 
-        Address address = new Address();
-
-        address.setNomeEndereco(dto.nomeEndereco());
-        address.setNomeDestinatario(dto.nomeDestinatario());
-        address.setCep(dto.cep());
-        address.setRua(dto.rua());
-        address.setNumero(dto.numero());
-        address.setCidade(dto.cidade());
-        address.setBairro(dto.bairro());
-        address.setEstado(dto.estado());
-        address.setComplemento(dto.complemento());
-        address.setReferencia(dto.referencia());
-        address.setTipoEndereco(dto.tipoEndereco());
-        address.setEnderecoPrincipal(dto.enderecoPrincipal());
+        Address address = new Address(
+                dto.nomeEndereco(),
+                dto.nomeDestinatario(),
+                dto.cep(),
+                dto.rua(),
+                dto.numero(),
+                dto.complemento(),
+                dto.cidade(),
+                dto.bairro(),
+                dto.estado(),
+                dto.referencia(),
+                dto.tipoEndereco(),
+                dto.enderecoPrincipal()
+        );
+        address.setCustomer(customer);
 
         return address;
     }

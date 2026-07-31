@@ -23,20 +23,11 @@ public class CategoryMapper {
 
         return category;
     }
-    public static CategoryCreateDTO toCategoryCreateDTO(Category dto) {
+    public static CategoryCreateDTO toCategoryListDTO(Category dto) {
         return new CategoryCreateDTO(
                 dto.getName(),
                 dto.getDescription(),
                 dto.isAtivo()
-        );
-    }
-    public static CategoryListDTO toCategoryListDTO(Category dto) {
-        return new CategoryListDTO(
-                dto.getId(),
-                dto.getName(),
-                dto.getDescription(),
-                dto.isAtivo(),
-                dto.getDataAtualizacao()
         );
     }
 }

@@ -29,13 +29,12 @@ public class Cart {
     @ManyToOne(fetch = FetchType.LAZY)
     private Customer customer;
 
-    public Cart(Long id, CartEnum status, LocalDate data_criacao, LocalDate data_atualizacao, Customer usuario, BigDecimal valorTotal) {
-        this.id = id;
-        this.status = status;
-        this.dataCriacao = data_criacao;
-        this.dataAtualizacao = data_atualizacao;
+    public Cart(Customer usuario) {
+        this.status = CartEnum.ATIVO;
+        this.dataCriacao = LocalDate.now();
+        this.dataAtualizacao = LocalDate.now();
         this.customer = usuario;
-        this.valorTotal = valorTotal;
+        this.valorTotal = BigDecimal.ZERO;
     }
 
     public Cart() {}

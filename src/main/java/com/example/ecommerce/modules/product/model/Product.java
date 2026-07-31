@@ -52,8 +52,7 @@ public class Product {
     private final List<CartItem> items = new ArrayList<>();
 
 
-    public Product(Long id, String nome, String slug, String descricao_curta, String descricao, BigDecimal preco, BigDecimal preco_promocional, Integer quantidade_estoque, Integer quantidade_reservada, Integer estoque_minimo, String sku, float peso, float altura, float largura, float comprimento, float media_avaliacao, Integer total_avaliacoes, ProductEnum status) {
-        this.id = id;
+    public Product(String nome, String slug, String descricao_curta, String descricao, BigDecimal preco, BigDecimal preco_promocional, Integer quantidade_estoque, Integer estoque_minimo, String sku, float peso, float altura, float largura, float comprimento) {
         this.nome = nome;
         this.slug = slug;
         this.descricaoCurta = descricao_curta;
@@ -61,16 +60,18 @@ public class Product {
         this.preco = preco;
         this.precoPromocional = preco_promocional;
         this.quantidadeEstoque = quantidade_estoque;
-        this.quantidadeReservada = quantidade_reservada;
+        this.quantidadeReservada = 0;
         this.estoqueMinimo = estoque_minimo;
         this.sku = sku;
         this.peso = peso;
         this.altura = altura;
         this.largura = largura;
         this.comprimento = comprimento;
-        this.mediaAvaliacao = media_avaliacao;
-        this.totalAvaliacoes = total_avaliacoes;
-        this.status = status;
+        this.mediaAvaliacao = 0;
+        this.totalAvaliacoes = 0;
+        this.status = ProductEnum.ATIVO;
+        this.dataCriacao = LocalDate.now();
+        this.dataAtualizacao = LocalDate.now();
     }
 
 

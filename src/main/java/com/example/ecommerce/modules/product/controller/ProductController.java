@@ -4,6 +4,7 @@ import com.example.ecommerce.modules.product.dto.ProductCreateDTO;
 import com.example.ecommerce.modules.product.dto.ProductImageResponseDTO;
 import com.example.ecommerce.modules.product.dto.ProductResponseDTO;
 import com.example.ecommerce.modules.product.dto.ProductUpdateDTO;
+import com.example.ecommerce.modules.product.mapper.ProductMapper;
 import com.example.ecommerce.modules.product.model.Product;
 import com.example.ecommerce.modules.product.service.ProductImageService;
 import com.example.ecommerce.modules.product.service.ProductService;
@@ -41,7 +42,7 @@ public class ProductController {
             Product produto = productService.createProduct(productCreateDTO);
             return ResponseEntity
                     .status(HttpStatus.CREATED)
-                    .body(produto);
+                    .body(ProductMapper.toProductResponseResumeDTO(produto));
         } catch (Exception ex){
             return ResponseEntity.badRequest().body(ex.getMessage());
         }

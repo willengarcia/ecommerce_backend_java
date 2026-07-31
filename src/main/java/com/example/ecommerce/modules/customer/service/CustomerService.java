@@ -7,41 +7,37 @@ import com.example.ecommerce.modules.customer.dto.CustomerUpdateDTO;
 import com.example.ecommerce.modules.customer.exception.*;
 import com.example.ecommerce.modules.customer.mapper.CustomerMapper;
 import com.example.ecommerce.modules.customer.model.Customer;
-import com.example.ecommerce.modules.customer.model.CustomerEnum;
 import com.example.ecommerce.modules.customer.repository.CustomerRepository;
 import com.example.ecommerce.modules.order.model.OrderEnum;
+import org.hibernate.validator.internal.constraintvalidators.hv.br.CPFValidator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 public class CustomerService {
     private final CustomerRepository customerRepository;
+    private static final Pattern CPF_PATTERN = Pattern.compile(
+            "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$|^\\d{11}$"
+    );
     public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
 
     @Transactional
     public Customer createCustomer(CustomerCreateDTO customerCreateDTO){
-        Customer customer = new Customer();
         if (customerRepository.existsByCpf(customerCreateDTO.cpf())) {
             throw new DuplicateCpfException("CPF já cadastrado");
-        } if (customerRepository.existsByEmail(customerCreateDTO.email())) {
+        } else if(!isValidCpfFormat(customerCreateDTO.cpf())) {
+            throw new CustomerNotFoundException("CPF Invalido!");
+        } else if(customerRepository.existsByEmail(customerCreateDTO.email())) {
             throw new DuplicateEmailException("Email já cadastrado");
         } else {
-            customer.setCpf(customerCreateDTO.cpf());
-            customer.setNomeCompleto(customerCreateDTO.nomeCompleto());
-            customer.setEmail(customerCreateDTO.email());
-            customer.setTelefone(customerCreateDTO.telefone());
-            customer.setStatus(CustomerEnum.ATIVO);
-            customer.setSenhaHash(customerCreateDTO.senhaHash());
-            customer.setDataCriacao(LocalDate.now());
-            customer.setDataAtualizacao(LocalDate.now());
-            return customerRepository.save(customer);
+            return customerRepository.save(CustomerMapper.toEntityCustomer(customerCreateDTO));
         }
     }
 
@@ -81,5 +77,9 @@ public class CustomerService {
         );
 
         return CustomerMapper.toCustomerListResponseDTO(customer);
+    }
+
+    public static boolean isValidCpfFormat(String cpf) {
+        return cpf != null && CPF_PATTERN.matcher(cpf).matches();
     }
 }

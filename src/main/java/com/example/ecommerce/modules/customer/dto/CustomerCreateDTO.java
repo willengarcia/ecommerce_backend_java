@@ -1,6 +1,5 @@
 package com.example.ecommerce.modules.customer.dto;
 
-import com.example.ecommerce.modules.customer.model.CustomerEnum;
 import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -27,9 +26,6 @@ public record CustomerCreateDTO(
 
         @NotBlank(message = "A senha é obrigatória")
         @Size(min = 8, max = 100, message = "A senha deve ter no mínimo 8 caracteres")
-        String senhaHash,
-
-        @NotNull(message = "O status é obrigatório")
-        CustomerEnum status
+        String senhaHash
 ) {
 }

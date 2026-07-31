@@ -39,16 +39,13 @@ public class AddressService {
         Customer customer = customerRepository.findById(addressDTO.usuarioId())
                 .orElseThrow(() -> new CustomerNotFoundException("Usuário não encontrado"));
 
-        if (customer.isStatus().equals(CustomerEnum.INATIVO) || customer.isStatus().equals(CustomerEnum.BLOQUEADO)) {
+        if (customer.getStatus().equals(CustomerEnum.INATIVO) || customer.getStatus().equals(CustomerEnum.BLOQUEADO)) {
             throw new InactiveCustomerException("Usuário Inativo ou Bloqueado!");
         }
 
 
-        Address addres = AddressMapper.toEntityAddress(addressDTO);
+        Address addres = AddressMapper.toEntityAddress(addressDTO, customer);
 
-        addres.setCustomer(customer);
-        addres.setDataCriacao(LocalDate.now());
-        addres.setDataAtualizacao(LocalDate.now());
 
         Address savedAddress = addressRepository.save(addres);
 
@@ -63,7 +60,7 @@ public class AddressService {
     }
 
     public List<Address> findByCustomerId(Integer id){
-        Customer customer = customerRepository.findById(id).orElseThrow(
+        customerRepository.findById(id).orElseThrow(
                 ()-> new CustomerNotFoundException("Usuário não encontrado.")
         );
         return addressRepository.findByCustomerId(id);

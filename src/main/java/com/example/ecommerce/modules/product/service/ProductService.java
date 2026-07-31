@@ -18,9 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -54,27 +52,6 @@ public class ProductService {
                     "É necessário informar o Nome, preço, estoque mínimo maior que 0, quantidade estoque maior que 0, e o ID da Categoria"
             );
         }
-        Product product = new Product();
-
-
-        product.setNome(productDTO.nome());
-        product.setSlug(productDTO.slug());
-        product.setDescricaoCurta(productDTO.descricaoCurta());
-        product.setDescricao(productDTO.descricao());
-        product.setPreco(productDTO.preco());
-        product.setPrecoPromocional(productDTO.precoPromocional());
-        product.setQuantidadeEstoque(productDTO.quantidadeEstoque());
-        product.setQuantidadeReservada(0);
-        product.setDataCriacao(LocalDate.now());
-        product.setTotalAvaliacoes(0);
-        product.setEstoqueMinimo(productDTO.estoqueMinimo());
-        product.setSku(productDTO.sku());
-        product.setPeso(productDTO.peso());
-        product.setAltura(productDTO.altura());
-        product.setLargura(productDTO.largura());
-        product.setComprimento(productDTO.comprimento());
-        product.setStatus(productDTO.status());
-
         Category category = categoryRepository.findById(categoryId).orElseThrow(
                 () -> new CategoryNotFoundException("Categoria não existe!")
         );
@@ -83,9 +60,7 @@ public class ProductService {
             throw new InactiveCategoryException("Não é possível vincular uma categoria Inativa a um Produto");
         }
 
-        product.setCategory(category);
-
-        return productRepository.save(product);
+        return productRepository.save(ProductMapper.toEntityProduct(productDTO, category));
     }
 
     public ProductResponseDTO findOneProduct(Integer productId){

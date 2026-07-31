@@ -46,11 +46,7 @@ public class CartService extends CartMapper {
         if (customer.getCarts().stream().anyMatch(c -> c.getStatus().equals(CartEnum.ATIVO))) {
             throw new CartIsActiveFromCustomer("Usuário tem um carrinho ATIVO");
         }
-        Cart cart = new Cart();
-        cart.setCustomer(customer);
-        cart.setStatus(CartEnum.ATIVO);
-        cart.setDataCriacao(LocalDate.now());
-        cart.setDataAtualizacao(LocalDate.now());
+        Cart cart = new Cart(customer);
 
         return cartRepository.save(cart);
     }
@@ -70,7 +66,7 @@ public class CartService extends CartMapper {
                         conversorProductDTO(item))).toList();
     }
 
-
+    @Transactional
     public Cart clearCart(Integer cartId) {
         Cart cart = cartRepository.findById(cartId).orElseThrow(() ->
                 new CartNotFoundException("Carrinho não encontrado"));
@@ -96,6 +92,7 @@ public class CartService extends CartMapper {
         return cart;
     }
 
+    @Transactional
     public void deleteCart(Integer cartId) {
         Cart cart = cartRepository.findById(cartId).orElseThrow(
                 () -> new CartNotFoundException("Carrinho não existente")
