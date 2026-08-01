@@ -24,7 +24,7 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createCategory(@Valid @RequestBody CategoryCreateDTO category) {
+    public ResponseEntity<CategoryCreateDTO> createCategory(@Valid @RequestBody CategoryCreateDTO category) {
         CategoryCreateDTO novaCategoria = categoryService.createCategory(category);
             return ResponseEntity
                     .status(HttpStatus.CREATED)
@@ -37,7 +37,7 @@ public class CategoryController {
     }
 
     @PatchMapping("/{idCategory}")
-    public ResponseEntity<?> updateCategory(@Positive(message = "O ID do Category tem que ser maior que 0") @PathVariable Long idCategory, @Valid @RequestBody CategoryCreateDTO category) {
+    public ResponseEntity<CategoryCreateDTO> updateCategory(@Positive(message = "O ID do Category tem que ser maior que 0") @PathVariable Long idCategory, @Valid @RequestBody CategoryCreateDTO category) {
         CategoryCreateDTO novaCategoria = categoryService.updateCategory(idCategory, category);
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -45,7 +45,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{idCategory}")
-    public ResponseEntity<?> deleteCategory(@Positive(message = "O ID do Category tem que ser maior que 0") @PathVariable Long idCategory) {
+    public ResponseEntity<Void> deleteCategory(@Positive(message = "O ID do Category tem que ser maior que 0") @PathVariable Long idCategory) {
         categoryService.deleteCategory(idCategory);
         return ResponseEntity.noContent().build();
     }

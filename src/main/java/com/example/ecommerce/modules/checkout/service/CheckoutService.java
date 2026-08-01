@@ -4,9 +4,11 @@ import com.example.ecommerce.modules.address.exception.AddressNotFoundException;
 import com.example.ecommerce.modules.address.exception.AddressOwnershipException;
 import com.example.ecommerce.modules.address.model.Address;
 import com.example.ecommerce.modules.address.repository.AddressRepository;
+import com.example.ecommerce.modules.cart.exception.CartAlreadyAbandonedException;
 import com.example.ecommerce.modules.cart.exception.CartNotFoundException;
 import com.example.ecommerce.modules.cart.exception.CartOwnershipException;
 import com.example.ecommerce.modules.cart.model.Cart;
+import com.example.ecommerce.modules.cart.model.CartEnum;
 import com.example.ecommerce.modules.cart.model.CartItem;
 import com.example.ecommerce.modules.cart.repository.CartRepository;
 import com.example.ecommerce.modules.checkout.dto.CheckoutRequestDTO;
@@ -17,6 +19,7 @@ import com.example.ecommerce.modules.order.model.OrderItem;
 import com.example.ecommerce.modules.order.repository.OrderItemRepository;
 import com.example.ecommerce.modules.order.service.OrderService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -47,6 +50,7 @@ public class CheckoutService {
                 .orElseThrow(() -> new AddressNotFoundException("Endererço não encontrado"));
     }
 
+    @Transactional
     public Order completePurchase(CheckoutRequestDTO dto, Integer idCustomer) {
         Cart cart = findCartId(Math.toIntExact(dto.cartId()));
         Address address = findAddressId(dto.addressId());
@@ -59,9 +63,14 @@ public class CheckoutService {
         if (cart.getItems().isEmpty()) {
             throw new EmptyCartException("Carrinho vazio");
         }
+        if(cart.getStatus().equals(CartEnum.CONVERTIDO) || cart.getStatus().equals(CartEnum.ABANDONADO)) {
+            throw new CartAlreadyAbandonedException("Carrinho com status ABANDONADO ou CONVERTIDO");
+        }
         Order orderCriado = orderService.createOrder(new OrderCreateDTO(cart, address, "PIX"));
         List<OrderItem> itemsCriados = createOrderItem(orderCriado, cart);
         orderCriado.setOrderItem(itemsCriados);
+        cart.setStatus(CartEnum.CONVERTIDO);
+        cartRepository.save(cart);
         return orderCriado;
     }
 

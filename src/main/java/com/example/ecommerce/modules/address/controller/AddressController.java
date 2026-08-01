@@ -27,19 +27,19 @@ public class AddressController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createAddress(@Valid @RequestBody AddressCreateDTO addressCreate) {
+    public ResponseEntity<AddressCreateDTO> createAddress(@Valid @RequestBody AddressCreateDTO addressCreate) {
         AddressCreateDTO address = addressService.createAddress(addressCreate);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(address);
     }
 
     @GetMapping("/{idAddress}")
-    public ResponseEntity<?> getAddress(@Positive(message = "O ID do Address tem que ser maior que 0")  @PathVariable Integer idAddress){
+    public ResponseEntity<AddressListDTO> getAddress(@Positive(message = "O ID do Address tem que ser maior que 0")  @PathVariable Integer idAddress){
         return ResponseEntity.status(HttpStatus.OK).body(addressService.findByIdAddress(idAddress));
     }
 
     @GetMapping("/user/{idUsuario}")
-    public ResponseEntity<?> getAddressByUsuarioId(@Positive(message = "O ID do Customer tem que ser maior que 0") @PathVariable Integer idUsuario){
+    public ResponseEntity<List<AddressListDTO>> getAddressByUsuarioId(@Positive(message = "O ID do Customer tem que ser maior que 0") @PathVariable Integer idUsuario){
         List<Address> address = addressService.findByCustomerId(idUsuario);
         List<AddressListDTO> addressListDTO = new ArrayList<>();
         address.forEach(addres -> {
@@ -50,13 +50,13 @@ public class AddressController {
     }
 
     @DeleteMapping("/{idAddress}")
-    public ResponseEntity<?> deleteAddress(@Positive(message = "O ID do Address tem que ser maior que 0") @PathVariable Integer idAddress){
+    public ResponseEntity<String> deleteAddress(@Positive(message = "O ID do Address tem que ser maior que 0") @PathVariable Integer idAddress){
         addressService.deleteById(idAddress);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{idAddress}/customer/{idCustomer}")
-    public ResponseEntity<?> updateAddress(@Valid @RequestBody AddressUpdateDTO addressUpdateDTO, @Positive(message = "O ID do Address tem que ser maior que 0")  @PathVariable Integer idAddress, @Positive(message = "O ID do Customer tem que ser maior que 0")  @PathVariable Integer idCustomer){
+    public ResponseEntity<AddressUpdateDTO> updateAddress(@Valid @RequestBody AddressUpdateDTO addressUpdateDTO, @Positive(message = "O ID do Address tem que ser maior que 0")  @PathVariable Integer idAddress, @Positive(message = "O ID do Customer tem que ser maior que 0")  @PathVariable Integer idCustomer){
         AddressUpdateDTO dto = addressService.alterAddressById(idAddress, idCustomer, addressUpdateDTO);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }

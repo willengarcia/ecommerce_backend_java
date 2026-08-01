@@ -70,6 +70,9 @@ public class CartService extends CartMapper {
     public Cart clearCart(Integer cartId) {
         Cart cart = cartRepository.findById(cartId).orElseThrow(() ->
                 new CartNotFoundException("Carrinho não encontrado"));
+        if(cart.getStatus().equals(CartEnum.CONVERTIDO) || cart.getStatus().equals(CartEnum.ABANDONADO)) {
+            throw new CartAlreadyAbandonedException("Carrinho com status ABANDONADO ou CONVERTIDO");
+        }
         for (CartItem item : cart.getItems()) {
             Product product = item.getProduct();
 

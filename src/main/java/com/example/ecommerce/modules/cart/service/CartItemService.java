@@ -2,10 +2,12 @@ package com.example.ecommerce.modules.cart.service;
 
 import com.example.ecommerce.modules.cart.dto.CartItemCreateDTO;
 import com.example.ecommerce.modules.cart.dto.CartItemResponseDTO;
+import com.example.ecommerce.modules.cart.exception.CartAlreadyAbandonedException;
 import com.example.ecommerce.modules.cart.exception.CartItemNotFoundException;
 import com.example.ecommerce.modules.cart.exception.CartNotFoundException;
 import com.example.ecommerce.modules.cart.mapper.CartMapper;
 import com.example.ecommerce.modules.cart.model.Cart;
+import com.example.ecommerce.modules.cart.model.CartEnum;
 import com.example.ecommerce.modules.cart.model.CartItem;
 import com.example.ecommerce.modules.cart.repository.CartItemRepository;
 import com.example.ecommerce.modules.cart.repository.CartRepository;
@@ -42,7 +44,9 @@ public class CartItemService extends CartMapper {
 
         CartItem existente = cartItemRepository
                 .findByCarroIdAndProductId(dto.cartId(), dto.productId());
-
+        if(cart.getStatus().equals(CartEnum.CONVERTIDO) || cart.getStatus().equals(CartEnum.ABANDONADO)) {
+            throw new CartAlreadyAbandonedException("Carrinho com status ABANDONADO ou CONVERTIDO");
+        }
         if (existente != null) {
             // Verifica Estoque
             return addExistingProduct(product, existente, cart, dto);
@@ -56,6 +60,9 @@ public class CartItemService extends CartMapper {
 
     @Transactional
     public CartItemResponseDTO createProductInCartItem(Cart cart, Product product) {
+        if(cart.getStatus().equals(CartEnum.CONVERTIDO) || cart.getStatus().equals(CartEnum.ABANDONADO)) {
+            throw new CartAlreadyAbandonedException("Carrinho com status ABANDONADO ou CONVERTIDO");
+        }
         CartItem created = new CartItem();
         created.setCarro(cart);
         created.setProduct(product);
@@ -95,6 +102,9 @@ public class CartItemService extends CartMapper {
         if (product.getQuantidadeEstoque() <= 0){
             throw new InsufficientStockException("Quantidade de estoque insuficiente");
         }
+        if(cart.getStatus().equals(CartEnum.CONVERTIDO) || cart.getStatus().equals(CartEnum.ABANDONADO)) {
+            throw new CartAlreadyAbandonedException("Carrinho com status ABANDONADO ou CONVERTIDO");
+        }
         existente.setQuantidade(existente.getQuantidade() + 1);
         existente.setSubtotal(existente.getPrecoUnitario().multiply(BigDecimal.valueOf(existente.getQuantidade())));
         existente.setDataAtualizacao(LocalDate.now());
@@ -131,6 +141,10 @@ public class CartItemService extends CartMapper {
 
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new CartNotFoundException("Carrinho não encontrado"));
+
+        if(cart.getStatus().equals(CartEnum.CONVERTIDO) || cart.getStatus().equals(CartEnum.ABANDONADO)) {
+            throw new CartAlreadyAbandonedException("Carrinho com status ABANDONADO ou CONVERTIDO");
+        }
 
         Product product = productRepository.findById(cartItem.getProduct().getId());
         product.setQuantidadeEstoque(product.getQuantidadeEstoque() + cartItem.getQuantidade());

@@ -29,14 +29,14 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createCustomer(@Valid @RequestBody CustomerCreateDTO dto) {
+    public ResponseEntity<CustomerListDTO> createCustomer(@Valid @RequestBody CustomerCreateDTO dto) {
         Customer customer = customerService.createCustomer(dto);
         CustomerListDTO customerCreateDTO = CustomerMapper.toCustomerListResponseDTO(customer);
         return ResponseEntity.status(HttpStatus.CREATED).body(customerCreateDTO);
     }
 
     @GetMapping
-    public ResponseEntity<List<?>> getAllCustomers(Pageable pageable, @Valid @RequestBody CustomerFindDTO nameCustomer) {
+    public ResponseEntity<List<CustomerListDTO>> getAllCustomers(Pageable pageable, @Valid @RequestBody CustomerFindDTO nameCustomer) {
         Page<Customer> customers = customerService.findAllByNameCustomer(nameCustomer, pageable);
         List<CustomerListDTO> response = customers.stream()
                 .map(CustomerMapper::toCustomerListResponseDTO)

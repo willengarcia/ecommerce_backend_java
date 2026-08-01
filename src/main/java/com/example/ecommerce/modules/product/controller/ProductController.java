@@ -1,9 +1,6 @@
 package com.example.ecommerce.modules.product.controller;
 
-import com.example.ecommerce.modules.product.dto.ProductCreateDTO;
-import com.example.ecommerce.modules.product.dto.ProductImageResponseDTO;
-import com.example.ecommerce.modules.product.dto.ProductResponseDTO;
-import com.example.ecommerce.modules.product.dto.ProductUpdateDTO;
+import com.example.ecommerce.modules.product.dto.*;
 import com.example.ecommerce.modules.product.mapper.ProductMapper;
 import com.example.ecommerce.modules.product.model.Product;
 import com.example.ecommerce.modules.product.service.ProductImageService;
@@ -37,15 +34,11 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createProduct(@Valid @RequestBody ProductCreateDTO productCreateDTO){
-        try{
-            Product produto = productService.createProduct(productCreateDTO);
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(ProductMapper.toProductResponseResumeDTO(produto));
-        } catch (Exception ex){
-            return ResponseEntity.badRequest().body(ex.getMessage());
-        }
+    public ResponseEntity<ProductResponseResumeDTO> createProduct(@Valid @RequestBody ProductCreateDTO productCreateDTO){
+        Product produto = productService.createProduct(productCreateDTO);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(ProductMapper.toProductResponseResumeDTO(produto));
     }
 
     @PostMapping(value = "/{productId}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -77,9 +70,9 @@ public class ProductController {
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<?> deleteProduto(@Positive(message = "O ID do Product tem que ser maior que 0") @PathVariable Integer productId){
+    public ResponseEntity<Void> deleteProduto(@Positive(message = "O ID do Product tem que ser maior que 0") @PathVariable Integer productId){
         ProductResponseDTO dto = productService.deleteOneProduct(productId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(dto);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/images/{imageId}")

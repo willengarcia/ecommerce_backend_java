@@ -21,13 +21,13 @@ public class CartItemController extends CartMapper {
     }
 
     @PostMapping
-    public ResponseEntity<?> createCartItem(@Valid @RequestBody CartItemCreateDTO dto) {
+    public ResponseEntity<CartItemResponseDTO> createCartItem(@Valid @RequestBody CartItemCreateDTO dto) {
         CartItemResponseDTO cartItem = cartItemService.createItem(dto);
         return ResponseEntity.ok(cartItem);
     }
 
     @DeleteMapping("/cart/{idCart}/item/{idCartItem}")
-    public ResponseEntity<?>  removeItemFromCartItem(@Positive(message = "O ID do Cart tem que ser maior que 0") @PathVariable Integer idCart, @Positive(message = "O ID do CartItem tem que ser maior que 0") @PathVariable Integer idCartItem) {
+    public ResponseEntity<String>  removeItemFromCartItem(@Positive(message = "O ID do Cart tem que ser maior que 0") @PathVariable Integer idCart, @Positive(message = "O ID do CartItem tem que ser maior que 0") @PathVariable Integer idCartItem) {
         cartItemService.deleteItem(idCart, idCartItem);
         return ResponseEntity.ok().build();
     }
