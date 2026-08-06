@@ -71,7 +71,7 @@ public class ProductController {
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> deleteProduto(@Positive(message = "O ID do Product tem que ser maior que 0") @PathVariable Integer productId){
-        ProductResponseDTO dto = productService.deleteOneProduct(productId);
+        productService.deleteOneProduct(productId);
         return ResponseEntity.noContent().build();
     }
 

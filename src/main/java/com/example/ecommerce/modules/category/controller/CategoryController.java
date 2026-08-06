@@ -5,7 +5,6 @@ import com.example.ecommerce.modules.category.dto.CategoryFindDTO;
 import com.example.ecommerce.modules.category.dto.CategoryListDTO;
 import com.example.ecommerce.modules.category.service.CategoryService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

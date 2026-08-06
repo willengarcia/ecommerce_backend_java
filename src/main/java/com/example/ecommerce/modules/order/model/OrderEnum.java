@@ -12,7 +12,7 @@ public enum OrderEnum {
     ENTREGUE("ENTREGUE"),
     CANCELADO("CANCELADO"),
     REEMBOLSADO("REEMBOLSADO");
-    private String orderEnum;
+    private final String orderEnum;
     OrderEnum(String orderEnum) {
         this.orderEnum = orderEnum;
     }

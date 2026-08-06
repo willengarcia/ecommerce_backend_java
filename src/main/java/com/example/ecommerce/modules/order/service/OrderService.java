@@ -8,12 +8,10 @@ import com.example.ecommerce.modules.order.dto.OrderUpdateAddressDTO;
 import com.example.ecommerce.modules.order.exception.*;
 import com.example.ecommerce.modules.order.model.Order;
 import com.example.ecommerce.modules.order.model.OrderEnum;
-import com.example.ecommerce.modules.order.model.OrderItem;
 import com.example.ecommerce.modules.order.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
