@@ -36,7 +36,7 @@ public class OrderService{
 
     private static Order getOrder(OrderCreateDTO orderCreateDTO) {
         Order order = new Order();
-        order.setStatus(OrderEnum.AGUARDANDO_PAGAMENTO);
+        order.setStatus(OrderEnum.CRIADO);
         order.setCustomer(orderCreateDTO.cart().getCustomer());
         order.setAddress(orderCreateDTO.address());
         order.setIdAddress(orderCreateDTO.address().getId());

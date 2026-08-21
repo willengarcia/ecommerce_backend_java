@@ -22,12 +22,12 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AddressServiceTest {
-    @Mock
+    @Mock // -> duble (finge ser algo)
     private AddressRepository  addressRepository;
-    @Mock
+    @Mock // -> duble (finge ser algo)
     private CustomerRepository customerRepository;
 
-    @InjectMocks
+    @InjectMocks 
     private AddressService addressService;
 
     @Test

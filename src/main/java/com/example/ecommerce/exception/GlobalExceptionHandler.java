@@ -52,7 +52,6 @@ public class GlobalExceptionHandler {
     // 409 - Conflito com o estado atual do sistema
     @ExceptionHandler({
             DuplicateProductException.class,
-            InsufficientStockException.class,
             DuplicateCpfException.class,
             DuplicateEmailException.class,
             CustomerAlreadyActiveException.class,
@@ -108,7 +107,8 @@ public class GlobalExceptionHandler {
             InactiveCategoryException.class,
             ImportValidationException.class,
             InactiveCustomerException.class,
-            EmptyCartException.class
+            EmptyCartException.class,
+            InsufficientStockException.class
     })
     public ResponseEntity<?> exceptionsUnprocessableEntity(RuntimeException e) {
         ResponseError response = new ResponseError(

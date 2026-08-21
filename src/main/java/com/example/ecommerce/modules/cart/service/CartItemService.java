@@ -67,7 +67,6 @@ public class CartItemService extends CartMapper {
         created.setCarro(cart);
         created.setProduct(product);
         created.setQuantidade(1);
-        product.setQuantidadeReservada(product.getQuantidadeReservada() + 1);
         created.setPrecoUnitario(product.getPreco());
         created.setSubtotal(product.getPreco());
         created.setDataCriacao(LocalDate.now());
@@ -86,9 +85,6 @@ public class CartItemService extends CartMapper {
 
         cartRepository.save(cart);
 
-        product.setQuantidadeEstoque(product.getQuantidadeEstoque() - 1);
-        productRepository.save(product);
-
         return new CartItemResponseDTO(
                 created.getId(),
                 created.getQuantidade(),
@@ -98,33 +94,27 @@ public class CartItemService extends CartMapper {
     }
 
     @Transactional
-    public CartItemResponseDTO addExistingProduct(Product product, CartItem existente, Cart cart, CartItemCreateDTO dto) {
+    public CartItemResponseDTO addExistingProduct(Product product, CartItem cartExist, Cart cart, CartItemCreateDTO dto) {
         if (product.getQuantidadeEstoque() <= 0){
             throw new InsufficientStockException("Quantidade de estoque insuficiente");
         }
         if(cart.getStatus().equals(CartEnum.CONVERTIDO) || cart.getStatus().equals(CartEnum.ABANDONADO)) {
             throw new CartAlreadyAbandonedException("Carrinho com status ABANDONADO ou CONVERTIDO");
         }
-        existente.setQuantidade(existente.getQuantidade() + 1);
-        existente.setSubtotal(existente.getPrecoUnitario().multiply(BigDecimal.valueOf(existente.getQuantidade())));
-        existente.setDataAtualizacao(LocalDate.now());
+        cartExist.setQuantidade(cartExist.getQuantidade() + 1);
+        cartExist.setSubtotal(cartExist.getPrecoUnitario().multiply(BigDecimal.valueOf(cartExist.getQuantidade())));
+        cartExist.setDataAtualizacao(LocalDate.now());
 
-        cartItemRepository.save(existente);
-
-        // Atualiza estoque
-        product.setQuantidadeEstoque(product.getQuantidadeEstoque() - 1);
-        product.setQuantidadeReservada(existente.getQuantidade());
-        productRepository.save(product);
-
+        cartItemRepository.save(cartExist);
         cart.setValorTotal(findSubTotalItemsInCart(dto.cartId()));
         cartRepository.save(cart);
 
         return new CartItemResponseDTO(
-                existente.getId(),
-                existente.getQuantidade(),
-                existente.getPrecoUnitario(),
-                existente.getSubtotal(),
-                conversorProductDTO(existente));
+                cartExist.getId(),
+                cartExist.getQuantidade(),
+                cartExist.getPrecoUnitario(),
+                cartExist.getSubtotal(),
+                conversorProductDTO(cartExist));
     }
 
     public BigDecimal findSubTotalItemsInCart(Integer cartId) {
@@ -142,13 +132,10 @@ public class CartItemService extends CartMapper {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new CartNotFoundException("Carrinho não encontrado"));
 
-        if(cart.getStatus().equals(CartEnum.CONVERTIDO) || cart.getStatus().equals(CartEnum.ABANDONADO)) {
+        if(!cart.getStatus().equals(CartEnum.ATIVO)) {
             throw new CartAlreadyAbandonedException("Carrinho com status ABANDONADO ou CONVERTIDO");
         }
 
-        Product product = productRepository.findById(cartItem.getProduct().getId());
-        product.setQuantidadeEstoque(product.getQuantidadeEstoque() + cartItem.getQuantidade());
-        product.setQuantidadeReservada(product.getQuantidadeReservada() - cartItem.getQuantidade());
         cart.getItems().remove(cartItem);
         cartItem.setCarro(null);
         cart.setValorTotal(
@@ -157,7 +144,6 @@ public class CartItemService extends CartMapper {
                         .map(CartItem::getSubtotal)
                         .reduce(BigDecimal.ZERO, BigDecimal::add)
         );
-        productRepository.save(product);
         cartRepository.save(cart);
     }
 }

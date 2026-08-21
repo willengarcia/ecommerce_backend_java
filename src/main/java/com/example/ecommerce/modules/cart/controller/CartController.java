@@ -40,11 +40,6 @@ public class CartController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/clear/{idCart}")
-    public ResponseEntity<CartResponseDTO> delete(@Positive(message = "O ID do Cart tem que ser maior que 0") @PathVariable Integer idCart) {
-        Cart cart = cartService.clearCart(idCart);
-        return ResponseEntity.ok(CartMapper.conversorCartResponseDTO(cart));
-    }
     @DeleteMapping("/{idCart}")
     public ResponseEntity<CartResponseDTO> deleteCart(@Positive(message = "O ID do Cart tem que ser maior que 0") @PathVariable Integer idCart) {
         cartService.deleteCart(idCart);

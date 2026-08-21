@@ -66,11 +66,11 @@ public class  CartService extends CartMapper {
     }
 
     @Transactional
-    public Cart clearCart(Integer cartId) {
+    public void clearCart(Integer cartId) {
         Cart cart = cartRepository.findById(cartId).orElseThrow(() ->
                 new CartNotFoundException("Carrinho não encontrado"));
-        if(cart.getStatus().equals(CartEnum.CONVERTIDO) || cart.getStatus().equals(CartEnum.ABANDONADO)) {
-            throw new CartAlreadyAbandonedException("Carrinho com status ABANDONADO ou CONVERTIDO");
+        if(cart.getStatus().equals(CartEnum.CONVERTIDO)) {
+            throw new CartAlreadyAbandonedException("Carrinho com status CONVERTIDO");
         }
         for (CartItem item : cart.getItems()) {
             Product product = item.getProduct();
@@ -91,7 +91,6 @@ public class  CartService extends CartMapper {
 
         cartRepository.save(cart);
 
-        return cart;
     }
 
     @Transactional
