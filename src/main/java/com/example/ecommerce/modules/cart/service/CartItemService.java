@@ -67,8 +67,9 @@ public class CartItemService extends CartMapper {
         created.setCarro(cart);
         created.setProduct(product);
         created.setQuantidade(1);
-        created.setPrecoUnitario(product.getPreco());
-        created.setSubtotal(product.getPreco());
+        BigDecimal precoVenda = product.getPrecoVenda();
+        created.setPrecoUnitario(precoVenda);
+        created.setSubtotal(precoVenda);
         created.setDataCriacao(LocalDate.now());
         created.setDataAtualizacao(LocalDate.now());
 

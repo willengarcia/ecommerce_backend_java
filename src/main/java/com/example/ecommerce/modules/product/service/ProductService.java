@@ -69,12 +69,12 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponseDTO deleteOneProduct(Integer produtoId){
+    public void deleteOneProduct(Integer produtoId){
         Product produto = productRepository.findById(produtoId).orElseThrow(
                 () -> new ProductNotFoundException("Produto não encontrado!")
         );
         productRepository.delete(produto);
-        return ProductMapper.toProductResponseDTO(produto);
+        ProductMapper.toProductResponseDTO(produto);
     }
 
     public Page<ProductResponseDTO> findAllPaginado(Pageable pageable) {

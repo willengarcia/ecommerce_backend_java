@@ -12,6 +12,7 @@ import com.example.ecommerce.modules.order.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -36,7 +37,7 @@ public class OrderService{
 
     private static Order getOrder(OrderCreateDTO orderCreateDTO) {
         Order order = new Order();
-        order.setStatus(OrderEnum.CRIADO);
+        order.setStatus(OrderEnum.AGUARDANDO_PAGAMENTO);
         order.setCustomer(orderCreateDTO.cart().getCustomer());
         order.setAddress(orderCreateDTO.address());
         order.setIdAddress(orderCreateDTO.address().getId());
@@ -52,7 +53,7 @@ public class OrderService{
         order.setReferencia(orderCreateDTO.address().getReferencia());
         order.setTipoEndereco(orderCreateDTO.address().getTipoEndereco());
         order.setEnderecoPrincipal(orderCreateDTO.address().getEnderecoPrincipal());
-        order.setValorTotal(orderCreateDTO.cart().getValorTotal());
+        order.setValorTotal(BigDecimal.ZERO);
         order.setDataAtualizacao(LocalDate.now());
         order.setDataCriacao(LocalDate.now());
         return order;

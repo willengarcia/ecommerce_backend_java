@@ -76,4 +76,15 @@ public class Product {
 
 
     public Product() {}
+
+    public BigDecimal getPrecoVenda() {
+
+        if (precoPromocional != null
+                && precoPromocional.compareTo(BigDecimal.ZERO) > 0) {
+
+            return precoPromocional;
+        }
+
+        return preco;
+    }
 }

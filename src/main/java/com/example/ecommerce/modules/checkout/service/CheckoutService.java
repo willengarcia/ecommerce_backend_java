@@ -109,6 +109,8 @@ public class CheckoutService {
 
         orderCriado.setOrderItem(itemsCriados);
 
+        orderCriado.calcularValorTotal();
+
         // converte o carrinho
         cart.setStatus(CartEnum.CONVERTIDO);
 
@@ -118,23 +120,53 @@ public class CheckoutService {
     }
 
     public List<OrderItem> createOrderItem(Order order, Cart cart) {
+
         List<OrderItem> orderItems = new ArrayList<>();
-        List<CartItem> cartItems = cart.getItems();
-        cartItems.forEach(cartItem -> {
+
+        for (CartItem cartItem : cart.getItems()) {
+
             OrderItem orderItem = new OrderItem();
-            orderItem.setSubTotal(cartItem.getSubtotal());
-            orderItem.setNomeProduto(cartItem.getProduct().getNome());
-            orderItem.setDataAtualizacao(LocalDateTime.now());
-            orderItem.setDataCriacao(LocalDateTime.now());
-            orderItem.setQuantidade(cartItem.getQuantidade());
-            orderItem.setSkuProduto(cartItem.getProduct().getSku());
-            orderItem.setPrecoUnitario(cartItem.getPrecoUnitario());
-            orderItem.setProduct(cartItem.getProduct());
+
+            orderItem.setNomeProduto(
+                    cartItem.getProduct().getNome()
+            );
+
+            orderItem.setQuantidade(
+                    cartItem.getQuantidade()
+            );
+
+            orderItem.setSkuProduto(
+                    cartItem.getProduct().getSku()
+            );
+
+            orderItem.setPrecoUnitario(
+                    cartItem.getProduct().getPrecoVenda()
+            );
+
+            orderItem.setProduct(
+                    cartItem.getProduct()
+            );
+
             orderItem.setOrder(order);
+
+            orderItem.setDataCriacao(
+                    LocalDateTime.now()
+            );
+
+            orderItem.setDataAtualizacao(
+                    LocalDateTime.now()
+            );
+
+            // OrderItem calcula seu próprio subtotal
+            orderItem.calcularSubtotal();
+
             orderItemRepository.save(orderItem);
+
             orderItems.add(orderItem);
-        });
+        }
+
         return orderItems;
     }
+
 
 }

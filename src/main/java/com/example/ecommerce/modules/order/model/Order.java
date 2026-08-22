@@ -67,4 +67,9 @@ public class Order {
         this.dataCriacao = LocalDate.now();
         this.dataAtualizacao = LocalDate.now();
     }
+    public void calcularValorTotal() {
+        this.valorTotal = this.orderItem.stream()
+                .map(OrderItem::getSubTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }

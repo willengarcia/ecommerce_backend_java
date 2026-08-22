@@ -42,4 +42,11 @@ public class OrderItem {
         this.dataAtualizacao = dataAtualizacao;
     }
 
+    public void calcularSubtotal() {
+
+        this.subTotal = this.precoUnitario.multiply(
+                BigDecimal.valueOf(this.quantidade)
+        );
+    }
+
 }
